@@ -37,6 +37,11 @@ application {
     mainClass = "org.example.App"
 }
 
+tasks.register<Exec>("format") {
+    workingDir = file(rootDir)
+    commandLine = listOf("sh", "-c", "find src -type f | xargs clang-format -i")
+}
+
 tasks.named<Test>("test") {
     useJUnitPlatform()
 }
