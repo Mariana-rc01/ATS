@@ -37,7 +37,7 @@ java {
 }
 
 application {
-    mainClass = "org.example.App"
+    mainClass = "MakeItFit.Main"
 }
 
 jacoco {
@@ -62,7 +62,11 @@ tasks.named<Test>("test") {
 
 // Other tasks
 
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
+}
+
 tasks.register<Exec>("format") {
     workingDir = file(rootDir)
-    commandLine = listOf("sh", "-c", "find src -type f | xargs clang-format -i")
+    commandLine = listOf("sh", "-c", "find src -type f | xargs -n1 sh -c 'clang-format -i $0; sed -i s/\\\\r//g $0'")
 }
