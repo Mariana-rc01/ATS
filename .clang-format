@@ -59,7 +59,7 @@ BinPackParameters:                         false
 
 # COMMENTS
 
-ReflowComments:               false
+ReflowComments:               true
 SpacesBeforeTrailingComments: 1
 SpacesInLineCommentPrefix:
   Minimum:  1
