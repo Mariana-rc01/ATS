@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+// Project configuration
+
 plugins {
     application
+    jacoco
 }
 
 repositories {
@@ -37,11 +40,29 @@ application {
     mainClass = "org.example.App"
 }
 
-tasks.register<Exec>("format") {
-    workingDir = file(rootDir)
-    commandLine = listOf("sh", "-c", "find src -type f | xargs clang-format -i")
+jacoco {
+    toolVersion = "0.8.13"
+}
+
+// Test configuration
+
+var testTarget = "unittests"
+if (project.hasProperty("testDir")) {
+    testTarget = project.property("testDir").toString()
+}
+
+java.sourceSets["test"].java {
+    srcDir("src/${testTarget}/java")
 }
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+// Other tasks
+
+tasks.register<Exec>("format") {
+    workingDir = file(rootDir)
+    commandLine = listOf("sh", "-c", "find src -type f | xargs clang-format -i")
 }
