@@ -145,6 +145,7 @@ public class ActivityTest {
         TestActivity clone = original.clone();
 
         assertNotSame(original, clone);
+        assertTrue(original.equals(clone));
         assertEquals(original.getUserCode(), clone.getUserCode());
         assertEquals(original.getCode(), clone.getCode());
         assertEquals(original.getRealizationDate(), clone.getRealizationDate());
