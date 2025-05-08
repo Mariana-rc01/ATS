@@ -19,6 +19,7 @@
 plugins {
     application
     jacoco
+    id("info.solidsoft.pitest") version "1.15.0"
 }
 
 repositories {
@@ -69,4 +70,17 @@ tasks.named<JavaExec>("run") {
 tasks.register<Exec>("format") {
     workingDir = file(rootDir)
     commandLine = listOf("sh", "-c", "find src -type f | xargs -n1 sh -c 'clang-format -i $0; sed -i s/\\\\r//g $0'")
+}
+
+// PIT Mutation Testing
+pitest {
+    junit5PluginVersion.set("1.2.2")
+    pitestVersion.set("1.19.1")
+
+    targetClasses.set(setOf("MakeItFit.*"))
+    testSourceSets.set(listOf(sourceSets.test.get()))
+    mainSourceSets.set(listOf(sourceSets.main.get()))
+
+    outputFormats.set(setOf("HTML"))
+    timestampedReports.set(false)
 }
