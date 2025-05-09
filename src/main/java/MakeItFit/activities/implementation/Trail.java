@@ -92,13 +92,16 @@ public class Trail extends DistanceWithAltimetry implements HardInterface, Seria
      * @param trailType The trail type to set (easy, medium, or hard).
      */
     public void setTrailType(int trailType) {
+        /* Changed because of the pit mutation
         if (trailType < TRAIL_TYPE_EASY) {
             this.trailType = TRAIL_TYPE_EASY;
         } else if (trailType > TRAIL_TYPE_HARD) {
             this.trailType = TRAIL_TYPE_HARD;
         } else {
             this.trailType = trailType;
-        }
+        }*/
+        this.trailType = Math.max(TRAIL_TYPE_EASY, Math.min(TRAIL_TYPE_HARD, trailType));
+
     }
 
     /**
