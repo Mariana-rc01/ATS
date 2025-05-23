@@ -65,6 +65,6 @@ public class Amateur extends User implements Serializable {
      * @return A string representation of this Amateur user.
      */
     public String toString() {
-        return super.toString() + "        ====================\n";
+        return super.toString() + "====================\n";
     }
 }
