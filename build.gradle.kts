@@ -28,6 +28,11 @@ if (testTarget == "evosuitetests" ||
     jvmVersion = JavaVersion.VERSION_1_8
 }
 
+var junitVersion = 5
+if (testTarget == "evosuitetests") {
+    junitVersion = 4
+}
+
 if (JavaVersion.current() != jvmVersion) {
     throw GradleException(
         "Wrong java version for this task: use Java 8 for EvoSuite and 21 for everything else"
@@ -55,7 +60,6 @@ repositories {
 dependencies {
     // JUnit 4
     testImplementation("junit:junit:4.13.2")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.12.2")
 
     // JUnit 5
     testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
@@ -82,9 +86,10 @@ java.sourceSets["test"].java {
 }
 
 tasks.named<Test>("test") {
-    useJUnitPlatform {
-        includeEngines("junit-jupiter", "junit-vintage")
+    if (junitVersion == 5) {
+        useJUnitPlatform ()
     }
+
     finalizedBy(tasks.jacocoTestReport)
 }
 
@@ -110,17 +115,16 @@ tasks.register<JavaExec>("generateEvoSuiteTests") {
     args = listOf(
         "-target",
         layout.buildDirectory.dir("classes/java/main").get().asFile.path,
+        "-Duse_separate_classloader=false",
         "-seed",
         "1"
     )
 
     doLast {
         project.delete(files("evosuite-report"))
-        File("src/evosuite-tests").mkdirs()
-        File("evosuite-tests").renameTo(File("src/evosuite-tests/main"))
-        ProcessBuilder(listOf("sh", "-c",
-            "find src/evosuite-tests/main -type f | xargs -n1 sed -i '/^@RunWith/d'"
-        )).start().waitFor()
+        project.delete(files("src/evosuitetests/java"))
+        File("src/evosuitetests/java").mkdirs()
+        File("evosuite-tests").renameTo(File("src/evosuitetests/java"))
     }
 
     finalizedBy(tasks.named<Task>("format"))
