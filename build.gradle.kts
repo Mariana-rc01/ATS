@@ -22,7 +22,9 @@ if (project.hasProperty("testDir")) {
 }
 
 var jvmVersion = JavaVersion.VERSION_21
-if (testTarget == "evosuitetests") {
+if (testTarget == "evosuitetests" ||
+    gradle.startParameter.taskNames.contains("generateEvoSuiteTests")) {
+
     jvmVersion = JavaVersion.VERSION_1_8
 }
 
@@ -30,6 +32,12 @@ if (JavaVersion.current() != jvmVersion) {
     throw GradleException(
         "Wrong java version for this task: use Java 8 for EvoSuite and 21 for everything else"
     )
+}
+
+// Build script configuration
+
+val evoSuiteDownload by configurations.creating {
+    isTransitive = true
 }
 
 // Project configuration
@@ -54,7 +62,8 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.12.2")
 
     // EvoSuite Runtime
-    testImplementation("org.evosuite:evosuite-standalone-runtime:1.2.0")
+    testImplementation("org.evosuite:evosuite-standalone-runtime:1.0.6")
+    evoSuiteDownload("org.evosuite:evosuite-master:1.0.6")
 }
 
 java {
@@ -95,6 +104,28 @@ pitest {
     timestampedReports.set(false)
 }
 
+tasks.register<JavaExec>("generateEvoSuiteTests") {
+    classpath = evoSuiteDownload
+    mainClass = "org.evosuite.EvoSuite"
+    args = listOf(
+        "-target",
+        layout.buildDirectory.dir("classes/java/main").get().asFile.path,
+        "-seed",
+        "1"
+    )
+
+    doLast {
+        project.delete(files("evosuite-report"))
+        File("src/evosuite-tests").mkdirs()
+        File("evosuite-tests").renameTo(File("src/evosuite-tests/main"))
+        ProcessBuilder(listOf("sh", "-c",
+            "find src/evosuite-tests/main -type f | xargs -n1 sed -i '/^@RunWith/d'"
+        )).start().waitFor()
+    }
+
+    finalizedBy(tasks.named<Task>("format"))
+}
+
 // Other tasks
 
 tasks.named<JavaExec>("run") {
@@ -103,5 +134,7 @@ tasks.named<JavaExec>("run") {
 
 tasks.register<Exec>("format") {
     workingDir = file(rootDir)
-    commandLine = listOf("sh", "-c", "find src -type f | xargs -n1 sh -c 'clang-format -i $0; sed -i s/\\\\r//g $0'")
+    commandLine = listOf("sh", "-c",
+        "find src -type f | xargs -n1 sh -c 'clang-format -i $0; sed -i s/\\\\r//g $0'"
+    )
 }
