@@ -1,17 +1,17 @@
 package MakeItFit.activities.types;
 
-import MakeItFit.utils.MakeItFitDate;
-
 import java.util.UUID;
 
+import MakeItFit.utils.MakeItFitDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RepetitionsTest {
     private TestRepetitions activity;
-    private UUID userCode;
-    private MakeItFitDate date;
+    private UUID            userCode;
+    private MakeItFitDate   date;
 
     private MakeItFitDate createDate(int year, int month, int day) {
         return MakeItFitDate.of(year, month, day);
@@ -20,7 +20,7 @@ public class RepetitionsTest {
     @BeforeEach
     void setUp() {
         userCode = UUID.randomUUID();
-        date = createDate(2025, 10, 5);
+        date     = createDate(2025, 10, 5);
         activity = new TestRepetitions(userCode, date, 5, "Abs", "Plank", 15, 4);
     }
 
@@ -91,10 +91,14 @@ public class RepetitionsTest {
     }
 }
 
-
 class TestRepetitions extends Repetitions {
-    public TestRepetitions(UUID userCode, MakeItFitDate realizationDate, int expectedDuration,
-                           String designation, String name, int repetitions, int series) {
+    public TestRepetitions(UUID          userCode,
+                           MakeItFitDate realizationDate,
+                           int           expectedDuration,
+                           String        designation,
+                           String        name,
+                           int           repetitions,
+                           int           series) {
         super(userCode, realizationDate, expectedDuration, designation, name, repetitions, series);
     }
 
@@ -122,4 +126,3 @@ class TestRepetitions extends Repetitions {
         return new TestRepetitions(this);
     }
 }
-

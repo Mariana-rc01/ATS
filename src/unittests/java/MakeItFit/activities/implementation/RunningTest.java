@@ -1,16 +1,16 @@
 package MakeItFit.activities.implementation;
 
+import java.util.UUID;
+
 import MakeItFit.utils.MakeItFitDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RunningTest {
-    private Running running;
-    private UUID userCode;
+    private Running       running;
+    private UUID          userCode;
     private MakeItFitDate date;
 
     private MakeItFitDate createDate(int year, int month, int day) {
@@ -20,8 +20,8 @@ public class RunningTest {
     @BeforeEach
     void setUp() {
         userCode = UUID.randomUUID();
-        date = createDate(2025, 12, 25);
-        running = new Running(userCode, date, 45, "Warming", "Just for 45 minutes", 5000.0, 10.0);
+        date     = createDate(2025, 12, 25);
+        running  = new Running(userCode, date, 45, "Warming", "Just for 45 minutes", 5000.0, 10.0);
     }
 
     @Test
@@ -51,16 +51,16 @@ public class RunningTest {
 
     @Test
     void testCalculateCaloricWaste() {
-        float index = 1.5f;
-        int expected = (int) (10.0 * 5000.0 * 1.5 * 0.005);
+        float index    = 1.5f;
+        int   expected = (int) (10.0 * 5000.0 * 1.5 * 0.005);
         running.calculateCaloricWaste(index);
         assertEquals(expected, running.getCaloricWaste());
     }
 
     @Test
     void testCaloricWasteMethod() {
-        float index = 2.0f;
-        int expected = (int) (10.0 * 5000.0 * 2.0 * 0.005);
+        float index    = 2.0f;
+        int   expected = (int) (10.0 * 5000.0 * 2.0 * 0.005);
         assertEquals(expected, running.caloricWaste(index));
     }
 
@@ -72,11 +72,13 @@ public class RunningTest {
 
     @Test
     void testEquals() {
-        Running same = new Running(userCode, date, 45, "Warming", "Just for 45 minutes", 5000.0, 10.0);
+        Running same =
+            new Running(userCode, date, 45, "Warming", "Just for 45 minutes", 5000.0, 10.0);
         assertTrue(running.equals(same));
         assertTrue(running.equals(running));
 
-        Running diff = new Running(userCode, date, 45, "Warming", "Just for 45 minutes", 5000.0, 12.0);
+        Running diff =
+            new Running(userCode, date, 45, "Warming", "Just for 45 minutes", 5000.0, 12.0);
         assertFalse(running.equals(diff));
         assertFalse(running.equals(null));
     }

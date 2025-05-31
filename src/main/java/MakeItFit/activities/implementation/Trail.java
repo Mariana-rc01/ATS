@@ -101,7 +101,6 @@ public class Trail extends DistanceWithAltimetry implements HardInterface, Seria
             this.trailType = trailType;
         }*/
         this.trailType = Math.max(TRAIL_TYPE_EASY, Math.min(TRAIL_TYPE_HARD, trailType));
-
     }
 
     /**

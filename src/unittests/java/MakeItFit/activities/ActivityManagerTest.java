@@ -1,9 +1,11 @@
 package MakeItFit.activities;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
 import java.lang.reflect.Field;
 import java.util.*;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ActivityManagerTest {
 
@@ -30,8 +32,8 @@ public class ActivityManagerTest {
 
     @Test
     void testAllActivitiesAreEventuallyReturned() {
-        ActivityManager manager = new ActivityManager();
-        Set<String> returnedActivities = new HashSet<>();
+        ActivityManager manager            = new ActivityManager();
+        Set<String>     returnedActivities = new HashSet<>();
 
         for (int i = 0; i < 100; i++) {
             returnedActivities.add(manager.getRandomActivity());
@@ -46,8 +48,8 @@ public class ActivityManagerTest {
         ActivityManager manager = new ActivityManager();
 
         Random controlledRandom = new Random() {
-            private int[] values = {1, 2};
-            private int index = 0;
+            private int[] values = { 1, 2 };
+            private int   index  = 0;
 
             @Override
             public int nextInt(int bound) {

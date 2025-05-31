@@ -1,16 +1,16 @@
 package MakeItFit.activities.implementation;
 
+import java.util.UUID;
+
 import MakeItFit.utils.MakeItFitDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PushUpTest {
-    private PushUp pushUp;
-    private UUID userCode;
+    private PushUp        pushUp;
+    private UUID          userCode;
     private MakeItFitDate date;
 
     private MakeItFitDate createDate(int year, int month, int day) {
@@ -20,8 +20,8 @@ public class PushUpTest {
     @BeforeEach
     void setUp() {
         userCode = UUID.randomUUID();
-        date = createDate(2025,10,5);
-        pushUp = new PushUp(userCode, date, 30, "You got this!", "Push-Ups", 5, 4);
+        date     = createDate(2025, 10, 5);
+        pushUp   = new PushUp(userCode, date, 30, "You got this!", "Push-Ups", 5, 4);
     }
 
     @Test
@@ -50,16 +50,16 @@ public class PushUpTest {
 
     @Test
     void testCalculateCaloricWaste() {
-        float index = 2f;
-        int expected = (int) (5 * 4 * 2 * 0.1);
+        float index    = 2f;
+        int   expected = (int) (5 * 4 * 2 * 0.1);
         pushUp.calculateCaloricWaste(index);
         assertEquals(expected, pushUp.getCaloricWaste());
     }
 
     @Test
     void testCaloricWasteMethod() {
-        float index = 1.5f;
-        int expected = (int) (5 * 4 * 1.5 * 0.1);
+        float index    = 1.5f;
+        int   expected = (int) (5 * 4 * 1.5 * 0.1);
         assertEquals(expected, pushUp.caloricWaste(index));
     }
 

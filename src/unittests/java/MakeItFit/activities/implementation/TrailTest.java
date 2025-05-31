@@ -1,17 +1,17 @@
 package MakeItFit.activities.implementation;
 
+import java.util.UUID;
+
 import MakeItFit.utils.MakeItFitDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
 
 import static MakeItFit.activities.implementation.Trail.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TrailTest {
-    private Trail trail;
-    private UUID userCode;
+    private Trail         trail;
+    private UUID          userCode;
     private MakeItFitDate date;
 
     private MakeItFitDate createDate(int year, int month, int day) {
@@ -21,8 +21,16 @@ public class TrailTest {
     @BeforeEach
     void setUp() {
         userCode = UUID.randomUUID();
-        date = createDate(2025, 12, 25);
-        trail = new Trail(userCode, date, 90, "Easy peasy lemon squeezy", "Trail", 10000, 500, 200, TRAIL_TYPE_EASY);
+        date     = createDate(2025, 12, 25);
+        trail    = new Trail(userCode,
+                          date,
+                          90,
+                          "Easy peasy lemon squeezy",
+                          "Trail",
+                          10000,
+                          500,
+                          200,
+                          TRAIL_TYPE_EASY);
     }
 
     @Test
@@ -66,16 +74,16 @@ public class TrailTest {
 
     @Test
     void testCalculateCaloricWaste() {
-        float index = 2.0f;
-        int expected = (int) ((10000 * 0.5 + 500 * 0.1 - 200 * 0.1) * index * 0.01);
+        float index    = 2.0f;
+        int   expected = (int) ((10000 * 0.5 + 500 * 0.1 - 200 * 0.1) * index * 0.01);
         trail.calculateCaloricWaste(index);
         assertEquals(expected, trail.getCaloricWaste());
     }
 
     @Test
     void testCaloricWasteMethod() {
-        float index = 1.5f;
-        int expected = (int) ((10000 * 0.5 + 500 * 0.1 - 200 * 0.1) * index * 0.01);
+        float index    = 1.5f;
+        int   expected = (int) ((10000 * 0.5 + 500 * 0.1 - 200 * 0.1) * index * 0.01);
         assertEquals(expected, trail.caloricWaste(index));
     }
 
@@ -87,11 +95,27 @@ public class TrailTest {
 
     @Test
     void testEquals() {
-        Trail same = new Trail(userCode, date, 90, "Easy peasy lemon squeezy", "Trail", 10000, 500, 200, TRAIL_TYPE_EASY);
+        Trail same = new Trail(userCode,
+                               date,
+                               90,
+                               "Easy peasy lemon squeezy",
+                               "Trail",
+                               10000,
+                               500,
+                               200,
+                               TRAIL_TYPE_EASY);
         assertTrue(trail.equals(same));
         assertTrue(trail.equals(trail));
 
-        Trail diff = new Trail(userCode, date, 90, "Easy peasy lemon squeezy", "Trail", 10000, 500, 200, TRAIL_TYPE_HARD);
+        Trail diff = new Trail(userCode,
+                               date,
+                               90,
+                               "Easy peasy lemon squeezy",
+                               "Trail",
+                               10000,
+                               500,
+                               200,
+                               TRAIL_TYPE_HARD);
         assertFalse(trail.equals(diff));
         assertFalse(trail.equals(null));
     }

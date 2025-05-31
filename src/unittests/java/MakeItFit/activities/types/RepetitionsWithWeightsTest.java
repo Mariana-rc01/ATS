@@ -1,17 +1,17 @@
 package MakeItFit.activities.types;
 
+import java.util.UUID;
+
 import MakeItFit.utils.MakeItFitDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RepetitionsWithWeightsTest {
     private TestRepetitionsWithWeights activity;
-    private UUID userCode;
-    private MakeItFitDate date;
+    private UUID                       userCode;
+    private MakeItFitDate              date;
 
     private MakeItFitDate createDate(int year, int month, int day) {
         return MakeItFitDate.of(year, month, day);
@@ -20,8 +20,9 @@ public class RepetitionsWithWeightsTest {
     @BeforeEach
     void setUp() {
         userCode = UUID.randomUUID();
-        date = createDate(2025, 10, 5);
-        activity = new TestRepetitionsWithWeights(userCode, date, 45, "BodyPump", "Squats", 10, 3, 20);
+        date     = createDate(2025, 10, 5);
+        activity =
+            new TestRepetitionsWithWeights(userCode, date, 45, "BodyPump", "Squats", 10, 3, 20);
     }
 
     @Test
@@ -64,11 +65,13 @@ public class RepetitionsWithWeightsTest {
 
     @Test
     void testEquals() {
-        TestRepetitionsWithWeights same = new TestRepetitionsWithWeights(userCode, date, 45, "BodyPump", "Squats", 10, 3, 20);
+        TestRepetitionsWithWeights same =
+            new TestRepetitionsWithWeights(userCode, date, 45, "BodyPump", "Squats", 10, 3, 20);
         assertTrue(activity.equals(same));
         assertTrue(activity.equals(activity));
 
-        TestRepetitionsWithWeights diff = new TestRepetitionsWithWeights(userCode, date, 45, "BodyPump", "Squats", 10, 3, 25);
+        TestRepetitionsWithWeights diff =
+            new TestRepetitionsWithWeights(userCode, date, 45, "BodyPump", "Squats", 10, 3, 25);
         assertFalse(activity.equals(diff));
         assertFalse(activity.equals(null));
     }
@@ -89,9 +92,22 @@ public class RepetitionsWithWeightsTest {
 }
 
 class TestRepetitionsWithWeights extends RepetitionsWithWeights {
-    public TestRepetitionsWithWeights(UUID userCode, MakeItFitDate realizationDate, int expectedDuration,
-                                      String designation, String name, int repetitions, int series, double weight) {
-        super(userCode, realizationDate, expectedDuration, designation, name, repetitions, series, weight);
+    public TestRepetitionsWithWeights(UUID          userCode,
+                                      MakeItFitDate realizationDate,
+                                      int           expectedDuration,
+                                      String        designation,
+                                      String        name,
+                                      int           repetitions,
+                                      int           series,
+                                      double        weight) {
+        super(userCode,
+              realizationDate,
+              expectedDuration,
+              designation,
+              name,
+              repetitions,
+              series,
+              weight);
     }
 
     public TestRepetitionsWithWeights() {
@@ -118,4 +134,3 @@ class TestRepetitionsWithWeights extends RepetitionsWithWeights {
         return new TestRepetitionsWithWeights(this);
     }
 }
-

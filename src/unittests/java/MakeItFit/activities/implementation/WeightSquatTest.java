@@ -1,18 +1,18 @@
 package MakeItFit.activities.implementation;
 
+import java.util.UUID;
+
 import MakeItFit.utils.MakeItFitDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WeightSquatTest {
 
-    private UUID userCode;
+    private UUID          userCode;
     private MakeItFitDate date;
-    private WeightSquat squat;
+    private WeightSquat   squat;
 
     private MakeItFitDate createDate(int year, int month, int day) {
         return MakeItFitDate.of(year, month, day);
@@ -21,8 +21,8 @@ public class WeightSquatTest {
     @BeforeEach
     void setUp() {
         userCode = UUID.randomUUID();
-        date = createDate(2025, 12, 25);
-        squat = new WeightSquat(userCode, date, 30, "Get ready for summer!", "Squat", 10, 3, 50);
+        date     = createDate(2025, 12, 25);
+        squat    = new WeightSquat(userCode, date, 30, "Get ready for summer!", "Squat", 10, 3, 50);
     }
 
     @Test
@@ -53,23 +53,23 @@ public class WeightSquatTest {
 
     @Test
     void testCaloricWasteCalculation() {
-        float index = 0f;
-        int expected = 0;
+        float index    = 0f;
+        int   expected = 0;
         assertEquals(expected, squat.caloricWaste(index));
 
-        index = 1f;
+        index    = 1f;
         expected = (int) (10 * 3 * 50 * 0.2 * index * 0.5);
         assertEquals(expected, squat.caloricWaste(index));
 
-        index = -1f;
+        index    = -1f;
         expected = (int) (10 * 3 * 50 * 0.2 * index * 0.5);
         assertEquals(expected, squat.caloricWaste(index));
 
-        index = Float.MAX_VALUE;
+        index    = Float.MAX_VALUE;
         expected = (int) (10 * 3 * 50 * 0.2 * index * 0.5);
         assertEquals(expected, squat.caloricWaste(index));
 
-        index = Float.MIN_VALUE;
+        index    = Float.MIN_VALUE;
         expected = (int) (10 * 3 * 50 * 0.2 * index * 0.5);
         assertEquals(expected, squat.caloricWaste(index));
     }
@@ -89,7 +89,8 @@ public class WeightSquatTest {
 
     @Test
     void testEquals() {
-        WeightSquat equalSquat = new WeightSquat(userCode, date, 31, "Get ready for summer!", "Squat", 10, 3, 50);
+        WeightSquat equalSquat =
+            new WeightSquat(userCode, date, 31, "Get ready for summer!", "Squat", 10, 3, 50);
         assertTrue(squat.equals(squat));
 
         assertFalse(squat.equals(equalSquat));
@@ -103,5 +104,4 @@ public class WeightSquatTest {
         assertEquals(squat, clone);
         assertNotSame(squat, clone);
     }
-
 }

@@ -1,11 +1,11 @@
 package MakeItFit.activities;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import java.util.UUID;
 
 import MakeItFit.utils.MakeItFitDate;
+import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ActivityTest {
 
@@ -29,9 +29,9 @@ public class ActivityTest {
 
     @Test
     void testParameterizedConstructor() {
-        UUID userCode = UUID.randomUUID();
-        MakeItFitDate date = createDate(2024, 5, 15);
-        TestActivity activity = new TestActivity(userCode, date, 60, "Class", "Dancing");
+        UUID          userCode = UUID.randomUUID();
+        MakeItFitDate date     = createDate(2024, 5, 15);
+        TestActivity  activity = new TestActivity(userCode, date, 60, "Class", "Dancing");
 
         assertEquals(userCode, activity.getUserCode());
         assertEquals(date, activity.getRealizationDate());
@@ -45,7 +45,8 @@ public class ActivityTest {
 
     @Test
     void testCopyConstructor() {
-        TestActivity original = new TestActivity(UUID.randomUUID(), createDate(2024, 5, 15), 60, "Class", "Body Pump");
+        TestActivity original =
+            new TestActivity(UUID.randomUUID(), createDate(2024, 5, 15), 60, "Class", "Body Pump");
         original.setDuration(30);
         original.setCaloricWaste(200);
 
@@ -81,16 +82,20 @@ public class ActivityTest {
     @Test
     void testEquals() {
         MakeItFitDate date = createDate(2024, 5, 15);
-        TestActivity activity1 = new TestActivity(UUID.randomUUID(), date, 60, "Workout", "Pilates");
-        TestActivity activity2 = new TestActivity(UUID.randomUUID(), date, 60, "Workout", "Pilates");
+        TestActivity  activity1 =
+            new TestActivity(UUID.randomUUID(), date, 60, "Workout", "Pilates");
+        TestActivity activity2 =
+            new TestActivity(UUID.randomUUID(), date, 60, "Workout", "Pilates");
 
         assertTrue(activity1.equals(activity1));
         assertTrue(activity1.equals(activity2));
 
-        TestActivity activity3 = new TestActivity(UUID.randomUUID(), date, 30, "Workout", "Pilates");
+        TestActivity activity3 =
+            new TestActivity(UUID.randomUUID(), date, 30, "Workout", "Pilates");
         assertFalse(activity1.equals(activity3));
 
-        TestActivity activity4 = new TestActivity(UUID.randomUUID(), date, 60, "Exercise", "Pilates");
+        TestActivity activity4 =
+            new TestActivity(UUID.randomUUID(), date, 60, "Exercise", "Pilates");
         assertFalse(activity1.equals(activity4));
 
         assertFalse(activity1.equals(new Object()));
@@ -100,10 +105,14 @@ public class ActivityTest {
     void testCompareTo() {
         MakeItFitDate date1 = createDate(2024, 5, 15);
         MakeItFitDate date2 = createDate(2024, 5, 16);
-        TestActivity activity1 = new TestActivity(UUID.randomUUID(), date1, 60, "Workout", "Pilates");
-        TestActivity activity2 = new TestActivity(UUID.randomUUID(), date2, 60, "Workout", "Body Pump");
-        TestActivity activity3 = new TestActivity(UUID.randomUUID(), date1, 30, "Workout", "Pilates");
-        TestActivity activity4 = new TestActivity(UUID.randomUUID(), date1, 60, "Workout", "Body Pump");
+        TestActivity  activity1 =
+            new TestActivity(UUID.randomUUID(), date1, 60, "Workout", "Pilates");
+        TestActivity activity2 =
+            new TestActivity(UUID.randomUUID(), date2, 60, "Workout", "Body Pump");
+        TestActivity activity3 =
+            new TestActivity(UUID.randomUUID(), date1, 30, "Workout", "Pilates");
+        TestActivity activity4 =
+            new TestActivity(UUID.randomUUID(), date1, 60, "Workout", "Body Pump");
 
         assertTrue(activity1.compareTo(activity2) < 0);
         assertTrue(activity2.compareTo(activity1) > 0);
@@ -113,7 +122,8 @@ public class ActivityTest {
 
     @Test
     void testToString() {
-        TestActivity activity = new TestActivity(UUID.randomUUID(), createDate(2024, 5, 15), 60, "Workout", "Biking");
+        TestActivity activity =
+            new TestActivity(UUID.randomUUID(), createDate(2024, 5, 15), 60, "Workout", "Biking");
         activity.setCaloricWaste(300);
 
         String result = activity.toString();
@@ -141,8 +151,11 @@ public class ActivityTest {
     @Test
     void testClone() {
         TestActivity original = new TestActivity(UUID.randomUUID(),
-            createDate(2024, 5, 15), 60, "Class", "Body Combat");
-        TestActivity clone = original.clone();
+                                                 createDate(2024, 5, 15),
+                                                 60,
+                                                 "Class",
+                                                 "Body Combat");
+        TestActivity clone    = original.clone();
 
         assertNotSame(original, clone);
         assertTrue(original.equals(clone));
@@ -171,7 +184,11 @@ class TestActivity extends Activity {
         super.setSpecialization(specialization);
     }
 
-    public TestActivity(UUID userCode, MakeItFitDate realizationDate, int expectedDuration, String designation, String name) {
+    public TestActivity(UUID          userCode,
+                        MakeItFitDate realizationDate,
+                        int           expectedDuration,
+                        String        designation,
+                        String        name) {
         super(userCode, realizationDate, expectedDuration, designation, name);
     }
 

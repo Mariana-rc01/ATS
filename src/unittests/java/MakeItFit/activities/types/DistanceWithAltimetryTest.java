@@ -1,8 +1,8 @@
 package MakeItFit.activities.types;
 
-import MakeItFit.utils.MakeItFitDate;
-
 import java.util.UUID;
+
+import MakeItFit.utils.MakeItFitDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DistanceWithAltimetryTest {
     private TestDistanceWithAltimetry activity;
-    private UUID userCode;
-    private MakeItFitDate date;
+    private UUID                      userCode;
+    private MakeItFitDate             date;
 
     private MakeItFitDate createDate(int year, int month, int day) {
         return MakeItFitDate.of(year, month, day);
@@ -20,9 +20,15 @@ public class DistanceWithAltimetryTest {
     @BeforeEach
     void setUp() {
         userCode = UUID.randomUUID();
-        date = createDate(2024, 5, 15);
-        activity = new TestDistanceWithAltimetry(userCode, date, 90, "Biking", "Bom Jesus Biking",
-                12345.0, 234.0, 200.0);
+        date     = createDate(2024, 5, 15);
+        activity = new TestDistanceWithAltimetry(userCode,
+                                                 date,
+                                                 90,
+                                                 "Biking",
+                                                 "Bom Jesus Biking",
+                                                 12345.0,
+                                                 234.0,
+                                                 200.0);
     }
 
     @Test
@@ -69,13 +75,25 @@ public class DistanceWithAltimetryTest {
 
     @Test
     void testEquals() {
-        TestDistanceWithAltimetry same = new TestDistanceWithAltimetry(userCode, date, 90, "Biking", "Bom Jesus Biking",
-                12345.0, 234.0, 200.0);
+        TestDistanceWithAltimetry same = new TestDistanceWithAltimetry(userCode,
+                                                                       date,
+                                                                       90,
+                                                                       "Biking",
+                                                                       "Bom Jesus Biking",
+                                                                       12345.0,
+                                                                       234.0,
+                                                                       200.0);
         assertTrue(activity.equals(same));
         assertTrue(activity.equals(activity));
 
-        TestDistanceWithAltimetry different = new TestDistanceWithAltimetry(userCode, date, 90, "Biking", "Bom Jesus Biking",
-        12345.0, 700.0, 200.0);
+        TestDistanceWithAltimetry different = new TestDistanceWithAltimetry(userCode,
+                                                                            date,
+                                                                            90,
+                                                                            "Biking",
+                                                                            "Bom Jesus Biking",
+                                                                            12345.0,
+                                                                            700.0,
+                                                                            200.0);
         assertFalse(activity.equals(null));
         assertFalse(activity.equals(different));
     }
@@ -97,10 +115,22 @@ public class DistanceWithAltimetryTest {
 }
 
 class TestDistanceWithAltimetry extends DistanceWithAltimetry {
-    public TestDistanceWithAltimetry(UUID userCode, MakeItFitDate realizationDate, int expectedDuration,
-                                     String designation, String name, double distance,
-                                     double elevationGain, double elevationLoss) {
-        super(userCode, realizationDate, expectedDuration, designation, name, distance, elevationGain, elevationLoss);
+    public TestDistanceWithAltimetry(UUID          userCode,
+                                     MakeItFitDate realizationDate,
+                                     int           expectedDuration,
+                                     String        designation,
+                                     String        name,
+                                     double        distance,
+                                     double        elevationGain,
+                                     double        elevationLoss) {
+        super(userCode,
+              realizationDate,
+              expectedDuration,
+              designation,
+              name,
+              distance,
+              elevationGain,
+              elevationLoss);
     }
 
     public TestDistanceWithAltimetry() {
@@ -113,7 +143,8 @@ class TestDistanceWithAltimetry extends DistanceWithAltimetry {
 
     @Override
     public void calculateCaloricWaste(float index) {
-        int waste = (int) ((getDistance() + getElevationGain() * 2 - getElevationLoss() * 0.5) * index);
+        int waste =
+            (int) ((getDistance() + getElevationGain() * 2 - getElevationLoss() * 0.5) * index);
         setCaloricWaste(waste);
     }
 
@@ -127,4 +158,3 @@ class TestDistanceWithAltimetry extends DistanceWithAltimetry {
         return new TestDistanceWithAltimetry(this);
     }
 }
-
