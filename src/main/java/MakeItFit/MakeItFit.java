@@ -1,14 +1,25 @@
 package MakeItFit;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 import MakeItFit.activities.Activity;
-import MakeItFit.exceptions.*;
-import MakeItFit.queries.*;
-import MakeItFit.trainingPlan.*;
-import MakeItFit.users.*;
+import MakeItFit.exceptions.EntityDoesNotExistException;
+import MakeItFit.exceptions.ExistingEntityConflictException;
+import MakeItFit.exceptions.InvalidTypeException;
+import MakeItFit.queries.QueriesManager;
+import MakeItFit.trainingPlan.TrainingPlan;
+import MakeItFit.trainingPlan.TrainingPlanManager;
+import MakeItFit.users.Gender;
+import MakeItFit.users.User;
+import MakeItFit.users.UserManager;
 import MakeItFit.utils.MakeItFitDate;
 
 /**
@@ -129,7 +140,7 @@ public class MakeItFit implements Serializable {
     public void updateUserName(String name, String email) {
         User user = getUser(email);
         user.setName(name);
-        this.userManager.updateUser(user);
+        // this.userManager.updateUser(user);
     }
 
     /**
@@ -141,7 +152,7 @@ public class MakeItFit implements Serializable {
     public void updateUserAge(int age, String email) {
         User user = getUser(email);
         user.setAge(age);
-        this.userManager.updateUser(user);
+        // this.userManager.updateUser(user);
     }
 
     /**
@@ -153,7 +164,7 @@ public class MakeItFit implements Serializable {
     public void updateUserGender(Gender gender, String email) {
         User user = getUser(email);
         user.setGender(gender);
-        this.userManager.updateUser(user);
+        // this.userManager.updateUser(user);
     }
 
     /**
@@ -165,7 +176,7 @@ public class MakeItFit implements Serializable {
     public void updateUserWeight(float weight, String email) {
         User user = getUser(email);
         user.setWeight(weight);
-        this.userManager.updateUser(user);
+        // this.userManager.updateUser(user);
     }
 
     /**
@@ -177,7 +188,7 @@ public class MakeItFit implements Serializable {
     public void updateUserHeight(int height, String email) {
         User user = getUser(email);
         user.setHeight(height);
-        this.userManager.updateUser(user);
+        // this.userManager.updateUser(user);
     }
 
     /**
@@ -189,7 +200,7 @@ public class MakeItFit implements Serializable {
     public void updateUserBpm(int bpm, String email) {
         User user = getUser(email);
         user.setBpm(bpm);
-        this.userManager.updateUser(user);
+        // this.userManager.updateUser(user);
     }
 
     /**
@@ -201,7 +212,7 @@ public class MakeItFit implements Serializable {
     public void updateUserLevel(int level, String email) {
         User user = getUser(email);
         user.setLevel(level);
-        this.userManager.updateUser(user);
+        // this.userManager.updateUser(user);
     }
 
     /**
@@ -213,7 +224,7 @@ public class MakeItFit implements Serializable {
     public void updateUserAddress(String address, String email) {
         User user = getUser(email);
         user.setAddress(address);
-        this.userManager.updateUser(user);
+        // this.userManager.updateUser(user);
     }
 
     /**
@@ -225,10 +236,12 @@ public class MakeItFit implements Serializable {
     public void updateUserPhone(String phone, String email) {
         User user = getUser(email);
         user.setPhone(phone);
-        this.userManager.updateUser(user);
+        // this.userManager.updateUser(user);
     }
 
     /**
+     * This function was previously incorrect because it relied on updating the user
+     * with the modified email, which could cause issues with user identification.
      * Updates the user's email address.
      *
      * @param email The new email address for the user.
@@ -236,8 +249,9 @@ public class MakeItFit implements Serializable {
      */
     public void updateUserEmail(String email, String newEmail) {
         User user = getUser(email);
+        this.userManager.removeUserByEmail(email);
         user.setEmail(newEmail);
-        this.userManager.updateUser(user);
+        this.userManager.insertUser(user);
     }
 
     /**
