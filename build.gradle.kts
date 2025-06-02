@@ -149,11 +149,15 @@ tasks.register<Exec>("repl") {
     standardInput = System.`in`
 }
 
+tasks.register<Exec>("haddock") {
+    workingDir = file("src/testgen")
+    commandLine = listOf("cabal", "haddock", "--haddock-all")
+}
+
 tasks.register<Exec>("format") {
     workingDir = file(rootDir)
     commandLine = listOf("sh", "-c",
-        "(find src/ -type f -not -path 'src/testgen/*' | xargs -n1 sh -c 'clang-format -i $0; sed -i s/\\\\r//g $0')" +
-        "&&" +
-        "(cd src/testgen && find testgen -type f | xargs -n1 hindent)"
+        "(find src/ -type f -not -path 'src/testgen/*' | xargs -n1 sh -c 'clang-format -i $0; sed -i s/\\\\r//g $0') &&" +
+        "src/testgen/format.sh"
     )
 }
