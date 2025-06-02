@@ -6,15 +6,6 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import MakeItFit.activities.Activity;
 import MakeItFit.activities.implementation.PushUp;
 import MakeItFit.activities.implementation.Running;
@@ -26,6 +17,15 @@ import MakeItFit.trainingPlan.TrainingPlan;
 import MakeItFit.users.Gender;
 import MakeItFit.users.User;
 import MakeItFit.utils.MakeItFitDate;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MakeItFitTest {
 
@@ -613,12 +613,12 @@ public class MakeItFitTest {
         UUID          planCode  = model.createTrainingPlan(userCode, startDate);
 
         Activity activity = new Running(userCode,
-                                         MakeItFitDate.of(2025, 5, 15),
-                                         90,
-                                         "Let's run",
-                                         "Running a lot",
-                                         25000,
-                                         25.0);
+                                        MakeItFitDate.of(2025, 5, 15),
+                                        90,
+                                        "Let's run",
+                                        "Running a lot",
+                                        25000,
+                                        25.0);
 
         model.addActivityToTrainingPlan(planCode, activity, 1);
         model.addActivityToUser("gabriel@outlook.com", activity);
