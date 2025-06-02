@@ -6,6 +6,15 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import MakeItFit.activities.Activity;
 import MakeItFit.activities.implementation.PushUp;
 import MakeItFit.activities.implementation.Running;
@@ -17,15 +26,6 @@ import MakeItFit.trainingPlan.TrainingPlan;
 import MakeItFit.users.Gender;
 import MakeItFit.users.User;
 import MakeItFit.utils.MakeItFitDate;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MakeItFitTest {
 
@@ -641,7 +641,7 @@ public class MakeItFitTest {
     }
 
     @Test
-    void testSaveSystemCreatesFile() throws Exception {
+    void testSaveSystem() throws Exception {
         String fileName = "makeitfit.txt";
 
         model.createUser("Domingos",
@@ -666,7 +666,7 @@ public class MakeItFitTest {
     }
 
     @Test
-    void testSaveSystemThrowsFileNotFoundExceptionWhenInvalidPath() {
+    void testSaveSystemException() {
         ByteArrayOutputStream outContent  = new ByteArrayOutputStream();
         PrintStream           originalOut = System.out;
         System.setOut(new PrintStream(outContent));
@@ -682,7 +682,7 @@ public class MakeItFitTest {
     }
 
     @Test
-    void testLoadSystemRestoresData() throws Exception {
+    void testLoadSystem() throws Exception {
         String fileName = "makeitfit.txt";
 
         model.createUser("Filipa",
@@ -710,7 +710,7 @@ public class MakeItFitTest {
     }
 
     @Test
-    void testLoadSystemThrowsFileNotFoundExceptionWhenFileDoesNotExist() {
+    void testLoadSystemException() {
         String invalidFilePath = "filedoesnotexist.txt";
 
         assertThrows(FileNotFoundException.class, () -> { model.loadSystem(invalidFilePath); });
