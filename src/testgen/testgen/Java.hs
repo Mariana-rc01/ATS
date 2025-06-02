@@ -1,8 +1,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 
-module JavaData
-  ( JavaData(..)
-  ) where
+-- | Java code generation utilities
+module Java (JavaData(..), indent, decorateTest) where
 
 import Data.Char (isAscii, ord)
 import Data.List (intercalate)
@@ -10,12 +9,28 @@ import Numeric (showHex)
 
 -- JavaData definition
 class JavaData a where
-  javaTypeName :: a -> String
-  toJavaExpression :: a -> String
-  toJavaVariable :: String -> a -> String
+  -- | Gets the equivalent Java name for this Haskell type
+  javaTypeName :: a      -- ^ Input value
+               -> String -- ^ Java type name
+
+  -- |
+  -- Creates a Java expression that evaluates to the given value.
+  --
+  -- Example output: @Arrays.asList(1, 2, 3)@
+  toJavaExpression :: a      -- ^ Input value
+                   -> String -- ^ Java expression
+
+  -- |
+  -- Creates a Java variable declaration, where the variable is initialized to the given value
+  --
+  -- Example output: @List<Integer> list = Arrays.asList(1, 2, 3)@
+  toJavaVariable :: String -- ^ Variable name
+                 -> a      -- ^ Input value
+                 -> String -- ^ Java variable declation
   toJavaVariable name obj = javaTypeName obj ++ " " ++ name ++ " = " ++ toJavaExpression obj ++ ";"
 
 -- Basic scalar types
+
 instance JavaData Bool where
   javaTypeName = const "bool"
   toJavaExpression False = "false"
@@ -61,6 +76,7 @@ instance JavaData String where
   toJavaExpression s = "\"" ++ concat (map toJavaCharacter s) ++ "\""
 
 -- Lists
+
 toJavaExpressionList :: JavaData a => [a] -> String
 toJavaExpressionList xs = "Arrays.asList(" ++ intercalate ", " (map toJavaExpression xs) ++ ")"
 
@@ -87,3 +103,25 @@ instance JavaData [Double] where
 instance JavaData [String] where
   javaTypeName = const "List<String>"
   toJavaExpression = toJavaExpressionList
+
+-- Utilities
+
+-- | Indents a sequence of lines with 4 spaces
+indent :: [String] -> [String]
+indent = map ("    " ++)
+
+-- |
+-- Puts the body of a test in a method declaration
+--
+-- Example output:
+--
+-- @
+-- \@Test
+-- void testName() {
+--     testContents
+-- }
+-- @
+decorateTest :: String   -- ^ Name of the test method
+             -> [String] -- ^ Lines constituting the body of the test method
+             -> [String] -- ^ Lines of the test method
+decorateTest name test = concat [["@Test", "void " ++ name ++ "() {"], indent test, ["}"]]
