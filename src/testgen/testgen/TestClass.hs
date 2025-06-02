@@ -4,10 +4,14 @@ import Data.List (intercalate)
 import Java (indent)
 import TestTemplate (TestTemplate(..), generateTestsFromTemplate)
 
+import System.Process (StdStream(CreatePipe), createProcess, proc, std_in, std_out, waitForProcess)
+import System.IO (hClose, hGetContents, hPutStr)
+import Control.Exception (bracket, evaluate)
+
 templates =
   [
-    TestTemplate "BooleanTest" (return ["assertTrue(true)"]) 5
-  , TestTemplate "IntegerTest" (return ["assertEquals(5, 5)"]) 5
+    TestTemplate "BooleanTest" (return ["assertTrue(true);"]) 5
+  , TestTemplate "IntegerTest" (return ["assertEquals(5, 5);"]) 5
   ]
 
 generateTests :: IO [String]
@@ -31,8 +35,28 @@ generateUnformattedTestClass = do
         , ["}"]
         ]
 
+format :: String -> IO String
+format source = do
+  (Just stdin, Just stdout, _, process) <- createProcess
+    (proc "clang-format" ["--assume-filename=MakeItFitTest.java"])
+    { std_in = CreatePipe, std_out = CreatePipe }
+
+  bracket
+    (return ())
+    (\_ -> hClose stdin >> hClose stdout)
+    (\_ -> do
+      hPutStr stdin source
+      hClose stdin
+
+      output <- hGetContents stdout
+      evaluate (length output) -- Force deep strict evaluation
+
+      waitForProcess process
+      return output
+    )
+
 -- | Generates the test class for the applications facade
 generateTestClass :: IO String
 generateTestClass = do
   lines <- generateUnformattedTestClass
-  return $ unlines lines
+  format $ unlines lines
