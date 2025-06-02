@@ -6,6 +6,15 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import MakeItFit.activities.Activity;
 import MakeItFit.activities.implementation.PushUp;
 import MakeItFit.activities.implementation.Running;
@@ -17,15 +26,6 @@ import MakeItFit.trainingPlan.TrainingPlan;
 import MakeItFit.users.Gender;
 import MakeItFit.users.User;
 import MakeItFit.utils.MakeItFitDate;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MakeItFitTest {
 
@@ -612,8 +612,18 @@ public class MakeItFitTest {
         MakeItFitDate startDate = new MakeItFitDate();
         UUID          planCode  = model.createTrainingPlan(userCode, startDate);
 
-        Activity activity = new PushUp();
+        Activity activity = new Running(userCode,
+                                         MakeItFitDate.of(2025, 5, 15),
+                                         90,
+                                         "Let's run",
+                                         "Running a lot",
+                                         25000,
+                                         25.0);
+
         model.addActivityToTrainingPlan(planCode, activity, 1);
+        model.addActivityToUser("gabriel@outlook.com", activity);
+
+        assertEquals(27.98457, model.getUser(userCode).getIndex(), 0.001);
 
         MakeItFitDate newDate = startDate.plusDays(7);
         model.updateSystem(newDate, userCode);
@@ -623,8 +633,11 @@ public class MakeItFitTest {
 
         assertFalse(activities.isEmpty());
 
-        Activity addedActivity = activities.get(0);
-        assertTrue(addedActivity.getCaloricWaste() == 0);
+        Activity addedActivity1 = activities.get(0);
+        Activity addedActivity2 = activities.get(1);
+        assertEquals(87451, addedActivity1.getCaloricWaste());
+        assertEquals(87451, addedActivity2.getCaloricWaste());
+        assertEquals(27.98457, userAfter.getIndex(), 0.001);
     }
 
     @Test
