@@ -11,7 +11,7 @@ author: Humberto Gomes <a104348@alunos.uminho.pt>
 
 executable testgen
     main-is: Main.hs
-    other-modules: JavaData
+    other-modules: Java, TestClass, TestTemplate
 
     build-depends:    base >= 4.15.1.0 && < 5, QuickCheck >= 2.15.0.1
     hs-source-dirs:   testgen
