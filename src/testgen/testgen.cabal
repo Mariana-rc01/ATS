@@ -1,7 +1,7 @@
 cabal-version: 2.4
 
 name:     testgen
-version:  0.1
+version:  0.0.0.1
 synopsis: Business layer facade test generator
 license:  Apache-2.0
 
