@@ -14,5 +14,19 @@
 
 module Main where
 
+import Java (runJava)
+import System.Environment (getArgs)
+import System.Exit (ExitCode(ExitFailure), exitWith)
+import System.IO (hPutStrLn, stderr)
+import TestClass (generateTestClass)
+
 main :: IO ()
-main = putStrLn "Hello, Haskell!"
+main = do
+  args <- getArgs
+  case args of
+    [file] -> do
+      test <- generateTestClass
+      writeFile file test
+    _ -> do
+      hPutStrLn stderr "Usage: cabal run testgen -- OutputFile.java"
+      exitWith (ExitFailure 1)

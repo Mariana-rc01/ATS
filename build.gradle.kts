@@ -112,8 +112,11 @@ pitest {
 // Test generation
 
 tasks.register<Exec>("generateQuickCheckTests") {
+    File("src/facadetests/java/MakeItFit").mkdirs()
+    dependsOn(tasks.jar)
     workingDir = file("src/testgen")
-    commandLine = listOf("cabal", "run")
+    commandLine =
+        listOf("cabal", "run", "testgen", "--", "../facadetests/java/MakeItFit/MakeItFitTest.java")
 }
 
 tasks.register<JavaExec>("generateEvoSuiteTests") {
@@ -139,11 +142,21 @@ tasks.register<JavaExec>("generateEvoSuiteTests") {
 
 // Other tasks
 
+tasks.named<Task>("build") {
+    finalizedBy(tasks.named<Task>("buildHaskell"))
+}
+
+tasks.register<Exec>("buildHaskell") {
+    workingDir = file("src/testgen")
+    commandLine = listOf("cabal", "build")
+}
+
 tasks.named<JavaExec>("run") {
     standardInput = System.`in`
 }
 
 tasks.register<Exec>("repl") {
+    dependsOn(tasks.jar)
     workingDir = file("src/testgen")
     commandLine = listOf("cabal", "repl")
     standardInput = System.`in`

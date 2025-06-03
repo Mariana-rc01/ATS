@@ -13,12 +13,13 @@
 -- limitations under the License.
 
 module FacadeTemplates (
-    equalityTemplate
+    equalityTemplate,
+    emailTemplate
   ) where
 
-import Java (assertEquals, toJavaExpression)
-import TestTemplate (TestTemplate, genToTestTemplate)
-import Test.QuickCheck (Gen, arbitrary)
+import Java (assertEquals, runJava, toJavaExpression)
+import TestTemplate (TestTemplate(..), genToTestTemplate)
+import Test.QuickCheck (Gen, arbitrary, elements, generate, listOf)
 
 equalityTestGenerator :: Gen [String]
 equalityTestGenerator = do
@@ -32,3 +33,25 @@ equalityTestGenerator = do
 
 equalityTemplate :: TestTemplate
 equalityTemplate = genToTestTemplate "equals" equalityTestGenerator 3
+
+genEmail :: Gen String
+genEmail = do
+  before <- listOf $ elements (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'])
+  after <- listOf $ elements (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'])
+  return $ before ++ "@" ++ after ++ ".com"
+
+emailTestGenerator :: IO [String]
+emailTestGenerator = do
+  email <- generate $ genEmail
+  resultLines <- runJava
+    [
+      "import MakeItFit.utils.EmailValidator;"
+    , "System.out.println(EmailValidator.isValidEmail(" ++ toJavaExpression email ++ "));"
+    ]
+  return
+    [
+      assertEquals (toJavaExpression email) (last resultLines)
+    ]
+
+emailTemplate :: TestTemplate
+emailTemplate = TestTemplate "validEmail" emailTestGenerator 1

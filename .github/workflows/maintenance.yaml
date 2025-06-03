@@ -21,7 +21,7 @@ jobs:
                    sudo bash ./llvm.sh 19                                            &&
                    (sudo rm /usr/bin/clang-format || exit 0)                         &&
                    sudo apt -y install clang-format-19
-            - run: gradle format
+            - run: gradle --no-daemon format
 
     build:
         timeout-minutes: 10
@@ -33,4 +33,4 @@ jobs:
                   java-version: '21'
                   distribution: 'temurin'
 
-            - run: ./gradlew --no-daemon build
+            - run: cabal update && ./gradlew --no-daemon build
