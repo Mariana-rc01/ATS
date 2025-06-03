@@ -26,10 +26,11 @@ import FacadeTemplates
 
 templates =
   [
-    equalityTemplate,
     getActivitiesFromUserTemplate,
     addActivityToUserTemplate,
-    removeActivityFromUserTemplate
+    removeActivityFromUserTemplate,
+    createTrainingPlanTemplate,
+    createTrainingPlanExceptionTemplate
   ]
 
 generateTests :: IO [String]

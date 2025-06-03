@@ -17,10 +17,12 @@ module FacadeTemplates (
     emailTemplate,
     getActivitiesFromUserTemplate,
     addActivityToUserTemplate,
-    removeActivityFromUserTemplate
+    removeActivityFromUserTemplate,
+    createTrainingPlanTemplate,
+    createTrainingPlanExceptionTemplate
   ) where
 
-import Java (assertEquals, assertTrue, runJava, toJavaExpression, toJavaExpressionList, JavaData (toJavaExpression))
+import Java (assertEquals, assertTrue, runJava, toJavaExpression, toJavaExpressionList, JavaData (toJavaExpression), assertThrows)
 import TestTemplate (TestTemplate(..), genToTestTemplate)
 import Test.QuickCheck (Gen, arbitrary, elements, generate, listOf, Arbitrary (arbitrary))
 import Generators
@@ -62,7 +64,7 @@ emailTestGenerator = do
 emailTemplate :: TestTemplate
 emailTemplate = TestTemplate "validEmail" emailTestGenerator 1
 
--- getActivitiesFromUser
+-- getActivitiesFromUser -> needs a throws Exception
 userEmail :: User -> String
 userEmail (Amateur _ _ _ _ _ _ _ _ _ email _)         = email
 userEmail (Occasional _ _ _ _ _ _ _ _ _ email _ _)    = email
@@ -88,7 +90,7 @@ getActivitiesFromUserTestGenerator = do
   let emailNoSpaces = filter (/= ' ') email
   let userVarName = "user"
   let setupLine = "MakeItFit model = new MakeItFit();"
-  let userLine = "model.create(" ++ toJavaExpression user ++ ")"
+  let userLine = "model.create(" ++ toJavaCreateUserArgs user ++ ");"
   let userCodeLine = "UUID userCode = model.getUser(" ++ toJavaExpression email ++ ").getCode();"
   let activitiesVar = "activities"
   let activitiesDecl = "List<Activity> " ++ activitiesVar ++ " = Arrays.asList(" ++ intercalate ", " (map toJavaExpression (activities)) ++ ");"
@@ -99,7 +101,7 @@ getActivitiesFromUserTestGenerator = do
 getActivitiesFromUserTemplate :: TestTemplate
 getActivitiesFromUserTemplate = genToTestTemplate "getActivitiesFromUserTest" getActivitiesFromUserTestGenerator 1
 
--- addActivityToUser
+-- addActivityToUser -> needs a throws Exception
 addActivityToUserTestGenerator :: Gen [String]
 addActivityToUserTestGenerator = do
   user <- arbitrary :: Gen User
@@ -109,7 +111,7 @@ addActivityToUserTestGenerator = do
   let emailNoSpaces = filter (/= ' ') email
   let userVarName = "user"
   let setupLine = "MakeItFit model = new MakeItFit();"
-  let userLine = "model.create(" ++ toJavaExpression user ++ ")"
+  let userLine = "model.create(" ++ toJavaCreateUserArgs user ++ ");"
   let userCodeLine = "UUID userCode = model.getUser(" ++ toJavaExpression email ++ ").getCode();"
   let activitiesVar = "activities"
   let activitiesDecl = "List<Activity> " ++ activitiesVar ++ " = Arrays.asList(" ++ intercalate ", " (map toJavaExpression activities) ++ ");"
@@ -123,7 +125,7 @@ addActivityToUserTestGenerator = do
 addActivityToUserTemplate :: TestTemplate
 addActivityToUserTemplate = genToTestTemplate "addActivityToUserTest" addActivityToUserTestGenerator 1
 
--- removeActivityFromUser
+-- removeActivityFromUser -> needs a throws Exception
 removeActivityFromUserTestGenerator :: Gen [String]
 removeActivityFromUserTestGenerator = do
   user <- arbitrary :: Gen User
@@ -132,7 +134,7 @@ removeActivityFromUserTestGenerator = do
   let activities = map (userCodeActivity "userCode") (userActivities user)
   let emailNoSpaces = filter (/= ' ') email
   let setupLine = "MakeItFit model = new MakeItFit();"
-  let userLine = "model.create(" ++ toJavaExpression user ++ ");"
+  let userLine = "model.create(" ++ toJavaCreateUserArgs user ++ ");"
   let userCodeLine = "UUID userCode = model.getUser(" ++ toJavaExpression email ++ ").getCode();"
   let activitiesVar = "activities"
   let activitiesDecl = "List<Activity> " ++ activitiesVar ++ " = Arrays.asList(" ++ intercalate ", " (map toJavaExpression activities) ++ ");"
@@ -156,3 +158,47 @@ removeActivityFromUserTestGenerator = do
 
 removeActivityFromUserTemplate :: TestTemplate
 removeActivityFromUserTemplate = genToTestTemplate "removeActivityFromUserTest" removeActivityFromUserTestGenerator 1
+
+-- createTrainingPlan -> needs a throws Exception
+createTrainingPlanTestGenerator :: Gen [String]
+createTrainingPlanTestGenerator = do
+  user <- arbitrary :: Gen User
+  let email = userEmail user
+  date <- arbitrary :: Gen MakeItFitDate
+  let setupLine = "MakeItFit model = new MakeItFit();"
+  let userLine = "model.create(" ++ toJavaCreateUserArgs user ++ ");"
+  let userCodeLine = "UUID userCode = model.getUser(" ++ toJavaExpression email ++ ").getCode();"
+  let dateLine = "MakeItFitDate startDate = " ++ toJavaExpression date ++ ";"
+  let planCodeLine = "UUID planCode = model.createTrainingPlan(userCode, startDate);"
+  let assertLine = "assertNotNull(planCode);"
+  return
+    [ setupLine
+    , userLine
+    , userCodeLine
+    , dateLine
+    , planCodeLine
+    , assertLine
+    ]
+
+createTrainingPlanTemplate :: TestTemplate
+createTrainingPlanTemplate = genToTestTemplate "createTrainingPlanTest" createTrainingPlanTestGenerator 1
+
+createTrainingPlanExceptionTestGenerator :: Gen [String]
+createTrainingPlanExceptionTestGenerator = do
+  user <- arbitrary :: Gen User
+  let email = userEmail user
+  date <- arbitrary :: Gen MakeItFitDate
+  let setupLine = "MakeItFit model = new MakeItFit();"
+  let userLine = "model.create(" ++ toJavaCreateUserArgs user ++ ");"
+  let userCodeLine = "UUID userCode = model.getUser(" ++ toJavaExpression email ++ ").getCode();"
+  let planCodeLine = "UUID planCode = model.createTrainingPlan(userCode, null);"
+  let assertThrowsLines = assertThrows "IllegalArgumentException" ["model.createTrainingPlan(userCode, null);"]
+  return
+    ([ setupLine
+     , userLine
+     , userCodeLine
+     , planCodeLine
+     ] ++ assertThrowsLines)
+
+createTrainingPlanExceptionTemplate :: TestTemplate
+createTrainingPlanExceptionTemplate = genToTestTemplate "createTrainingPlanExceptionTest" createTrainingPlanExceptionTestGenerator 1

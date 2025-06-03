@@ -22,7 +22,8 @@ module Generators
   , Activity(..)
   , TrainingPlan(..)
   , genActivity
-  , genTrainingPlan
+  , genTrainingPlan,
+  toJavaCreateUserArgs
   ) where
 
 import Data.List (intercalate)
@@ -223,6 +224,50 @@ instance JavaData User where
         Amateur      _ _ _ _ _ _ _ _ _ _   activities -> activities
         Occasional   _ _ _ _ _ _ _ _ _ _ _ activities -> activities
         Professional _ _ _ _ _ _ _ _ _ _ _ activities -> activities
+
+toJavaCreateUserArgs :: User -> String
+toJavaCreateUserArgs (Amateur name age gender weight height bpm level address phone email _) =
+  intercalate ", " [ toJavaExpression name
+                   , toJavaExpression age
+                   , toJavaExpression gender
+                   , toJavaExpression weight
+                   , toJavaExpression height
+                   , toJavaExpression bpm
+                   , toJavaExpression level
+                   , toJavaExpression address
+                   , toJavaExpression phone
+                   , toJavaExpression email
+                   , "0"  -- valor default para frequency
+                   , "\"Amateur\""
+                   ]
+toJavaCreateUserArgs (Occasional name age gender weight height bpm level address phone email freq _) =
+  intercalate ", " [ toJavaExpression name
+                   , toJavaExpression age
+                   , toJavaExpression gender
+                   , toJavaExpression weight
+                   , toJavaExpression height
+                   , toJavaExpression bpm
+                   , toJavaExpression level
+                   , toJavaExpression address
+                   , toJavaExpression phone
+                   , toJavaExpression email
+                   , toJavaExpression freq
+                   , "\"Occasional\""
+                   ]
+toJavaCreateUserArgs (Professional name age gender weight height bpm level address phone email freq _) =
+  intercalate ", " [ toJavaExpression name
+                   , toJavaExpression age
+                   , toJavaExpression gender
+                   , toJavaExpression weight
+                   , toJavaExpression height
+                   , toJavaExpression bpm
+                   , toJavaExpression level
+                   , toJavaExpression address
+                   , toJavaExpression phone
+                   , toJavaExpression email
+                   , toJavaExpression freq
+                   , "\"Professional\""
+                   ]
 
 -- | A MakeItFit date (YYYY/MM/DD)
 data MakeItFitDate = MakeItFitDate Int Int Int deriving (Show, Eq, Ord)
