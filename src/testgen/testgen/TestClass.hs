@@ -39,8 +39,12 @@ generateUnformattedTestClass = do
   tests <- generateTests
   return
     $ concat
-        [ [ "import java.util.Arrays;"
+        [ [ "package MakeItFit;"
+          , ""
+          , "import java.util.Arrays;"
           , "import java.util.List;"
+          , "import org.junit.jupiter.api.Test;"
+          , "import static org.junit.jupiter.api.Assertions.*;"
           , ""
           , "import MakeItFit.users.User;"
           , ""
