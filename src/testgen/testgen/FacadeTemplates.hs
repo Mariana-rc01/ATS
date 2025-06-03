@@ -16,7 +16,8 @@ module FacadeTemplates (
     equalityTemplate,
     emailTemplate,
     getActivitiesFromUserTemplate,
-    addActivityToUserTemplate
+    addActivityToUserTemplate,
+    removeActivityFromUserTemplate
   ) where
 
 import Java (assertEquals, assertTrue, runJava, toJavaExpression, toJavaExpressionList, JavaData (toJavaExpression))
@@ -121,3 +122,37 @@ addActivityToUserTestGenerator = do
 
 addActivityToUserTemplate :: TestTemplate
 addActivityToUserTemplate = genToTestTemplate "addActivityToUserTest" addActivityToUserTestGenerator 1
+
+-- removeActivityFromUser
+removeActivityFromUserTestGenerator :: Gen [String]
+removeActivityFromUserTestGenerator = do
+  user <- arbitrary :: Gen User
+  let email = userEmail user
+  let activitiesLen = length (userActivities user)
+  let activities = map (userCodeActivity "userCode") (userActivities user)
+  let emailNoSpaces = filter (/= ' ') email
+  let setupLine = "MakeItFit model = new MakeItFit();"
+  let userLine = "model.create(" ++ toJavaExpression user ++ ");"
+  let userCodeLine = "UUID userCode = model.getUser(" ++ toJavaExpression email ++ ").getCode();"
+  let activitiesVar = "activities"
+  let activitiesDecl = "List<Activity> " ++ activitiesVar ++ " = Arrays.asList(" ++ intercalate ", " (map toJavaExpression activities) ++ ");"
+  let forAddLine = "for (Activity a : " ++ activitiesVar ++ ") model.addActivityToUser(" ++ toJavaExpression emailNoSpaces ++ ", a);"
+  let activityIdsVar = "activityIds"
+  let activityIdsDecl = "List<UUID> " ++ activityIdsVar ++ " = new java.util.ArrayList<>();"
+  let forGetIdLine = "for (Activity a : " ++ activitiesVar ++ ") " ++ activityIdsVar ++ ".add(a.getCode());"
+  let forRemoveLine = "for (UUID activityId : " ++ activityIdsVar ++ ") model.removeActivityFromUser(" ++ toJavaExpression emailNoSpaces ++ ", activityId);"
+  let testLine = assertEquals ("getActivitiesFromUser(\"" ++ emailNoSpaces ++ "\").size()") "0"
+  return
+    [ setupLine
+    , userLine
+    , userCodeLine
+    , activitiesDecl
+    , forAddLine
+    , activityIdsDecl
+    , forGetIdLine
+    , forRemoveLine
+    , testLine
+    ]
+
+removeActivityFromUserTemplate :: TestTemplate
+removeActivityFromUserTemplate = genToTestTemplate "removeActivityFromUserTest" removeActivityFromUserTestGenerator 1

@@ -28,7 +28,8 @@ templates =
   [
     equalityTemplate,
     getActivitiesFromUserTemplate,
-    addActivityToUserTemplate
+    addActivityToUserTemplate,
+    removeActivityFromUserTemplate
   ]
 
 generateTests :: IO [String]
