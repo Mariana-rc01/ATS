@@ -42,21 +42,37 @@ public class MostDoneActivity implements Serializable {
                 }
             }
         }
+
         int maxIndex = max(count);
-        return switch (maxIndex) {
-            case 0 -> "DistanceWithAltimetry";
-            case 1 -> "Distance";
+        String mostDoneActivity;
+        switch (maxIndex) {
+            case 0:
+                mostDoneActivity = "DistanceWithAltimetry";
+                break;
+            case 1:
+                mostDoneActivity = "Distance";
+                break;
             /* fails testExecuteQuerySingleUserReturnsRepetitions/RepetitionsWithWeights
-            case 2 -> "Repetitions";
-            default -> "RepetitionsWithWeights";
+            case 2:
+                mostDoneActivity = "Repetitions";
+                break;
+            case 3:
+                mostDoneActivity = "RepetitionsWithWeights";
+                break;
             */
-            case 2 -> "RepetitionsWithWeights";
-            default ->
-                "Repetitions";
-                /* Would never be reached (dead code)
-                default -> "No activities";
-                */
+            case 2:
+                mostDoneActivity = "RepetitionsWithWeights";
+                break;
+            default:
+                mostDoneActivity = "Repetitions";
+                break;
+            /* Would never be reached (dead code)
+            default:
+                mostDoneActivity = "No activities";
+                break;
+            */
         };
+        return mostDoneActivity;
     }
 
     /**
