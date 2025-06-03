@@ -51,10 +51,11 @@ public class MostDoneActivity implements Serializable {
             default -> "RepetitionsWithWeights";
             */
             case 2 -> "RepetitionsWithWeights";
-            default -> "Repetitions";
-            /* Would never be reached (dead code)
-            default -> "No activities";
-            */
+            default ->
+                "Repetitions";
+                /* Would never be reached (dead code)
+                default -> "No activities";
+                */
         };
     }
 

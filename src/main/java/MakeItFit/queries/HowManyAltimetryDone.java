@@ -45,8 +45,7 @@ public class HowManyAltimetryDone implements Serializable {
                 }
                 */
 
-                if (a instanceof DistanceWithAltimetry &&
-                    a.getRealizationDate().isAfter(date1) &&
+                if (a instanceof DistanceWithAltimetry && a.getRealizationDate().isAfter(date1) &&
                     date2.isAfter(a.getRealizationDate())) {
 
                     altimetry += ((DistanceWithAltimetry) a).getElevationGain() +

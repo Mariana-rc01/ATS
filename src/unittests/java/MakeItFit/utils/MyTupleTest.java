@@ -1,5 +1,3 @@
 package MakeItFit.utils;
 
-public class MyTupleTest {
-
-}
+public class MyTupleTest {}
