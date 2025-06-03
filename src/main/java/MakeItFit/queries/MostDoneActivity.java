@@ -46,9 +46,15 @@ public class MostDoneActivity implements Serializable {
         return switch (maxIndex) {
             case 0 -> "DistanceWithAltimetry";
             case 1 -> "Distance";
+            /* fails testExecuteQuerySingleUserReturnsRepetitions/RepetitionsWithWeights
             case 2 -> "Repetitions";
-            case 3 -> "RepetitionsWithWeights";
+            default -> "RepetitionsWithWeights";
+            */
+            case 2 -> "RepetitionsWithWeights";
+            default -> "Repetitions";
+            /* Would never be reached (dead code)
             default -> "No activities";
+            */
         };
     }
 
