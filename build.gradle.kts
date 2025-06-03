@@ -142,6 +142,15 @@ tasks.register<JavaExec>("generateEvoSuiteTests") {
 
 // Other tasks
 
+tasks.named<Task>("build") {
+    finalizedBy(tasks.named<Task>("buildHaskell"))
+}
+
+tasks.register<Exec>("buildHaskell") {
+    workingDir = file("src/testgen")
+    commandLine = listOf("cabal", "build")
+}
+
 tasks.named<JavaExec>("run") {
     standardInput = System.`in`
 }
