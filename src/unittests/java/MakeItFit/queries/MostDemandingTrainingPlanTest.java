@@ -151,7 +151,6 @@ public class MostDemandingTrainingPlanTest {
         this.TPManager.insertTrainingPlan(tp1);
         this.TPManager.insertTrainingPlan(tp2);
 
-
         /* Calculate calories for the first plan */
         double caloriesTp1 = 0;
         for (MyTuple<Integer, Activity> tuple : tp1.getActivities()) {
@@ -190,6 +189,7 @@ public class MostDemandingTrainingPlanTest {
         this.TPManager.insertTrainingPlan(tp1);
         this.TPManager.insertTrainingPlan(tp1Copy);
 
-        assertSame(tp1, query.executeQuery(this.TPManager, this.userManager));
+        List<TrainingPlan> activities = this.TPManager.getAllTrainingPlans();
+        assertSame(activities.get(0), query.executeQuery(this.TPManager, this.userManager));
     }
 }

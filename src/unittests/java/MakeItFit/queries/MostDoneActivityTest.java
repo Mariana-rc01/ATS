@@ -2,7 +2,6 @@ package MakeItFit.queries;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.rmi.server.UID;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -15,11 +14,13 @@ import MakeItFit.activities.implementation.PushUp;
 import MakeItFit.activities.implementation.Running;
 import MakeItFit.activities.implementation.Trail;
 import MakeItFit.activities.implementation.WeightSquat;
+import MakeItFit.trainingPlan.TrainingPlan;
 import MakeItFit.users.Gender;
 import MakeItFit.users.User;
 import MakeItFit.users.UserManager;
 import MakeItFit.users.types.Professional;
 import MakeItFit.utils.MakeItFitDate;
+import MakeItFit.utils.MyTuple;
 
 public class MostDoneActivityTest {
 
@@ -31,7 +32,7 @@ public class MostDoneActivityTest {
     private Trail trail;
     private WeightSquat weightSquat;
 
-    private User createUser(List<Activity> activities) {
+    private User createUser(String email, List<Activity> activities) {
         User user = new Professional(
             "JohnDoe",
             21,
@@ -42,7 +43,7 @@ public class MostDoneActivityTest {
             6,
             "Lloyd",
             "987 123 432",
-            "jd@suspect.pt",
+            email,
             7
         );
 
@@ -101,21 +102,26 @@ public class MostDoneActivityTest {
         assertEquals("DistanceWithAltimetry", this.query.executeQuery(this.userManager));
     }
 
+    private TrainingPlan createTrainingPlan(UUID code, List<MyTuple<Integer, Activity>> activities) {
+        TrainingPlan tl = new TrainingPlan(
+            code,
+            MakeItFitDate.of(2000, 1, 1)
+        );
+
+        for (MyTuple<Integer, Activity> activity : activities) {
+            tl.addActivity(activity.getItem1(), activity.getItem2());
+        }
+
+        return tl;
+    }
+
     @Test
     void testExecuteQuerySingleUserReturnsRepetitions() {
-        User user = createUser(Arrays.asList(
-            this.pushUp,
-            this.pushUp,
+        User user = createUser("jd@uminho.pt", Arrays.asList(
             this.pushUp,
             this.pushUp,
             this.running,
-            this.running,
             this.trail,
-            this.trail,
-            this.trail,
-            this.weightSquat,
-            this.weightSquat,
-            this.weightSquat,
             this.weightSquat
         ));
         this.userManager.insertUser(user);
@@ -124,11 +130,56 @@ public class MostDoneActivityTest {
     }
 
     @Test
+    void testExecuteQuerySingleUserReturnsDistance() {
+        User user = createUser("jd@uminho.pt", Arrays.asList(
+            this.pushUp,
+            this.running,
+            this.running,
+            this.trail,
+            this.weightSquat
+        ));
+        this.userManager.insertUser(user);
+
+        assertEquals("Distance", this.query.executeQuery(this.userManager));
+    }
+
+    @Test
+    void testExecuteQuerySingleUserReturnsDistanceWithAltimetry() {
+        User user = createUser("jd@uminho.pt", Arrays.asList(
+            this.pushUp,
+            this.running,
+            this.trail,
+            this.trail,
+            this.weightSquat
+        ));
+        this.userManager.insertUser(user);
+
+        assertEquals("DistanceWithAltimetry", this.query.executeQuery(this.userManager));
+    }
+
+    @Test
+    void testExecuteQuerySingleUserReturnsRepetitionsWithWeights() {
+        User user = createUser("jd@uminho.pt", Arrays.asList(
+            this.pushUp,
+            this.running,
+            this.trail,
+            this.weightSquat,
+            this.weightSquat
+        ));
+        this.userManager.insertUser(user);
+
+        assertEquals("RepetitionsWithWeights", this.query.executeQuery(this.userManager));
+    }
+
+    @Test
     void testExecuteQueryMultipleUsersReturnsDistance() {
-        User user1 = createUser(Arrays.asList(this.pushUp, this.pushUp));
-        User user2 = createUser(Arrays.asList(this.trail));
-        User user3 = createUser(Arrays.asList(this.running, this.running, this.running));
-        User user4 = createUser(Arrays.asList(this.weightSquat, this.weightSquat));
+        User user1 = createUser("jd@suspect.pt", Arrays.asList(this.pushUp, this.pushUp));
+        User user2 = createUser("jd@uminho.pt", Arrays.asList(this.trail));
+        User user3 = createUser("jd@eb23.pt", Arrays.asList(this.weightSquat, this.weightSquat));
+        User user4 = createUser(
+            "jd@vice.pt",
+            Arrays.asList(this.running, this.running, this.running)
+        );
 
         this.userManager.insertUser(user1);
         this.userManager.insertUser(user2);
@@ -137,38 +188,4 @@ public class MostDoneActivityTest {
 
         assertEquals("Distance", this.query.executeQuery(this.userManager));
     }
-
-    /*
-    @Test
-    @DisplayName("Tie between 'Repetitions' and 'Distance' → returns 'DistanceWithAltimetry'? No: check exact index mapping")
-    void testExecuteQuery_tieBetweenTwoCategories() {
-        // Arrange: Build two users leading to a tie between index 1 (Distance) and index 3 (Repetitions)
-        User uA = mock(User.class);
-        Distance dA1 = new Distance( ... );
-        Distance dA2 = new Distance( ... );
-        when(uA.getListActivities()).thenReturn(Arrays.asList(dA1, dA2));                // :contentReference[oaicite:16]{index=16}
-
-        User uB = mock(User.class);
-        Repetitions rB1 = new Repetitions( ... );
-        Repetitions rB2 = new Repetitions( ... );
-        when(uB.getListActivities()).thenReturn(Arrays.asList(rB1, rB2));                // :contentReference[oaicite:17]{index=17}
-
-        when(mockUserManager.getAllUsers())
-            .thenReturn(Arrays.asList(uA, uB));                                          // :contentReference[oaicite:18]{index=18}
-
-        // Counts:
-        //   DistanceWithAltimetry = 0
-        //   Distance = 2
-        //   RepetitionsWithWeights = 0
-        //   Repetitions = 2
-        //   → maxIndices = {1, 3} tied at 2. Since max(...) picks the first occurrence of the maximum, index 1 (“Distance”) is returned.
-
-        // Act
-        String result = queryService.executeQuery(mockUserManager);
-
-        // Assert: “Distance” should be returned because index 1 (Distance) appears before index 3 (Repetitions) in the tie
-        assertEquals("Distance", result,
-            "Tie between Distance and Repetitions → Distance (index 1) should win because it appears first"); // :contentReference[oaicite:19]{index=19}
-    }
-    */
 }
