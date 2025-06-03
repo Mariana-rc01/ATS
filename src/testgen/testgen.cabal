@@ -23,4 +23,4 @@ executable testgen
     build-depends:
         base >=4.15.1.0 && <5,
         QuickCheck ^>=2.15.0.1,
-        process ^>=1.6.26.1
+        process ^>=1.6.25.0
