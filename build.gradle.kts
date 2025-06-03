@@ -158,6 +158,6 @@ tasks.register<Exec>("format") {
     workingDir = file(rootDir)
     commandLine = listOf("sh", "-c",
         "(find src/ -type f -not -path 'src/testgen/*' | xargs -n1 sh -c 'clang-format -i $0; sed -i s/\\\\r//g $0') &&" +
-        "src/testgen/format.sh"
+        "(cd src/testgen && ./format.sh)"
     )
 }

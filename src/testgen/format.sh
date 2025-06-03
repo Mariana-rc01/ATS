@@ -20,6 +20,8 @@ grep_error_message() {
     sed -r "s/^([^:]*):([^:]*):.*$/\1:\2: $1/g"
 }
 
+cabal format || exit 1
+
 # shellcheck disable=SC2266
 find . -type f -name "*.hs" | while IFS="" read -r file; do
     grep -PHn '.{101,}$' "$file" | grep_error_message "Column exceeds 100 characters"
