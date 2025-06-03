@@ -14,13 +14,11 @@ import MakeItFit.activities.implementation.PushUp;
 import MakeItFit.activities.implementation.Running;
 import MakeItFit.activities.implementation.Trail;
 import MakeItFit.activities.implementation.WeightSquat;
-import MakeItFit.trainingPlan.TrainingPlan;
 import MakeItFit.users.Gender;
 import MakeItFit.users.User;
 import MakeItFit.users.UserManager;
 import MakeItFit.users.types.Professional;
 import MakeItFit.utils.MakeItFitDate;
-import MakeItFit.utils.MyTuple;
 
 public class MostDoneActivityTest {
 
@@ -100,19 +98,6 @@ public class MostDoneActivityTest {
     @Test
     void testExecuteQueryNoUsers() {
         assertEquals("DistanceWithAltimetry", this.query.executeQuery(this.userManager));
-    }
-
-    private TrainingPlan createTrainingPlan(UUID code, List<MyTuple<Integer, Activity>> activities) {
-        TrainingPlan tl = new TrainingPlan(
-            code,
-            MakeItFitDate.of(2000, 1, 1)
-        );
-
-        for (MyTuple<Integer, Activity> activity : activities) {
-            tl.addActivity(activity.getItem1(), activity.getItem2());
-        }
-
-        return tl;
     }
 
     @Test
