@@ -30,7 +30,9 @@ templates =
     addActivityToUserTemplate,
     removeActivityFromUserTemplate,
     createTrainingPlanTemplate,
-    createTrainingPlanExceptionTemplate
+    createTrainingPlanExceptionTemplate,
+    constructTrainingPlanTemplate,
+    constructTrainingPlanExceptionTemplate
   ]
 
 generateTests :: IO [String]

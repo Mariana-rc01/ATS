@@ -19,7 +19,9 @@ module FacadeTemplates (
     addActivityToUserTemplate,
     removeActivityFromUserTemplate,
     createTrainingPlanTemplate,
-    createTrainingPlanExceptionTemplate
+    createTrainingPlanExceptionTemplate,
+    constructTrainingPlanTemplate,
+    constructTrainingPlanExceptionTemplate
   ) where
 
 import Java (assertEquals, assertTrue, runJava, toJavaExpression, toJavaExpressionList, JavaData (toJavaExpression), assertThrows)
@@ -202,3 +204,44 @@ createTrainingPlanExceptionTestGenerator = do
 
 createTrainingPlanExceptionTemplate :: TestTemplate
 createTrainingPlanExceptionTemplate = genToTestTemplate "createTrainingPlanExceptionTest" createTrainingPlanExceptionTestGenerator 1
+
+-- ConstructTrainingPlan -> needs a throws Exception
+constructTrainingPlanTestGenerator :: Gen [String]
+constructTrainingPlanTestGenerator = do
+  user <- arbitrary :: Gen User
+  let email = userEmail user
+  date <- arbitrary :: Gen MakeItFitDate
+  let userLine = "model.create(" ++ toJavaCreateUserArgs user ++ ");"
+  let userCodeLine = "UUID userCode = model.getUser(" ++ toJavaExpression email ++ ").getCode();"
+  let dateLine = "MakeItFitDate startDate = " ++ toJavaExpression date ++ ";"
+  let planCodeLine = "UUID planCode = model.createTrainingPlan(userCode, startDate);"
+  let planLine = "TrainingPlan plan = model.getTrainingPlan(planCode);"
+  let assertLine = "assertDoesNotThrow(() -> { model.constructTrainingPlanByObjectives(plan, true, 2, 3, 4, 500); });"
+  return
+    [ userLine
+    , userCodeLine
+    , dateLine
+    , planCodeLine
+    , planLine
+    , assertLine
+    ]
+
+constructTrainingPlanTemplate :: TestTemplate
+constructTrainingPlanTemplate = genToTestTemplate "constructTrainingPlanTest" constructTrainingPlanTestGenerator 1
+
+constructTrainingPlanExceptionTestGenerator :: Gen [String]
+constructTrainingPlanExceptionTestGenerator = do
+  date <- arbitrary :: Gen MakeItFitDate
+  let fakeUserCodeLine = "UUID fakeUserCode = UUID.randomUUID();"
+  let dateLine = "MakeItFitDate startDate = " ++ toJavaExpression date ++ ";"
+  let fakePlanLine = "TrainingPlan fakePlan = new TrainingPlan(fakeUserCode, startDate);"
+  let assertLine = assertThrows "(EntityDoesNotExistException" ["model.constructTrainingPlanByObjectives(fakePlan, true, 2, 3, 4, 500);"]
+  return
+    ([ fakeUserCodeLine
+    , dateLine
+    , fakePlanLine
+    ] ++ assertLine)
+
+constructTrainingPlanExceptionTemplate :: TestTemplate
+constructTrainingPlanExceptionTemplate =
+  genToTestTemplate "constructTrainingPlanExceptionTest" constructTrainingPlanExceptionTestGenerator 1
