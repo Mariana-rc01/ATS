@@ -109,6 +109,13 @@ pitest {
     timestampedReports.set(false)
 }
 
+// Test generation
+
+tasks.register<Exec>("generateQuickCheckTests") {
+    workingDir = file("src/testgen")
+    commandLine = listOf("cabal", "run")
+}
+
 tasks.register<JavaExec>("generateEvoSuiteTests") {
     classpath = evoSuiteDownload
     mainClass = "org.evosuite.EvoSuite"
@@ -136,9 +143,21 @@ tasks.named<JavaExec>("run") {
     standardInput = System.`in`
 }
 
+tasks.register<Exec>("repl") {
+    workingDir = file("src/testgen")
+    commandLine = listOf("cabal", "repl")
+    standardInput = System.`in`
+}
+
+tasks.register<Exec>("haddock") {
+    workingDir = file("src/testgen")
+    commandLine = listOf("cabal", "haddock", "--haddock-all")
+}
+
 tasks.register<Exec>("format") {
     workingDir = file(rootDir)
     commandLine = listOf("sh", "-c",
-        "find src -type f | xargs -n1 sh -c 'clang-format -i $0; sed -i s/\\\\r//g $0'"
+        "(find src/ -type f -not -path 'src/testgen/*' | xargs -n1 sh -c 'clang-format -i $0; sed -i s/\\\\r//g $0') &&" +
+        "(cd src/testgen && ./format.sh)"
     )
 }
