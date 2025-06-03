@@ -112,6 +112,7 @@ pitest {
 // Test generation
 
 tasks.register<Exec>("generateQuickCheckTests") {
+    dependsOn(tasks.jar)
     workingDir = file("src/testgen")
     commandLine = listOf("cabal", "run")
 }
@@ -144,6 +145,7 @@ tasks.named<JavaExec>("run") {
 }
 
 tasks.register<Exec>("repl") {
+    dependsOn(tasks.jar)
     workingDir = file("src/testgen")
     commandLine = listOf("cabal", "repl")
     standardInput = System.`in`

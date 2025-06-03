@@ -23,11 +23,26 @@ module Java
   , assertTrue
   , assertEquals
   , assertSame
-  , assertThrows) where
+  , assertThrows
+  , runJava
+  ) where
 
 import Data.Char (isAscii, ord)
-import Data.List (intercalate)
+import Data.List (intercalate, isPrefixOf)
 import Numeric (showHex)
+
+import System.Process
+  (
+    StdStream(CreatePipe)
+  , createProcess
+  , proc
+  , std_in
+  , std_out
+  , std_err
+  , waitForProcess
+  )
+import System.IO (Handle, hClose, hGetContents, hPutStr)
+import Control.Exception (bracket, evaluate)
 
 -- JavaData definition
 class JavaData a where
@@ -181,3 +196,32 @@ assertThrows e b =
     "    }"
   , ");"
   ]
+
+-- JVM interop
+
+-- | Runs Java code with classes the project classes loaded
+runJava :: [String]    -- ^ Java statements
+        -> IO [String] -- ^ Lines output by the statements
+runJava statements = do
+  (Just stdin, Just stdout, Just stderr, process) <- createProcess
+    (proc "jshell" ["--class-path=../../build/libs/ATS.jar"])
+    { std_in = CreatePipe, std_out = CreatePipe, std_err = CreatePipe }
+
+  bracket
+    (return ())
+    (\_ -> do
+      hClose stdin
+      hClose stdout
+      hClose stderr
+    )
+    (\_ -> do
+      hPutStr stdin (unlines statements)
+      hClose stdin
+
+      output <- hGetContents stdout
+      evaluate (length output) -- Force deep strict evaluation
+      let outputLines = lines output
+
+      waitForProcess process
+      return $ filter (not . isPrefixOf "|  ") outputLines
+    )
