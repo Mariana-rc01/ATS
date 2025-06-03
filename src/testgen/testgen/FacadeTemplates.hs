@@ -15,7 +15,8 @@
 module FacadeTemplates (
     equalityTemplate,
     emailTemplate,
-    getActivitiesFromUserTemplate
+    getActivitiesFromUserTemplate,
+    addActivityToUserTemplate
   ) where
 
 import Java (assertEquals, assertTrue, runJava, toJavaExpression, toJavaExpressionList, JavaData (toJavaExpression))
@@ -91,35 +92,32 @@ getActivitiesFromUserTestGenerator = do
   let activitiesVar = "activities"
   let activitiesDecl = "List<Activity> " ++ activitiesVar ++ " = Arrays.asList(" ++ intercalate ", " (map toJavaExpression (activities)) ++ ");"
   let forLine = "for (Activity a : " ++ activitiesVar ++ ") model.addActivityToUser(" ++ toJavaExpression emailNoSpaces ++ ", a);"
-  let testLine = assertEquals ("getActivitiesFromUser(\"" ++ emailNoSpaces ++ "\")") (toJavaExpression activitiesLen)
+  let testLine = assertEquals ("getActivitiesFromUser(\"" ++ emailNoSpaces ++ "\").size()") (toJavaExpression activitiesLen)
   return ([setupLine] ++ [userLine] ++ [";"] ++ [userCodeLine, activitiesDecl, forLine] ++ [testLine])
 
-
 getActivitiesFromUserTemplate :: TestTemplate
-getActivitiesFromUserTemplate = genToTestTemplate "getActivitiesFromUser" getActivitiesFromUserTestGenerator 3
+getActivitiesFromUserTemplate = genToTestTemplate "getActivitiesFromUserTest" getActivitiesFromUserTestGenerator 1
 
 -- addActivityToUser
-{-- addActivityToUserTestGenerator :: Gen [String]
+addActivityToUserTestGenerator :: Gen [String]
 addActivityToUserTestGenerator = do
   user <- arbitrary :: Gen User
-  activity <- genActivity (userCode user)
   let email = userEmail user
   let activitiesLen = length (userActivities user)
+  let activities = map (userCodeActivity "userCode") (userActivities user)
   let emailNoSpaces = filter (/= ' ') email
   let userVarName = "user"
-  let activityVarName = "activity"
   let setupLine = "MakeItFit model = new MakeItFit();"
   let userLine = "model.create(" ++ toJavaExpression user ++ ")"
-  let activityLine = "Activity " ++ activityVarName ++ " = " ++ toJavaExpression activity ++ ";"
-  let beforeLine = assertEquals
-        ("getActivitiesFromUser(\"" ++ emailNoSpaces ++ "\").size()")
-        (toJavaExpression activitiesLen)
-  let addLine = "addActivityToUser(\"" ++ emailNoSpaces ++ "\", " ++ activityVarName ++ ");"
-  let afterLine = assertEquals
-        ("getActivitiesFromUser(\"" ++ emailNoSpaces ++ "\").size()")
-        (toJavaExpression (activitiesLen + 1))
-  return [setupLine, userLine, activityLine, beforeLine, addLine, afterLine]
+  let userCodeLine = "UUID userCode = model.getUser(" ++ toJavaExpression email ++ ").getCode();"
+  let activitiesVar = "activities"
+  let activitiesDecl = "List<Activity> " ++ activitiesVar ++ " = Arrays.asList(" ++ intercalate ", " (map toJavaExpression activities) ++ ");"
+  let forLine = "for (Activity a : " ++ activitiesVar ++ ") model.addActivityToUser(" ++ toJavaExpression emailNoSpaces ++ ", a);"
+  let testLineBefore = assertEquals ("getActivitiesFromUser(\"" ++ emailNoSpaces ++ "\").size()") (toJavaExpression activitiesLen)
+  activityToAdd <- genActivity "userCode"
+  let activityAdd = "model.addActivityToUser(" ++ toJavaExpression emailNoSpaces ++ ", " ++ toJavaExpression activityToAdd ++ ");"
+  let testLineAfter = assertEquals ("getActivitiesFromUser(\"" ++ emailNoSpaces ++ "\").size()") (toJavaExpression (activitiesLen + 1))
+  return ([setupLine] ++ [userLine] ++ [";"] ++ [userCodeLine, activitiesDecl, forLine, testLineBefore, activityAdd, testLineAfter])
 
 addActivityToUserTemplate :: TestTemplate
-addActivityToUserTemplate = genToTestTemplate "addActivityToUser" addActivityToUserTestGenerator 3
---}
+addActivityToUserTemplate = genToTestTemplate "addActivityToUserTest" addActivityToUserTestGenerator 1

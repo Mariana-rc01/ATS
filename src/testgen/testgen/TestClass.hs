@@ -27,7 +27,8 @@ import FacadeTemplates
 templates =
   [
     equalityTemplate,
-    getActivitiesFromUserTemplate
+    getActivitiesFromUserTemplate,
+    addActivityToUserTemplate
   ]
 
 generateTests :: IO [String]
