@@ -15,7 +15,7 @@
 module TestClass (generateTestClass) where
 
 import Data.List (intercalate)
-import Java (indent)
+import Java (indent, toJavaExpressionList)
 import TestTemplate (generateTestsFromTemplate)
 
 import System.Process (StdStream(CreatePipe), createProcess, proc, std_in, std_out, waitForProcess)
@@ -26,7 +26,8 @@ import FacadeTemplates
 
 templates =
   [
-    equalityTemplate -- TODO: remove this simple template only to show the desired architecture
+    equalityTemplate,
+    getActivitiesFromUserTemplate
   ]
 
 generateTests :: IO [String]

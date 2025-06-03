@@ -14,12 +14,14 @@
 
 module FacadeTemplates (
     equalityTemplate,
-    emailTemplate
+    emailTemplate,
+    getActivitiesFromUserTemplate
   ) where
 
-import Java (assertEquals, runJava, toJavaExpression)
+import Java (assertEquals, assertTrue, runJava, toJavaExpression, toJavaExpressionList, JavaData (toJavaExpression))
 import TestTemplate (TestTemplate(..), genToTestTemplate)
-import Test.QuickCheck (Gen, arbitrary, elements, generate, listOf)
+import Test.QuickCheck (Gen, arbitrary, elements, generate, listOf, Arbitrary (arbitrary))
+import Generators
 
 equalityTestGenerator :: Gen [String]
 equalityTestGenerator = do
@@ -55,3 +57,28 @@ emailTestGenerator = do
 
 emailTemplate :: TestTemplate
 emailTemplate = TestTemplate "validEmail" emailTestGenerator 1
+
+-- getActivitiesFromUser
+userEmail :: User -> String
+userEmail (Amateur _ _ _ _ _ _ _ _ _ email _)         = email
+userEmail (Occasional _ _ _ _ _ _ _ _ _ email _ _)    = email
+userEmail (Professional _ _ _ _ _ _ _ _ _ email _ _)  = email
+
+userActivities :: User -> [Activity]
+userActivities (Amateur _ _ _ _ _ _ _ _ _ _ acts)         = acts
+userActivities (Occasional _ _ _ _ _ _ _ _ _ _ _ acts)    = acts
+userActivities (Professional _ _ _ _ _ _ _ _ _ _ _ acts)  = acts
+
+getActivitiesFromUserTestGenerator :: Gen [String]
+getActivitiesFromUserTestGenerator = do
+  user <- arbitrary :: Gen User
+  let email = userEmail user
+  let activitiesLen = length (userActivities user)
+  let emailNoSpaces = filter (/= ' ') email
+  let userVarName = "user"
+  let userLine = "User " ++ userVarName ++ " = " ++ toJavaExpression user
+  let testLine = assertEquals ("getActivitiesFromUser(\"" ++ emailNoSpaces ++ "\")") (toJavaExpression activitiesLen)
+  return ([userLine] ++ [";"] ++ [testLine])
+
+getActivitiesFromUserTemplate :: TestTemplate
+getActivitiesFromUserTemplate = genToTestTemplate "getActivitiesFromUser" getActivitiesFromUserTestGenerator 3
