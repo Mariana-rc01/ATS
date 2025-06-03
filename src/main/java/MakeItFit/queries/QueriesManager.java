@@ -25,7 +25,10 @@ public class QueriesManager implements Serializable {
     /**
      * Constructs a new queries manager.
      */
+    /* Parameters aren't being used
     public QueriesManager(UserManager userManager, TrainingPlanManager trainingPlanManager) {
+    */
+    public QueriesManager() {
         this.howManyAltimetryDone      = new HowManyAltimetryDone();
         this.howManyKMsDone            = new HowManyKMsDone();
         this.mostDoneActivity          = new MostDoneActivity();
