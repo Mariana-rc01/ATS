@@ -18,6 +18,7 @@
 module Java
   (
     JavaData(..)
+  , toJavaExpressionList
   , indent
   , decorateTest
   , assertTrue
@@ -46,10 +47,11 @@ class JavaData a where
   -- Creates a Java variable declaration, where the variable is initialized to the given value
   --
   -- Example output: @List<Integer> list = Arrays.asList(1, 2, 3)@
-  toJavaVariable :: String -- ^ Variable name
-                 -> a      -- ^ Input value
-                 -> String -- ^ Java variable declation
-  toJavaVariable name obj = javaTypeName obj ++ " " ++ name ++ " = " ++ toJavaExpression obj ++ ";"
+  toJavaVariable :: String   -- ^ Variable name
+                 -> a        -- ^ Input value
+                 -> [String] -- ^ Java variable declation (lines of code)
+  toJavaVariable name obj =
+    [javaTypeName obj ++ " " ++ name ++ " = " ++ toJavaExpression obj ++ ";"]
 
 -- Basic scalar types
 
@@ -99,7 +101,9 @@ instance JavaData String where
 
 -- Lists
 
-toJavaExpressionList :: JavaData a => [a] -> String
+-- | Creates the expression for a list of Java objects
+toJavaExpressionList :: JavaData a => [a]    -- ^ List of Java objects
+                                   -> String -- ^ Java expression
 toJavaExpressionList xs = "Arrays.asList(" ++ intercalate ", " (map toJavaExpression xs) ++ ")"
 
 instance JavaData [Bool] where
