@@ -2,16 +2,17 @@ module TestClass (generateTestClass) where
 
 import Data.List (intercalate)
 import Java (indent)
-import TestTemplate (TestTemplate(..), generateTestsFromTemplate)
+import TestTemplate (generateTestsFromTemplate)
 
 import System.Process (StdStream(CreatePipe), createProcess, proc, std_in, std_out, waitForProcess)
 import System.IO (hClose, hGetContents, hPutStr)
 import Control.Exception (bracket, evaluate)
 
+import FacadeTemplates
+
 templates =
   [
-    TestTemplate "BooleanTest" (return ["assertTrue(true);"]) 5
-  , TestTemplate "IntegerTest" (return ["assertEquals(5, 5);"]) 5
+    equalityTemplate -- TODO: remove this simple template only to show the desired architecture
   ]
 
 generateTests :: IO [String]
