@@ -90,6 +90,11 @@ public class MakeItFit implements Serializable {
         this.userManager.insertUser(user);
     }
 
+    // CHANGED: added to facilitate testing
+    public void addUser(User user) {
+        this.userManager.insertUser(user);
+    }
+
     /**
      * Removes a user based on the provided identifier.
      *

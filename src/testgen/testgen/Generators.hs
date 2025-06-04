@@ -179,6 +179,7 @@ instance JavaData User where
       , toJavaExpression age
       , toJavaExpression gender
       , toJavaExpression weight
+      , toJavaExpression height
       , toJavaExpression bpm
       , toJavaExpression level
       , toJavaExpression address
@@ -192,6 +193,7 @@ instance JavaData User where
       , toJavaExpression age
       , toJavaExpression gender
       , toJavaExpression weight
+      , toJavaExpression height
       , toJavaExpression bpm
       , toJavaExpression level
       , toJavaExpression address
@@ -206,6 +208,7 @@ instance JavaData User where
       , toJavaExpression age
       , toJavaExpression gender
       , toJavaExpression weight
+      , toJavaExpression height
       , toJavaExpression bpm
       , toJavaExpression level
       , toJavaExpression address

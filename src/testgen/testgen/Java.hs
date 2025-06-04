@@ -25,6 +25,7 @@ module Java
   , assertEquals
   , assertSame
   , assertThrows
+  , javaImports
   , runJava
   ) where
 
@@ -85,7 +86,7 @@ instance JavaData Integer where
 
 instance JavaData Float where
   javaTypeName = const "float"
-  toJavaExpression = show
+  toJavaExpression f = show f ++ "f"
 
 instance JavaData Double where
   javaTypeName = const "double"
@@ -229,3 +230,25 @@ runJava statements = do
       waitForProcess process
       return $ filter (not . isPrefixOf "|  ") outputLines
     )
+
+-- Useful code
+
+-- | Modules imported during testing
+javaImports :: [String]
+javaImports =
+  [
+    "import java.util.*;"
+  , ""
+  , "import MakeItFit.MakeItFit;"
+  , "import MakeItFit.activities.Activity;"
+  , "import MakeItFit.activities.implementation.PushUp;"
+  , "import MakeItFit.activities.implementation.Running;"
+  , "import MakeItFit.activities.implementation.Trail;"
+  , "import MakeItFit.activities.implementation.WeightSquat;"
+  , "import MakeItFit.users.Gender;"
+  , "import MakeItFit.users.User;"
+  , "import MakeItFit.users.types.Amateur;"
+  , "import MakeItFit.users.types.Occasional;"
+  , "import MakeItFit.users.types.Professional;"
+  , "import MakeItFit.utils.MakeItFitDate;"
+  ]

@@ -15,7 +15,7 @@
 module TestClass (generateTestClass) where
 
 import Data.List (intercalate)
-import Java (indent, toJavaExpressionList)
+import Java (indent, toJavaExpressionList, javaImports)
 import TestTemplate (generateTestsFromTemplate)
 
 import System.Process (StdStream(CreatePipe), createProcess, proc, std_in, std_out, waitForProcess)
@@ -50,7 +50,11 @@ templates =
     getAllTrainingPlansTemplate,
     addActivityToTrainingPlanTemplate,
     removeActivityFromTrainingPlanTemplate,
-    getTrainingPlansFromUserTemplate
+    getTrainingPlansFromUserTemplate,
+    executeQueryHowManyKMsDoneTemplate,
+    executeQueryHowManyKMsDoneDatesTemplate,
+    executeQueryHowManyAltimetryDoneTemplate,
+    executeQueryHowManyAltimetryDoneDatesTemplate
   ]
 
 generateTests :: IO [String]
@@ -65,8 +69,10 @@ generateUnformattedTestClass = do
     $ concat
         [ [ "package MakeItFit;"
           , ""
-          , "import java.util.Arrays;"
-          , "import java.util.List;"
+          ]
+        , javaImports
+        , [
+            "import static org.junit.jupiter.api.Assertions.*;"
           , "import org.junit.jupiter.api.Test;"
           , "import static org.junit.jupiter.api.Assertions.*;"
           , ""
@@ -80,7 +86,6 @@ generateUnformattedTestClass = do
           , "import MakeItFit.trainingPlan.TrainingPlan;"
           , "import static org.junit.Assert.assertThrows;"
           , "import MakeItFit.exceptions.*;"
-
           , ""
           , "public class MakeItFitTest {"
           ]
