@@ -35,7 +35,9 @@ templates =
     constructTrainingPlanExceptionTemplate,
     removeTrainingPlanTemplate,
     getTrainingPlanTemplate,
-    getTrainingPlanExceptionTemplate
+    getTrainingPlanExceptionTemplate,
+    updateTrainingPlanTemplate,
+    updateTrainingPlanExceptionTemplate
   ]
 
 generateTests :: IO [String]

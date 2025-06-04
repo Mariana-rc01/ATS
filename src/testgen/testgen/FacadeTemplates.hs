@@ -24,7 +24,9 @@ module FacadeTemplates (
     constructTrainingPlanExceptionTemplate,
     removeTrainingPlanTemplate,
     getTrainingPlanTemplate,
-    getTrainingPlanExceptionTemplate
+    getTrainingPlanExceptionTemplate,
+    updateTrainingPlanTemplate,
+    updateTrainingPlanExceptionTemplate
   ) where
 
 import Java (assertEquals, assertTrue, runJava, toJavaExpression, toJavaExpressionList, JavaData (toJavaExpression), assertThrows)
@@ -312,5 +314,53 @@ getTrainingPlanExceptionTestGenerator = do
 getTrainingPlanExceptionTemplate :: TestTemplate
 getTrainingPlanExceptionTemplate =
   genToTestTemplate "getTrainingPlanExceptionTest" getTrainingPlanExceptionTestGenerator 1
+
+-- updateTrainingPlan -> needs a throws Exception
+updateTrainingPlanTestGenerator :: Gen [String]
+updateTrainingPlanTestGenerator = do
+  user <- arbitrary :: Gen User
+  let email = userEmail user
+  date1 <- arbitrary :: Gen MakeItFitDate
+  date2 <- arbitrary :: Gen MakeItFitDate
+  let userLine = "model.create(" ++ toJavaCreateUserArgs user ++ ");"
+  let userCodeLine = "UUID userCode = model.getUser(" ++ toJavaExpression email ++ ").getCode();"
+  let dateLine1 = "MakeItFitDate startDate = " ++ toJavaExpression date1 ++ ";"
+  let planCodeLine = "UUID planCode = model.createTrainingPlan(userCode, startDate);"
+  let planLine = "TrainingPlan plan = model.getTrainingPlan(planCode);"
+  let setDateLine = "plan.setStartDate(" ++ toJavaExpression date2 ++ ");"
+  let assertDoesNotThrowLine = "assertDoesNotThrow(() -> model.updateTrainingPlan(plan));"
+  let updatedLine = "TrainingPlan updated = model.getTrainingPlan(planCode);"
+  let assertEqualsLine = assertEquals (toJavaExpression date2) "updated.getStartDate()"
+  return
+    [ userLine
+    , userCodeLine
+    , dateLine1
+    , planCodeLine
+    , planLine
+    , setDateLine
+    , assertDoesNotThrowLine
+    , updatedLine
+    , assertEqualsLine
+    ]
+
+updateTrainingPlanTemplate :: TestTemplate
+updateTrainingPlanTemplate =
+  genToTestTemplate "updateTrainingPlanTest" updateTrainingPlanTestGenerator 1
+
+updateTrainingPlanExceptionTestGenerator :: Gen [String]
+updateTrainingPlanExceptionTestGenerator = do
+  date <- arbitrary :: Gen MakeItFitDate
+  let dateLine = "MakeItFitDate startDate = " ++ toJavaExpression date ++ ";"
+  let fakePlanLine = "TrainingPlan fakePlan = new TrainingPlan(UUID.randomUUID(), startDate);"
+  let assertLine = "assertThrows(EntityDoesNotExistException.class, () -> { model.updateTrainingPlan(fakePlan); });"
+  return
+    [ dateLine
+    , fakePlanLine
+    , assertLine
+    ]
+
+updateTrainingPlanExceptionTemplate :: TestTemplate
+updateTrainingPlanExceptionTemplate =
+  genToTestTemplate "updateTrainingPlanExceptionTest" updateTrainingPlanExceptionTestGenerator 1
 
 
