@@ -77,7 +77,7 @@ public abstract class MakeItFitView {
             String phone = scanner.nextLine();
 
             switch (this.userType) {
-                case "Amateur" ->
+                case "Amateur": {
                     this.makeItFitController.createUser(name,
                                                         age,
                                                         gender,
@@ -89,7 +89,10 @@ public abstract class MakeItFitView {
                                                         phone,
                                                         -1,
                                                         this.userType);
-                case "Occasional", "Professional" -> {
+                } break;
+
+                case "Occasional":
+                case "Professional": {
                     System.out.print("[APP] Frequency: ");
                     int frequency = scanner.nextInt();
                     scanner.nextLine(); // Consume the remaining newline
@@ -105,10 +108,11 @@ public abstract class MakeItFitView {
                                                         phone,
                                                         frequency,
                                                         this.userType);
-                }
-                default -> {
+                } break;
+
+                default: {
                     System.out.println("[APP] Invalid type.");
-                }
+                } break;
             }
             System.out.println("[" + this.makeItFitController.getName() +
                                "] User created successfully.");
@@ -396,7 +400,7 @@ public abstract class MakeItFitView {
                 String designation = scanner.nextLine();
 
                 switch (this.activityType) {
-                    case "PushUp" -> {
+                    case "PushUp": {
                         System.out.print("[APP] Repetitions: ");
                         int repetitions = scanner.nextInt();
                         System.out.print("[APP] Series: ");
@@ -409,8 +413,9 @@ public abstract class MakeItFitView {
                                                                    this.activityType,
                                                                    repetitions,
                                                                    series);
-                    }
-                    case "Running" -> {
+                    } break;
+
+                    case "Running": {
                         System.out.print("[APP] Distance (meters): ");
                         double distance = scanner.nextInt();
                         scanner.nextLine(); // Consume the remaining newline
@@ -424,8 +429,9 @@ public abstract class MakeItFitView {
                                                                    this.activityType,
                                                                    distance,
                                                                    speed);
-                    }
-                    case "Trail" -> {
+                    } break;
+
+                    case "Trail": {
                         System.out.print("[APP] Distance (meters): ");
                         double distance = scanner.nextInt();
                         scanner.nextLine(); // Consume the remaining newline
@@ -447,8 +453,9 @@ public abstract class MakeItFitView {
                                                                    elevationGain,
                                                                    elevationLoss,
                                                                    trailType);
-                    }
-                    case "WeightSquat" -> {
+                    } break;
+
+                    case "WeightSquat": {
                         System.out.print("[APP] Repetitions: ");
                         int repetitions = scanner.nextInt();
                         System.out.print("[APP] Series: ");
@@ -465,8 +472,11 @@ public abstract class MakeItFitView {
                                                                    repetitions,
                                                                    series,
                                                                    weight);
-                    }
-                    default -> System.out.println("[APP] Invalid type.");
+                    } break;
+
+                    default: {
+                        System.out.println("[APP] Invalid type.");
+                    } break;
                 }
             } catch (Exception e) {
                 System.out.println("[" + this.makeItFitController.getName() + "] Invalid input.");
@@ -608,7 +618,7 @@ public abstract class MakeItFitView {
                 String designation = scanner.nextLine();
 
                 switch (this.activityType) {
-                    case "PushUp" -> {
+                    case "PushUp": {
                         System.out.print("[APP] Repetitions: ");
                         int repetitions = scanner.nextInt();
                         System.out.print("[APP] Series: ");
@@ -622,8 +632,9 @@ public abstract class MakeItFitView {
                                                                            repetitions,
                                                                            series,
                                                                            iterations);
-                    }
-                    case "Running" -> {
+                    } break;
+
+                    case "Running": {
                         System.out.print("[APP] Distance (meters): ");
                         double distance = scanner.nextInt();
                         scanner.nextLine(); // Consume the remaining newline
@@ -638,8 +649,9 @@ public abstract class MakeItFitView {
                                                                            distance,
                                                                            speed,
                                                                            iterations);
-                    }
-                    case "Trail" -> {
+                    } break;
+
+                    case "Trail": {
                         System.out.print("[APP] Distance (meters): ");
                         double distance = scanner.nextInt();
                         scanner.nextLine(); // Consume the remaining newline
@@ -662,8 +674,9 @@ public abstract class MakeItFitView {
                                                                            elevationLoss,
                                                                            trailType,
                                                                            iterations);
-                    }
-                    case "WeightSquat" -> {
+                    } break;
+
+                    case "WeightSquat": {
                         System.out.print("[APP] Repetitions: ");
                         int repetitions = scanner.nextInt();
                         System.out.print("[APP] Series: ");
@@ -681,8 +694,11 @@ public abstract class MakeItFitView {
                                                                            series,
                                                                            weight,
                                                                            iterations);
-                    }
-                    default -> System.out.println("[APP] Invalid type.");
+                    } break;
+
+                    default: {
+                        System.out.println("[APP] Invalid type.");
+                    } break;
                 }
             } catch (Exception e) {
                 System.out.println("[" + this.makeItFitController.getName() + "] Invalid input.");

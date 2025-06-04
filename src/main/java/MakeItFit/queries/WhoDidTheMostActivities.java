@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import MakeItFit.activities.Activity;
-import MakeItFit.activities.types.DistanceWithAltimetry;
 import MakeItFit.users.User;
 import MakeItFit.users.UserManager;
 import MakeItFit.utils.MakeItFitDate;

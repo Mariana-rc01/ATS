@@ -37,7 +37,10 @@ public class MakeItFit implements Serializable {
     public MakeItFit() {
         this.userManager         = new UserManager();
         this.trainingPlanManager = new TrainingPlanManager();
+        /* Parameters aren't being used
         this.queriesManager      = new QueriesManager(userManager, trainingPlanManager);
+        */
+        this.queriesManager      = new QueriesManager();
     }
 
     /**

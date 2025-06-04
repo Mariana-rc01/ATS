@@ -38,8 +38,16 @@ public class HowManyAltimetryDone implements Serializable {
             User   user      = userManager.getUserByEmail(email);
             double altimetry = 0;
             for (Activity a : user.getListActivities()) {
-
+                /* fails testExecuteQueryWithDatesActivitiesOutsideTimeWindow
                 if (a instanceof DistanceWithAltimetry) {
+                    altimetry += ((DistanceWithAltimetry) a).getElevationGain() +
+                                 ((DistanceWithAltimetry) a).getElevationLoss();
+                }
+                */
+
+                if (a instanceof DistanceWithAltimetry && a.getRealizationDate().isAfter(date1) &&
+                    date2.isAfter(a.getRealizationDate())) {
+
                     altimetry += ((DistanceWithAltimetry) a).getElevationGain() +
                                  ((DistanceWithAltimetry) a).getElevationLoss();
                 }
@@ -64,7 +72,11 @@ public class HowManyAltimetryDone implements Serializable {
         double altimetry = 0;
         for (Activity a : user.getListActivities()) {
             if (a instanceof DistanceWithAltimetry) {
+                /* fails testExecuteQueryReturnsTrueAltimetry
                 altimetry += ((DistanceWithAltimetry) a).getElevationGain() -
+                             ((DistanceWithAltimetry) a).getElevationLoss();
+                */
+                altimetry += ((DistanceWithAltimetry) a).getElevationGain() +
                              ((DistanceWithAltimetry) a).getElevationLoss();
             }
         }

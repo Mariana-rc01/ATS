@@ -8,6 +8,7 @@ import MakeItFit.activities.ActivityManager;
 import MakeItFit.activities.HardInterface;
 import MakeItFit.activities.implementation.*;
 import MakeItFit.exceptions.EntityDoesNotExistException;
+import MakeItFit.utils.ExtendedRandom;
 import MakeItFit.utils.MakeItFitDate;
 import MakeItFit.utils.MyTuple;
 
@@ -82,7 +83,7 @@ public class TrainingPlanManager implements Serializable {
 
         ActivityManager activityManager = new ActivityManager();
         MakeItFitDate   currentDate     = trainingPlan.getStartDate();
-        Random          random          = new Random();
+        ExtendedRandom  random          = new ExtendedRandom();
 
         Set<String> differentActivityTypes = new HashSet<>();
 
@@ -97,7 +98,7 @@ public class TrainingPlanManager implements Serializable {
             }
 
             switch (activityType) {
-                case "PushUp" -> {
+                case "PushUp": {
                     int expectedDuration = random.nextInt(10, 40);
                     int repetitions      = random.nextInt(5, 20);
                     int series           = random.nextInt(1, 5);
@@ -108,8 +109,9 @@ public class TrainingPlanManager implements Serializable {
                                           activityType,
                                           repetitions,
                                           series);
-                }
-                case "Running" -> {
+                } break;
+
+                case "Running": {
                     int    expectedDuration = random.nextInt(10, 40);
                     double distance         = random.nextInt(500, 5000);
                     double speed            = random.nextInt(5, 20);
@@ -120,8 +122,9 @@ public class TrainingPlanManager implements Serializable {
                                            activityType,
                                            distance,
                                            speed);
-                }
-                case "Trail" -> {
+                } break;
+
+                case "Trail": {
                     int expectedDuration = random.nextInt(10, 40);
                     int distance         = random.nextInt(500, 5000);
                     int elevationGain    = random.nextInt(0, 800);
@@ -136,8 +139,9 @@ public class TrainingPlanManager implements Serializable {
                                          elevationGain,
                                          elevationLoss,
                                          trailType);
-                }
-                case "WeightSquat" -> {
+                } break;
+
+                case "WeightSquat": {
                     int    expectedDuration = random.nextInt(10, 40);
                     int    repetitions      = random.nextInt(5, 20);
                     int    series           = random.nextInt(1, 5);
@@ -150,8 +154,11 @@ public class TrainingPlanManager implements Serializable {
                                                repetitions,
                                                series,
                                                weight);
+                } break;
+
+                default: {
+                    throw new IllegalArgumentException("Invalid type.");
                 }
-                default -> throw new IllegalArgumentException("Invalid type.");
             }
 
             if (!hardActivities && activity instanceof HardInterface) {

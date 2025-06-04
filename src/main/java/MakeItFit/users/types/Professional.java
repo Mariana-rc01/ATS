@@ -48,9 +48,11 @@ public class Professional extends User implements Serializable {
                         String phone,
                         String email,
                         int    frequency) {
+
+        // CHANGED: Added argument validation
         super(name, age, gender, weight, height, bpm, level, address, phone, email);
         this.specialization = "No specialization";
-        this.frequency      = frequency;
+        this.setFrequency(frequency);
     }
 
     /**
@@ -98,6 +100,11 @@ public class Professional extends User implements Serializable {
      * @param frequency the new training frequency to set
      */
     public void setFrequency(int frequency) {
+        // CHANGED: Added argument validation
+        if (frequency < 0) {
+            throw new IllegalArgumentException("Frequency must be a non-negative integer");
+        }
+
         this.frequency = frequency;
     }
 
@@ -118,6 +125,9 @@ public class Professional extends User implements Serializable {
                 Collections.max(activityCount.entrySet(), Map.Entry.comparingByValue()).getKey();
 
             this.setSpecialization(mostFrequentActivity);
+        } else {
+            // CHANGED: added this missing assignment
+            this.setSpecialization("No specialization");
         }
     }
 
@@ -131,14 +141,35 @@ public class Professional extends User implements Serializable {
         return new Professional(this);
     }
 
+    // CHANGED: added equals method
+
+    /**
+     * Checks if the user is equal to another object.
+     *
+     * @param o The object to compare.
+     * @return True if the user is equal to the object, false otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (o == null)
+            return false;
+        if (this.getClass() != o.getClass())
+            return false;
+
+        Professional u = (Professional) o;
+        return (super.equals(o) && this.frequency == u.frequency &&
+                this.specialization.equals(u.specialization));
+    }
+
     /**
      * Returns a string representation of the professional.
      *
      * @return a string representation including the specialization and training frequency
      */
     public String toString() {
-        return super.toString() + "        Specialization: " + specialization + "\n"
-            + "        Frequency: " + frequency + "\n"
-            + "        ====================\n";
+        return super.toString() + "Specialization: " + specialization +
+            "\nFrequency: " + frequency + "\n====================\n";
     }
 }

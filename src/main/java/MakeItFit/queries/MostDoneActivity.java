@@ -37,19 +37,45 @@ public class MostDoneActivity implements Serializable {
                     count[1]++;
                 } else if (a instanceof RepetitionsWithWeights) {
                     count[2]++;
-                } else if (a instanceof Repetitions) {
+                    /* One of the branches is never triggered
+                    } else if (a instanceof Repetitions) {
+                     */
+                } else {
                     count[3]++;
                 }
             }
         }
-        int maxIndex = max(count);
-        return switch (maxIndex) {
-            case 0 -> "DistanceWithAltimetry";
-            case 1 -> "Distance";
-            case 2 -> "Repetitions";
-            case 3 -> "RepetitionsWithWeights";
-            default -> "No activities";
+
+        int    maxIndex = max(count);
+        String mostDoneActivity;
+        switch (maxIndex) {
+            case 0:
+                mostDoneActivity = "DistanceWithAltimetry";
+                break;
+            case 1:
+                mostDoneActivity = "Distance";
+                break;
+            /* fails testExecuteQuerySingleUserReturnsRepetitions/RepetitionsWithWeights
+            case 2:
+                mostDoneActivity = "Repetitions";
+                break;
+            case 3:
+                mostDoneActivity = "RepetitionsWithWeights";
+                break;
+            */
+            case 2:
+                mostDoneActivity = "RepetitionsWithWeights";
+                break;
+            default:
+                mostDoneActivity = "Repetitions";
+                break;
+                /* Would never be reached (dead code)
+                default:
+                    mostDoneActivity = "No activities";
+                    break;
+                */
         };
+        return mostDoneActivity;
     }
 
     /**

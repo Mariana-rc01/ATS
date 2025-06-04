@@ -14,6 +14,7 @@ import MakeItFit.utils.MakeItFitDate;
  * @version (11052024)
  */
 public abstract class User implements UserInterface, Serializable, Comparable<User> {
+    // CHANGED: removed index and setIndex: now calculated dynamically
 
     private final UUID    code;
     private String        name;
@@ -26,7 +27,6 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
     private String        address;
     private String        phone;
     private String        email;
-    private float         index;
     public List<Activity> activities;
 
     /**
@@ -53,18 +53,19 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
                 String address,
                 String phone,
                 String email) {
-        this.code       = UUID.randomUUID();
-        this.name       = name;
-        this.age        = age;
-        this.gender     = gender;
-        this.weight     = weight;
-        this.height     = height;
-        this.bpm        = bpm;
-        this.level      = level;
+
+        // CHANGED: Added argument validation
+        this.code = UUID.randomUUID();
+        this.name = name;
+        this.setAge(age);
+        this.gender = gender;
+        this.setWeight(weight);
+        this.setHeight(height);
+        this.setBpm(bpm);
+        this.setLevel(level);
         this.address    = address;
         this.phone      = phone;
         this.email      = email;
-        this.index      = calculateIndex(weight, height, bpm);
         this.activities = new ArrayList<>();
     }
 
@@ -72,18 +73,20 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      * Constructs a new user with the default details.
      */
     public User() {
+        // NOTE: unreachable code
+        // CHANGED: made values for weight, height, and bpm valid
+
         this.code       = UUID.randomUUID();
         this.name       = "";
         this.age        = 0;
         this.gender     = Gender.Other;
-        this.weight     = 0;
-        this.height     = 0;
-        this.bpm        = 0;
+        this.weight     = 1.0f;
+        this.height     = 1;
+        this.bpm        = 1;
         this.level      = 0;
         this.address    = "";
         this.phone      = "";
         this.email      = "";
-        this.index      = 0;
         this.activities = new ArrayList<>();
     }
 
@@ -104,7 +107,6 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
         this.address    = u.getAddress();
         this.phone      = u.getPhone();
         this.email      = u.getEmail();
-        this.index      = u.getIndex();
         this.activities = u.getListActivities();
     }
 
@@ -213,7 +215,7 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      * @return The index of the user.
      */
     public float getIndex() {
-        return this.index;
+        return this.calculateIndex(this.weight, this.height, this.bpm);
     }
 
     /**
@@ -240,6 +242,11 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      * @param age The new age of the user.
      */
     public void setAge(int age) {
+        // CHANGED: Added argument validation
+        if (age < 0) {
+            throw new IllegalArgumentException("Invalid user age");
+        }
+
         this.age = age;
     }
 
@@ -258,6 +265,11 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      * @param weight The new weight of the user.
      */
     public void setWeight(float weight) {
+        // CHANGED: Added argument validation
+        if (weight < 0.0f) {
+            throw new IllegalArgumentException("Invalid user weight");
+        }
+
         this.weight = weight;
     }
 
@@ -267,6 +279,11 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      * @param height The new height of the user.
      */
     public void setHeight(int height) {
+        // CHANGED: Added argument validation
+        if (height < 0) {
+            throw new IllegalArgumentException("Invalid user age");
+        }
+
         this.height = height;
     }
 
@@ -276,6 +293,11 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      * @param bpm The new bpm of the user.
      */
     public void setBpm(int bpm) {
+        // CHANGED: Added argument validation
+        if (bpm < 0) {
+            throw new IllegalArgumentException("Invalid user bpm");
+        }
+
         this.bpm = bpm;
     }
 
@@ -285,6 +307,11 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      * @param level The new level of the user.
      */
     public void setLevel(int level) {
+        // CHANGED: Added argument validation
+        if (level < 0) {
+            throw new IllegalArgumentException("Invalid user level");
+        }
+
         this.level = level;
     }
 
@@ -316,15 +343,6 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
     }
 
     /**
-     * Sets the index of the user.
-     *
-     * @param index The new index of the user.
-     */
-    public void setIndex(float index) {
-        this.index = index;
-    }
-
-    /**
      * Adds an activity to the user's list of activities.
      *
      * @param activity The activity to add.
@@ -334,7 +352,10 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
     }
 
     public void addActivities(List<Activity> activities) {
-        this.activities.addAll(activities);
+        // CHANGED: fix composition
+        for (Activity activity : activities) {
+            this.activities.add(activity.clone());
+        }
     }
 
     /**
@@ -351,7 +372,7 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      */
     public void updateActivities() {
         for (Activity activity : this.activities) {
-            activity.updateActivity(this.index);
+            activity.updateActivity(this.getIndex());
         }
     }
 
@@ -364,6 +385,11 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      * @return The index of the user.
      */
     public float calculateIndex(float weight, int height, int bpm) {
+        // CHANGED: added argument validation
+        if (weight <= 0.0f || height <= 0 || bpm <= 0) {
+            throw new IllegalArgumentException("Invalid calculateIndex arguments");
+        }
+
         return (weight / (((float) height / 100) * ((float) height / 100)) + (float) bpm / 40);
     }
 
@@ -382,21 +408,19 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
     @Override
     public String toString() {
         // clang-format off
-        return String.format("""
-                                == (User details) ==
-                                Code: %s
-                                Name: %s
-                                Age: %d
-                                Gender: %s
-                                Weight: %.2f kg
-                                Height: %d cm
-                                Bpm: %d
-                                Level: %s
-                                Address: %s
-                                Phone: %s
-                                Email: %s
-                                Activities: %s
-                             """,
+        return String.format("== (User details) ==\n" +
+                             "Code: %s\n" +
+                             "Name: %s\n" +
+                             "Age: %d\n" +
+                             "Gender: %s\n" +
+                             "Weight: %.2f kg\n" +
+                             "Height: %d cm\n" +
+                             "Bpm: %d\n" +
+                             "Level: %s\n" +
+                             "Address: %s\n" +
+                             "Phone: %s\n" +
+                             "Email: %s\n" +
+                             "Activities: %s\n",
                              this.code,
                              this.name,
                              this.age,
@@ -420,12 +444,17 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      */
     @Override
     public boolean equals(Object o) {
+        // CHANGED: check for null, class, and gender
+
         if (o == this)
             return true;
-        if (!(o instanceof User))
+        if (o == null)
             return false;
+        if (this.getClass() != o.getClass())
+            return false;
+
         User u = (User) o;
-        return (this.index == u.index && this.name.equals(u.name) && this.age == u.age &&
+        return (this.name.equals(u.name) && this.age == u.age && this.gender == u.gender &&
                 this.height == u.height && this.weight == u.weight && this.bpm == u.bpm &&
                 this.level == u.level && this.address.equals(u.address) &&
                 this.phone.equals(u.phone) && this.email.equals(u.email) &&
