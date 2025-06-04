@@ -13,8 +13,6 @@
 -- limitations under the License.
 
 module FacadeTemplates (
-    equalityTemplate,
-    emailTemplate,
     createAndGetUserTemplate,
     removeUserByEmailTemplate,
     removeUserByUUIDTemplate,
@@ -48,25 +46,12 @@ module FacadeTemplates (
   ) where
 
 import Java (assertEquals, assertTrue, runJava, toJavaExpression, toJavaExpressionList,
-  JavaData (toJavaExpression), assertThrows)
+  JavaData(..), javaImports, assertThrows)
 import TestTemplate (TestTemplate(..), genToTestTemplate)
 import Test.QuickCheck (Gen, arbitrary, elements, choose, generate, listOf, Arbitrary (arbitrary), suchThat)
 import Generators
 import Data.List (intercalate)
 import GHC.Generics (Associativity)
-
-equalityTestGenerator :: Gen [String]
-equalityTestGenerator = do
-  elem <- arbitrary :: Gen Int
-  return [assertEquals (toJavaExpression elem) (toJavaExpression elem)]
-
-  -- Other usage examples
-  -- return [assertTrue (toJavaExpression elem ++ " == " ++ toJavaExpression elem)]
-  -- return [assertSame (toJavaExpression elem) (toJavaExpression elem)]
-  -- return $ assertThrows "Exception" [assertEquals "1" "1"]
-
-equalityTemplate :: TestTemplate
-equalityTemplate = genToTestTemplate "equals" equalityTestGenerator 3
 
 executeQueryHowManyKMsDoneGenerator :: IO [String]
 executeQueryHowManyKMsDoneGenerator = do
@@ -192,9 +177,6 @@ executeQueryHowManyAltimetryDoneDatesGenerator = do
       , assertEquals (last resultLines) expr
       ]
     ]
-
-emailTemplate :: TestTemplate
-emailTemplate = TestTemplate "validEmail" emailTestGenerator 1
 
 -- getActivitiesFromUserdate
 userEmail :: User -> String

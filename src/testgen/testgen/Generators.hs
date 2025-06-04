@@ -24,6 +24,7 @@ module Generators
   , genActivity
   , genTrainingPlan
   , toJavaCreateUserArgs
+  , genEmail
   , genAddress
   , genPhone
   , genUserName
