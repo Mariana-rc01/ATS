@@ -13,11 +13,15 @@
 -- limitations under the License.
 
 module FacadeTemplates (
-    equalityTemplate,
-    emailTemplate
+    equalityTemplate
+  , executeQueryHowManyKMsDoneTemplate
+  , executeQueryHowManyKMsDoneDatesTemplate
+  , executeQueryHowManyAltimetryDoneTemplate
+  , executeQueryHowManyAltimetryDoneDatesTemplate
   ) where
 
-import Java (assertEquals, runJava, toJavaExpression)
+import Generators (User(..), MakeItFitDate(..))
+import Java (JavaData(..), assertEquals, javaImports, runJava, toJavaExpression)
 import TestTemplate (TestTemplate(..), genToTestTemplate)
 import Test.QuickCheck (Gen, arbitrary, elements, generate, listOf)
 
@@ -34,24 +38,134 @@ equalityTestGenerator = do
 equalityTemplate :: TestTemplate
 equalityTemplate = genToTestTemplate "equals" equalityTestGenerator 3
 
-genEmail :: Gen String
-genEmail = do
-  before <- listOf $ elements (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'])
-  after <- listOf $ elements (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'])
-  return $ before ++ "@" ++ after ++ ".com"
-
-emailTestGenerator :: IO [String]
-emailTestGenerator = do
-  email <- generate $ genEmail
-  resultLines <- runJava
+executeQueryHowManyKMsDoneGenerator :: IO [String]
+executeQueryHowManyKMsDoneGenerator = do
+  user <- generate $ (arbitrary :: Gen User)
+  resultLines <- runJava $ concat
     [
-      "import MakeItFit.utils.EmailValidator;"
-    , "System.out.println(EmailValidator.isValidEmail(" ++ toJavaExpression email ++ "));"
+      javaImports
+    , toJavaVariable "user" user
+    , [
+        "MakeItFit makeItFit = new MakeItFit();"
+      , "makeItFit.addUser(user);"
+      , "System.out.println(makeItFit.executeQueryHowManyKMsDone(user.getEmail()))"
+      ]
     ]
-  return
+  return $ concat
     [
-      assertEquals (toJavaExpression email) (last resultLines)
+      toJavaVariable "user" user
+    , [
+        "MakeItFit makeItFit = new MakeItFit();"
+      , "makeItFit.addUser(user);"
+      , assertEquals (last resultLines) "makeItFit.executeQueryHowManyKMsDone(user.getEmail())"
+      ]
     ]
 
-emailTemplate :: TestTemplate
-emailTemplate = TestTemplate "validEmail" emailTestGenerator 1
+executeQueryHowManyKMsDoneTemplate :: TestTemplate
+executeQueryHowManyKMsDoneTemplate =
+  TestTemplate "testExecuteQueryHowManyKMsDone" executeQueryHowManyKMsDoneGenerator 1
+
+executeQueryHowManyKMsDoneDatesGenerator :: IO [String]
+executeQueryHowManyKMsDoneDatesGenerator = do
+  user                        <- generate $ (arbitrary :: Gen User)
+  date1@(MakeItFitDate y m d) <- generate $ (arbitrary :: Gen MakeItFitDate)
+  date2                       <- return $ MakeItFitDate (y + 100) m d
+  expr <- return $ concat
+    [
+      "makeItFit.executeQueryHowManyKMsDone(user.getEmail(), "
+    , toJavaExpression date1
+    , ", "
+    , toJavaExpression date2
+    , ")"
+    ]
+  resultLines <- runJava $ concat
+    [
+      javaImports
+    , toJavaVariable "user" user
+    , [
+        "MakeItFit makeItFit = new MakeItFit();"
+      , "makeItFit.addUser(user);"
+      , "System.out.println(" ++ expr ++ ")"
+      ]
+    ]
+  return $ concat
+    [
+      toJavaVariable "user" user
+    , [
+        "MakeItFit makeItFit = new MakeItFit();"
+      , "makeItFit.addUser(user);"
+      , assertEquals (last resultLines) expr
+      ]
+    ]
+
+executeQueryHowManyKMsDoneDatesTemplate :: TestTemplate
+executeQueryHowManyKMsDoneDatesTemplate =
+  TestTemplate "testExecuteQueryHowManyKMsDoneDates" executeQueryHowManyKMsDoneDatesGenerator 1
+
+executeQueryHowManyAltimetryDoneGenerator :: IO [String]
+executeQueryHowManyAltimetryDoneGenerator = do
+  user <- generate $ (arbitrary :: Gen User)
+  resultLines <- runJava $ concat
+    [
+      javaImports
+    , toJavaVariable "user" user
+    , [
+        "MakeItFit makeItFit = new MakeItFit();"
+      , "makeItFit.addUser(user);"
+      , "System.out.println(makeItFit.executeQueryHowManyAltimetryDone(user.getEmail()))"
+      ]
+    ]
+  return $ concat
+    [
+      toJavaVariable "user" user
+    , [
+        "MakeItFit makeItFit = new MakeItFit();"
+      , "makeItFit.addUser(user);"
+      , assertEquals (last resultLines)
+          "makeItFit.executeQueryHowManyAltimetryDone(user.getEmail())"
+      ]
+    ]
+
+executeQueryHowManyAltimetryDoneTemplate :: TestTemplate
+executeQueryHowManyAltimetryDoneTemplate =
+  TestTemplate "testExecuteQueryHowManyAltimetryDone" executeQueryHowManyAltimetryDoneGenerator 1
+
+executeQueryHowManyAltimetryDoneDatesGenerator :: IO [String]
+executeQueryHowManyAltimetryDoneDatesGenerator = do
+  user                        <- generate $ (arbitrary :: Gen User)
+  date1@(MakeItFitDate y m d) <- generate $ (arbitrary :: Gen MakeItFitDate)
+  date2                       <- return $ MakeItFitDate (y + 100) m d
+  expr <- return $ concat
+    [
+      "makeItFit.executeQueryHowManyAltimetryDone(user.getEmail(), "
+    , toJavaExpression date1
+    , ", "
+    , toJavaExpression date2
+    , ")"
+    ]
+  resultLines <- runJava $ concat
+    [
+      javaImports
+    , toJavaVariable "user" user
+    , [
+        "MakeItFit makeItFit = new MakeItFit();"
+      , "makeItFit.addUser(user);"
+      , "System.out.println(" ++ expr ++ ")"
+      ]
+    ]
+  return $ concat
+    [
+      toJavaVariable "user" user
+    , [
+        "MakeItFit makeItFit = new MakeItFit();"
+      , "makeItFit.addUser(user);"
+      , assertEquals (last resultLines) expr
+      ]
+    ]
+
+executeQueryHowManyAltimetryDoneDatesTemplate :: TestTemplate
+executeQueryHowManyAltimetryDoneDatesTemplate =
+  TestTemplate
+    "testExecuteQueryHowManyAltimetryDoneDates"
+    executeQueryHowManyAltimetryDoneDatesGenerator
+    1

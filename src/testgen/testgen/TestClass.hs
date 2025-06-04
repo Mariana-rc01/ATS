@@ -15,7 +15,7 @@
 module TestClass (generateTestClass) where
 
 import Data.List (intercalate)
-import Java (indent)
+import Java (indent, javaImports)
 import TestTemplate (generateTestsFromTemplate)
 
 import System.Process (StdStream(CreatePipe), createProcess, proc, std_in, std_out, waitForProcess)
@@ -26,7 +26,10 @@ import FacadeTemplates
 
 templates =
   [
-    equalityTemplate -- TODO: remove this simple template only to show the desired architecture
+    executeQueryHowManyKMsDoneTemplate
+  , executeQueryHowManyKMsDoneDatesTemplate
+  , executeQueryHowManyAltimetryDoneTemplate
+  , executeQueryHowManyAltimetryDoneDatesTemplate
   ]
 
 generateTests :: IO [String]
@@ -41,12 +44,11 @@ generateUnformattedTestClass = do
     $ concat
         [ [ "package MakeItFit;"
           , ""
-          , "import java.util.Arrays;"
-          , "import java.util.List;"
+          ]
+        , javaImports
+        , [
+            "import static org.junit.jupiter.api.Assertions.*;"
           , "import org.junit.jupiter.api.Test;"
-          , "import static org.junit.jupiter.api.Assertions.*;"
-          , ""
-          , "import MakeItFit.users.User;"
           , ""
           , "public class MakeItFitTest {"
           ]
