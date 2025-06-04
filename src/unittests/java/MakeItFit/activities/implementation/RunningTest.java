@@ -6,7 +6,10 @@ import MakeItFit.utils.MakeItFitDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RunningTest {
     private Running       running;
@@ -81,6 +84,13 @@ public class RunningTest {
             new Running(userCode, date, 45, "Warming", "Just for 45 minutes", 5000.0, 12.0);
         assertFalse(running.equals(diff));
         assertFalse(running.equals(null));
+        Running diffSpeed =
+            new Running(userCode, date, 45, "Warming", "Just for 45 minutes", 5000.0, 13.0);
+        assertFalse(running.equals(diffSpeed));
+
+        Running diffInSpeed =
+            new Running(userCode, date, 50, "Warming", "Just for 45 minutes", 5000.0, 10.0);
+        assertFalse(running.equals(diffInSpeed));
     }
 
     @Test

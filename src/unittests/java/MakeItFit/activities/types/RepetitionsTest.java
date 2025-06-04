@@ -2,11 +2,14 @@ package MakeItFit.activities.types;
 
 import java.util.UUID;
 
-import MakeItFit.utils.MakeItFitDate;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import MakeItFit.utils.MakeItFitDate;
 
 public class RepetitionsTest {
     private TestRepetitions activity;
@@ -34,9 +37,9 @@ public class RepetitionsTest {
     @Test
     void testSetters() {
         activity.setRepetitions(20);
-        activity.setSeries(5);
+        activity.setSeries(6);
         assertEquals(20, activity.getRepetitions());
-        assertEquals(5, activity.getSeries());
+        assertEquals(6, activity.getSeries());
     }
 
     @Test
@@ -73,6 +76,9 @@ public class RepetitionsTest {
         TestRepetitions diff = new TestRepetitions(userCode, date, 5, "Abs", "Plank", 12, 4);
         assertFalse(activity.equals(diff));
         assertFalse(activity.equals(null));
+
+        TestRepetitions diff2 = new TestRepetitions(userCode, date, 5, "Abs", "Plank", 15, 5);
+        assertFalse(activity.equals(diff2));
     }
 
     @Test
