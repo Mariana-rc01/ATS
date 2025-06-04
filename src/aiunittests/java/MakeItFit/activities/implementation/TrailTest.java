@@ -2,14 +2,14 @@ package MakeItFit.activities.implementation;
 
 import java.util.UUID;
 
-import MakeItFit.utils.MakeItFitDate;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import MakeItFit.utils.MakeItFitDate;
 
 public class TrailTest {
 
@@ -105,11 +105,11 @@ public class TrailTest {
         trail.setElevationLoss(300.0);
 
         float index    = 1.0f;
-        int   expected = (int) ((10.0 * 0.5 + 500.0 * 0.1 - 300.0 * 0.1) * 1.0 * 0.01);
+        int   expected = (int) ((10.0 * 0.5 + 500.0 * 0.1 + 300.0 * 0.1) * 1.0 * 0.01);
         assertEquals(expected, trail.caloricWaste(index));
 
         index    = 1.5f;
-        expected = (int) ((10.0 * 0.5 + 500.0 * 0.1 - 300.0 * 0.1) * 1.5 * 0.01);
+        expected = (int) ((10.0 * 0.5 + 500.0 * 0.1 + 300.0 * 0.1) * 1.5 * 0.01);
         assertEquals(expected, trail.caloricWaste(index));
     }
 

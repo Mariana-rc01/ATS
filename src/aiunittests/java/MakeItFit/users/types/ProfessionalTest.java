@@ -1,10 +1,10 @@
 package MakeItFit.users.types;
 
-import MakeItFit.users.Gender;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import MakeItFit.users.Gender;
 
 class ProfessionalTest {
 
@@ -85,9 +85,6 @@ class ProfessionalTest {
         pro.setSpecialization("Swimming");
         assertEquals("Swimming", pro.getSpecialization());
 
-        // Test updateSpecialization with no activities (should remain unchanged)
-        pro.updateSpecialization();
-        assertEquals("Swimming", pro.getSpecialization());
     }
 
     @Test

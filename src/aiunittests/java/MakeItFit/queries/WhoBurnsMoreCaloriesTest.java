@@ -2,6 +2,11 @@ package MakeItFit.queries;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
+
 import MakeItFit.activities.Activity;
 import MakeItFit.activities.implementation.PushUp;
 import MakeItFit.users.Gender;
@@ -9,11 +14,6 @@ import MakeItFit.users.User;
 import MakeItFit.users.UserManager;
 import MakeItFit.users.types.Amateur;
 import MakeItFit.utils.MakeItFitDate;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WhoBurnsMoreCaloriesTest {
 
@@ -35,7 +35,6 @@ public class WhoBurnsMoreCaloriesTest {
                                  "Braga",
                                  "990000000",
                                  "jose@mail.com");
-        user1.setIndex(1.0f);
 
         User user2 = new Amateur("Maria Silva",
                                  30,
@@ -47,7 +46,6 @@ public class WhoBurnsMoreCaloriesTest {
                                  "Porto",
                                  "910000000",
                                  "maria@mail.com");
-        user2.setIndex(1.2f);
 
         userManager.insertUser(user1);
         userManager.insertUser(user2);

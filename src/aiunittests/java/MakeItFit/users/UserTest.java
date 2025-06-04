@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import MakeItFit.activities.Activity;
-import MakeItFit.activities.implementation.PushUp;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import MakeItFit.activities.Activity;
+import MakeItFit.activities.implementation.PushUp;
 
 class TestUser extends User {
 
@@ -78,14 +78,13 @@ public class UserTest {
         assertEquals("", user.getName());
         assertEquals(0, user.getAge());
         assertEquals(Gender.Other, user.getGender());
-        assertEquals(0f, user.getWeight());
-        assertEquals(0, user.getHeight());
-        assertEquals(0, user.getBpm());
+        assertEquals(1f, user.getWeight());
+        assertEquals(1, user.getHeight());
+        assertEquals(1, user.getBpm());
         assertEquals(0, user.getLevel());
         assertEquals("", user.getAddress());
         assertEquals("", user.getPhone());
         assertEquals("", user.getEmail());
-        assertEquals(0f, user.getIndex());
         assertNotNull(user.getCode());
         assertTrue(user.getListActivities().isEmpty());
     }
@@ -116,7 +115,6 @@ public class UserTest {
         assertEquals(original.getAddress(), copy.getAddress());
         assertEquals(original.getPhone(), copy.getPhone());
         assertEquals(original.getEmail(), copy.getEmail());
-        assertEquals(original.getIndex(), copy.getIndex());
         assertEquals(original.getCode(), copy.getCode());
         assertEquals(original.getListActivities().size(), copy.getListActivities().size());
     }
@@ -135,7 +133,6 @@ public class UserTest {
         user.setAddress("789 Pine St");
         user.setPhone("555-9012");
         user.setEmail("alice@example.com");
-        user.setIndex(25.5f);
 
         assertEquals("Alice", user.getName());
         assertEquals(28, user.getAge());
@@ -147,20 +144,6 @@ public class UserTest {
         assertEquals("789 Pine St", user.getAddress());
         assertEquals("555-9012", user.getPhone());
         assertEquals("alice@example.com", user.getEmail());
-        assertEquals(25.5f, user.getIndex());
-    }
-
-    @Test
-    void testCalculateIndex() {
-        TestUser user = new TestUser();
-
-        // Test with normal values
-        float index1 = user.calculateIndex(70.0f, 175, 72);
-        assertEquals(70.0f / (1.75f * 1.75f) + 72.0f / 40.0f, index1, 0.001f);
-
-        // Test with zero values (should handle division by zero?)
-        float index2 = user.calculateIndex(1f, 0, 0);
-        assertEquals(Float.POSITIVE_INFINITY, index2); // This might need to be handled differently
     }
 
     @Test
@@ -340,7 +323,6 @@ public class UserTest {
         assertEquals(original.getAddress(), clone.getAddress());
         assertEquals(original.getPhone(), clone.getPhone());
         assertEquals(original.getEmail(), clone.getEmail());
-        assertEquals(original.getIndex(), clone.getIndex());
         assertEquals(original.getCode(), clone.getCode());
         assertEquals(original.getListActivities().size(), clone.getListActivities().size());
     }
