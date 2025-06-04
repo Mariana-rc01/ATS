@@ -3,7 +3,6 @@ package MakeItFit.utils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class EmailValidatorTest {

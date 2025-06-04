@@ -75,6 +75,27 @@ public class Occasional extends User implements Serializable {
         this.frequency = frequency;
     }
 
+    // CHANGED: added equals method
+
+    /**
+     * Checks if the user is equal to another object.
+     *
+     * @param o The object to compare.
+     * @return True if the user is equal to the object, false otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (o == null)
+            return false;
+        if (this.getClass() != o.getClass())
+            return false;
+
+        Occasional u = (Occasional) o;
+        return (super.equals(o) && this.frequency == u.frequency);
+    }
+
     /**
      * Creates and returns a copy of this Occasional user.
      *
@@ -91,7 +112,6 @@ public class Occasional extends User implements Serializable {
      * @return a string containing the details of the Occasional user
      */
     public String toString() {
-        return super.toString() + "        Frequency: " + frequency + "\n"
-            + "        ====================\n";
+        return super.toString() + "Frequency: " + frequency + "\n====================\n";
     }
 }
