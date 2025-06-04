@@ -3,10 +3,6 @@ package MakeItFit.queries;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.Test;
-
 import MakeItFit.activities.Activity;
 import MakeItFit.activities.implementation.Trail;
 import MakeItFit.users.Gender;
@@ -14,6 +10,10 @@ import MakeItFit.users.User;
 import MakeItFit.users.UserManager;
 import MakeItFit.users.types.Amateur;
 import MakeItFit.utils.MakeItFitDate;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HowManyAltimetryDoneTest {
 

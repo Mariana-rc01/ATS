@@ -15,7 +15,7 @@
 module TestClass (generateTestClass) where
 
 import Data.List (intercalate)
-import Java (indent)
+import Java (indent, toJavaExpressionList)
 import TestTemplate (generateTestsFromTemplate)
 
 import System.Process (StdStream(CreatePipe), createProcess, proc, std_in, std_out, waitForProcess)
@@ -26,7 +26,22 @@ import FacadeTemplates
 
 templates =
   [
-    equalityTemplate -- TODO: remove this simple template only to show the desired architecture
+    getActivitiesFromUserTemplate,
+    addActivityToUserTemplate,
+    removeActivityFromUserTemplate,
+    createTrainingPlanTemplate,
+    createTrainingPlanExceptionTemplate,
+    constructTrainingPlanTemplate,
+    constructTrainingPlanExceptionTemplate,
+    removeTrainingPlanTemplate,
+    getTrainingPlanTemplate,
+    getTrainingPlanExceptionTemplate,
+    updateTrainingPlanTemplate,
+    updateTrainingPlanExceptionTemplate,
+    getAllTrainingPlansTemplate,
+    addActivityToTrainingPlanTemplate,
+    removeActivityFromTrainingPlanTemplate,
+    getTrainingPlansFromUserTemplate
   ]
 
 generateTests :: IO [String]
@@ -47,6 +62,15 @@ generateUnformattedTestClass = do
           , "import static org.junit.jupiter.api.Assertions.*;"
           , ""
           , "import MakeItFit.users.User;"
+          , "import MakeItFit.users.Gender;"
+          , "import java.util.UUID;"
+          , "import MakeItFit.activities.Activity;"
+          , "import MakeItFit.activities.implementation.*;"
+          , "import MakeItFit.utils.MakeItFitDate;"
+          , "import MakeItFit.trainingPlan.TrainingPlan;"
+          , "import static org.junit.Assert.assertThrows;"
+          , "import MakeItFit.exceptions.*;"
+
           , ""
           , "public class MakeItFitTest {"
           ]
