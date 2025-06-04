@@ -175,6 +175,7 @@ instance JavaData User where
       , toJavaExpression age
       , toJavaExpression gender
       , toJavaExpression weight
+      , toJavaExpression height
       , toJavaExpression bpm
       , toJavaExpression level
       , toJavaExpression address
@@ -188,6 +189,7 @@ instance JavaData User where
       , toJavaExpression age
       , toJavaExpression gender
       , toJavaExpression weight
+      , toJavaExpression height
       , toJavaExpression bpm
       , toJavaExpression level
       , toJavaExpression address
@@ -202,6 +204,7 @@ instance JavaData User where
       , toJavaExpression age
       , toJavaExpression gender
       , toJavaExpression weight
+      , toJavaExpression height
       , toJavaExpression bpm
       , toJavaExpression level
       , toJavaExpression address
@@ -242,7 +245,7 @@ instance Arbitrary MakeItFitDate where
 instance JavaData MakeItFitDate where
   javaTypeName = const "MakeItFitDate"
   toJavaExpression (MakeItFitDate y m d) =
-    "new MakeItFitDate(" ++ intercalate ", " (map toJavaExpression [y, m, d])  ++ ")"
+    "MakeItFitDate.of(" ++ intercalate ", " (map toJavaExpression [y, m, d])  ++ ")"
 
 -- | MakeItFit TrailType
 data TrailType = TrailEasy | TrailMedium | TrailHard deriving (Show, Eq)
