@@ -62,7 +62,7 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
         this.setWeight(weight);
         this.setHeight(height);
         this.setBpm(bpm);
-        this.level      = level;
+        this.setLevel(level);
         this.address    = address;
         this.phone      = phone;
         this.email      = email;
@@ -266,7 +266,7 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      */
     public void setWeight(float weight) {
         // CHANGED: Added argument validation
-        if (weight <= 0.0f) {
+        if (weight < 0.0f) {
             throw new IllegalArgumentException("Invalid user weight");
         }
 
@@ -280,7 +280,7 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      */
     public void setHeight(int height) {
         // CHANGED: Added argument validation
-        if (height <= 0) {
+        if (height < 0) {
             throw new IllegalArgumentException("Invalid user age");
         }
 
@@ -294,7 +294,7 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      */
     public void setBpm(int bpm) {
         // CHANGED: Added argument validation
-        if (bpm <= 0) {
+        if (bpm < 0) {
             throw new IllegalArgumentException("Invalid user bpm");
         }
 
@@ -307,6 +307,11 @@ public abstract class User implements UserInterface, Serializable, Comparable<Us
      * @param level The new level of the user.
      */
     public void setLevel(int level) {
+        // CHANGED: Added argument validation
+        if (level < 0) {
+            throw new IllegalArgumentException("Invalid user level");
+        }
+
         this.level = level;
     }
 

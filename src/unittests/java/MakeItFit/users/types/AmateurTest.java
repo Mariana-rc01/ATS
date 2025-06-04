@@ -66,7 +66,7 @@ public class AmateurTest {
             new Amateur("João",
                         30,
                         Gender.Male,
-                        0.0f,
+                        -0.1f,
                         180,
                         70,
                         0,
@@ -79,7 +79,16 @@ public class AmateurTest {
     @Test
     public void testConstructorInvalidFields3() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Amateur("João", 30, Gender.Male, 1.0f, 0, 70, 0, "Casa", "+351 123", "abc@def.com");
+            new Amateur("João",
+                        30,
+                        Gender.Male,
+                        1.0f,
+                        -1,
+                        70,
+                        0,
+                        "Casa",
+                        "+351 123",
+                        "abc@def.com");
         });
     }
 
@@ -87,6 +96,22 @@ public class AmateurTest {
     public void testConstructorInvalidFields4() {
         assertThrows(IllegalArgumentException.class, () -> {
             new Amateur("João", 30, Gender.Male, 1.0f, 1, -1, 0, "Casa", "+351 123", "abc@def.com");
+        });
+    }
+
+    @Test
+    public void testConstructorInvalidFields5() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Amateur("João",
+                        30,
+                        Gender.Male,
+                        1.0f,
+                        1,
+                        70,
+                        -1,
+                        "Casa",
+                        "+351 123",
+                        "abc@def.com");
         });
     }
 

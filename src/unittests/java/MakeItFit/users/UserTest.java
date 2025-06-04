@@ -98,7 +98,8 @@ public class UserTest {
 
     @Test
     public void testSetWeight2() {
-        assertThrows(IllegalArgumentException.class, () -> { this.referenceUser.setWeight(0.0f); });
+        this.referenceUser.setWeight(0.0f);
+        assertEquals(0.0f, this.referenceUser.getWeight());
     }
 
     @Test
@@ -115,7 +116,8 @@ public class UserTest {
 
     @Test
     public void testSetHeight2() {
-        assertThrows(IllegalArgumentException.class, () -> { this.referenceUser.setHeight(0); });
+        this.referenceUser.setHeight(0);
+        assertEquals(0, this.referenceUser.getHeight());
     }
 
     @Test
@@ -131,7 +133,8 @@ public class UserTest {
 
     @Test
     public void testSetBpm2() {
-        assertThrows(IllegalArgumentException.class, () -> { this.referenceUser.setBpm(0); });
+        this.referenceUser.setBpm(0);
+        assertEquals(0, this.referenceUser.getBpm());
     }
 
     @Test
