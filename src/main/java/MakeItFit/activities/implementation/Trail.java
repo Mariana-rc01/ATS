@@ -121,7 +121,8 @@ public class Trail extends DistanceWithAltimetry implements HardInterface, Seria
      * @return The calculated caloric waste as an integer.
      */
     public int caloricWaste(float index) {
-        return (int) ((getDistance() * 0.5 + getElevationGain() * 0.1 - getElevationLoss() * 0.1) *
+        // Fix calories calculation formula
+        return (int) ((getDistance() * 0.5 + getElevationGain() * 0.1 + getElevationLoss() * 0.1) *
                       index * 0.01);
     }
 
