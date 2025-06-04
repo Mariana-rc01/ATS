@@ -1,0 +1,280 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage[portuguese]{babel}
+\usepackage{chngpage}
+\usepackage{float}
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{setspace}
+\usepackage{xcolor}
+
+\lstdefinestyle{codestyle}{
+    commentstyle=\color{teal},
+    keywordstyle=\color{blue},
+    numberstyle=\ttfamily\color{gray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=false,
+    keepspaces=true,
+    numbers=none,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4
+}
+\lstset{style=codestyle}
+
+\title{\Huge \textbf{ATS \\ \Large Trabalho Prático}}
+\date{4 de junho 2025}
+
+\begin{document}
+
+\begin{center}
+    \includegraphics[width=0.25\textwidth]{res/cover/EE-C.eps}
+\end{center}
+
+\chardef\_=`_
+\onehalfspacing
+\setlength{\parskip}{\baselineskip}
+\setlength{\parindent}{0pt}
+\def\arraystretch{1.5}
+
+{\let\newpage\relax\maketitle}
+\maketitle
+\thispagestyle{empty}
+
+\vspace{\fill}
+
+\begin{adjustwidth}{-2cm}{-2cm} % These values only need to be large enough to center the table
+    \begin{center}
+        \begin{tabular}{>{\centering}p{0.25\textwidth}
+                        >{\centering}p{0.25\textwidth}
+                        >{\centering\arraybackslash}p{0.25\textwidth}}
+
+            Humberto Gomes & José Lopes & Mariana Cristino \\
+            A104348        & AXXXX      & A90817
+        \end{tabular}
+    \end{center}
+\end{adjustwidth}
+
+\pagebreak
+
+\begin{abstract}
+    Escrever
+\end{abstract}
+
+\section{Gradle}
+
+\section{Testes JUnit}
+
+\subsection{\texttt{Activities}}
+
+Durante o processo de desenvolvimento e execução de testes unitários para os componentes
+relacionados às atividades físicas, foram identificadas diversas inconsistências e oportunidades de
+melhoria tanto na implementação quanto na cobertura dos testes. Abaixo detalham-se os principais
+pontos identificados, as correções aplicadas e a garantia de cobertura total através dos frameworks
+\emph{JaCoCo} e \emph{PIT Mutation Testing}.
+
+Na classe \texttt{Activity.java}, verificou-se a ausência do método \texttt{getSpecialization()},
+necessário para garantir o contrato polimórfico com as subclasses.
+
+Na classe \texttt{Trail.java}:
+\begin{itemize}
+  \item O método \texttt{setTrailType(int trailType)} não limitava corretamente os valores do tipo
+  de trilho, o que foi identificado através de um \emph{mutant} que sobreviveu no PIT. Logo, foi
+  realizada uma substituição da lógica condicional por:
+  \begin{verbatim}
+        this.trailType = Math.max(TRAIL_TYPE_EASY, Math.min(TRAIL_TYPE_HARD, trailType));
+  \end{verbatim}
+  Esta abordagem assegura que \texttt{trailType} seja sempre mantido entre os limites definidos
+  (\texttt{TRAIL_TYPE_EASY} e \texttt{TRAIL_TYPE_HARD}).
+
+  \item O método \texttt{caloriesWaste()} permitia valores negativos devido a um erro aritmético,
+  pois utilizava \texttt{-} onde deveria ser \texttt{+} na fórmula do cálculo de calorias. A fórmula
+  foi atualizada para:
+  \begin{verbatim}
+    return (int) ((getDistance() * 0.5 + getElevationGain() * 0.1 + getElevationLoss() * 0.1) *
+    index * 0.01);
+  \end{verbatim}
+  Esta alteração assegura que o cálculo de calorias gastas reflita corretamente o esforço físico
+  baseado nos parâmetros da atividade.
+\end{itemize}
+
+\subsection{\texttt{MakeItFit}}
+
+Diversos métodos de atualização de atributos do utilizador estavam incorretamente a chamar
+\texttt{this.userManager.updateUser(user)}, mesmo não sendo necessária tal invocação devido ao
+padrão de agregação usado (e não composição). Foram aplicadas as seguintes correções:
+
+Métodos corrigidos:
+\begin{itemize}
+    \item \texttt{updateUserName}
+    \item \texttt{updateUserAge}
+    \item \texttt{updateUserWeight}
+    \item \texttt{updateUserHeight}
+    \item \texttt{updateUserBpm}
+    \item \texttt{updateUserLevel}
+    \item \texttt{updateUserPhone}
+\end{itemize}
+
+Foi removida a chamada de \texttt{updateUser(user)}, pois as alterações ao objeto \texttt{User} são
+refletidas automaticamente devido à agregação.
+
+No método \texttt{updateUserEmail}, o caso é diferente, pois altera a chave identificadora do
+utilizador (o email). De modo que, a chamada de \texttt{updateUser(user)} foi substituída por:
+\begin{verbatim}
+    this.userManager.removeUserByEmail(email);
+    this.userManager.insertUser(user);
+\end{verbatim}
+
+Este erros foram detetados, devido ao desenvolvimento de testes unitários robustos que asseguram a
+cobertura total do código.
+
+Os testes cobrem condições normais, limites, entradas inválidas e casos extremos, garantindo assim
+confiabilidade e robustez no comportamento das funcionalidades relacionadas às atividades e à gestão
+de utilizadores.
+
+\section{Evosuite}
+
+\section{PIT}
+
+\section{QuickCheck}
+
+\subsection{Setup}
+
+\subsection{Generators}
+
+Foram implementados diversos \emph{generators} com o objetivo de criar utilizadores e atividades
+realistas. O foco passou por cobrir todos os tipos de utilizadores (\texttt{Amateur},
+\texttt{Occasional} e \texttt{Professional}) e atividades (\texttt{PushUp}, \texttt{Running},
+\texttt{Trail} e \texttt{WeightSquat}), assim como os respetivos planos de treino. A implementação
+teve atenção a vários detalhes, nomeadamente:
+
+\begin{itemize}
+  \item Geração realista de nomes: Através de uma combinação de nomes próprios e apelidos comuns em
+  Portugal, foram gerados nomes plausíveis como ``José Lopes'' ou ``Humberto Silva''.
+  \item Endereços completos e variados: Foram geradas moradas completas, incluindo ruas, números de
+  porta, andares e cidades como ``Lisboa'', ``Porto'' e ``Braga''.
+  \item Telefones válidos: Os números de telemóvel e de telefone fixo são criados com base nos
+  prefixos corretos e comprimentos típicos.
+  \item Emails com domínios reais: Domínios populares como \texttt{gmail.com}, \texttt{hotmail.com}
+  e \texttt{yahoo.com} são utilizados, promovendo realismo, além disso, a frequência de geração de
+  emails é ajustada para refletir a prevalência de cada domínio, sendo \texttt{gmail.com} o mais
+  comum.
+  \item Datas válidas e bem distribuídas: Utilizamos um \emph{generator} específico para datas
+  válidas, respeitando os dias de cada mês e anos entre 2001 e 2025.
+  \item Valores fisiológicos credíveis: Os valores gerados para peso, altura, BPM e nível de treino
+  situam-se dentro de intervalos realistas e coerentes.
+  \item Frequência de treino: Utilizadores do tipo \texttt{Occasional} e \texttt{Professional}
+  incluem um campo de frequência semanal, gerado com base em valores plausíveis.
+  \item Atividades específicas e detalhadas: Cada tipo de atividade possui os seus próprios campos
+  (ex: número de repetições e séries para \texttt{PushUp}, distância e velocidade para
+  \texttt{Running}, tipo de trilho para \texttt{Trail}, entre outros).
+  \item Associação de atividades ao utilizador: As atividades são geradas com referência ao
+  \texttt{UUID} Java do utilizador, garantindo a consistência dos dados.
+  \item Planos de treino compostos: Foram definidos \emph{training plans} que incluem listas de
+  atividades com número de repetições associado, simulando planos personalizados.
+\end{itemize}
+
+Todos os dados gerados são compatíveis com a estrutura da aplicação Java, graças à implementação da
+interface \texttt{JavaData}. Esta permite converter automaticamente os dados Haskell em expressões
+Java válidas (ex. construtores de objetos, listas de atividades, etc.), o que facilita a integração
+entre os testes automáticos em Haskell e o código de produção Java.
+
+\subsection{Geração Automática de Testes}
+
+O principal objetivo desta abordagem é automatizar a geração de código de teste em Java, assegurando
+cobertura funcional das principais operações do sistema, tais como:
+
+\begin{itemize}
+  \item Obtenção de atividades associadas a um utilizador (\texttt{getActivitiesFromUser});
+  \item Adição e remoção de atividades (\texttt{addActivityToUser},
+  \texttt{removeActivityFromUser});
+  \item Criação, obtenção, atualização e remoção de planos de treino (\texttt{createTrainingPlan},
+  \texttt{getTrainingPlan}, \texttt{updateTrainingPlan}, \texttt{removeTrainingPlan});
+  \item Construção de planos de treino com base em objetivos
+  (\texttt{constructTrainingPlanByObjectives});
+  \item Adição de atividades a planos de treino (\texttt{addActivityToTrainingPlan}).
+\end{itemize}
+
+A geração de testes é realizada por funções em Haskell que produzem listas de instruções em Java,
+representando os testes a serem executados. Cada teste é encapsulado num \texttt{TestTemplate}, que
+inclui:
+
+\begin{itemize}
+  \item A configuração inicial do modelo (\texttt{MakeItFit});
+  \item A criação do utilizador com os seus respetivos dados e atividades;
+  \item As chamadas aos métodos da API Java a serem testados;
+  \item Instruções de verificação, como \texttt{assertEquals}, \texttt{assertTrue} e
+  \texttt{assertThrows}.
+\end{itemize}
+
+A estrutura dos testes é parametrizada por geradores, como \texttt{Gen User} e
+\texttt{Gen MakeItFitDate}, e utiliza funções auxiliares como \texttt{toJavaCreateUserArgs},
+\texttt{toJavaExpression} e \texttt{assertThrows} para gerar código sintaticamente válido em Java.
+
+Além dos testes de fluxo normal, foram gerados testes para cenários de exceção, onde se verifica se
+os métodos lançam exceções apropriadas como \texttt{IllegalArgumentException} ou
+\texttt{EntityDoesNotExistException}. Isto contribui para uma verificação mais rigorosa do
+comportamento esperado do sistema em casos inválidos.
+
+\section{Testes gerados por AI}
+
+Durante a fase de testes da aplicação \textit{MakeItFit}, foi também explorada a utilização de
+inteligência artificial generativa como ferramenta de apoio à criação de testes unitários. Para este
+fim, recorreu-se à IA \textit{Deepseek} treinado em grandes volumes de código-fonte aberto.
+
+A abordagem consistiu em fornecer à IA os métodos de cada classe a serem testados. Com base nesta
+informação, a IA gerou blocos de testes em Java, seguindo a convenção do \texttt{JUnit}. A IA
+procurou inferir os casos típicos de uso, incluindo:
+
+\begin{itemize}
+  \item Criação e configuração de instâncias da classe \texttt{MakeItFit};
+  \item Invocação de métodos públicos com argumentos válidos e inválidos;
+  \item Utilização de instruções de verificação, como \texttt{assertEquals} e \texttt{assertThrows},
+  para validar os comportamentos esperados.
+\end{itemize}
+
+A IA demonstrou competência na estruturação básica dos testes e na utilização adequada da API da
+aplicação. No entanto, a sua geração baseou-se maioritariamente em inferência sem contexto profundo
+do domínio da aplicação, o que resultou em testes frequentemente superficiais ou redundantes.
+
+Apesar de gerar código funcional, a cobertura de testes obtida com a abordagem baseada em IA foi
+limitada. Os testes criados cobriam sobretudo os caminhos felizes (\textit{happy paths}) e não
+exploravam cenários de exceção ou combinações mais complexas de estado interno da aplicação.
+
+Com o auxílio de ferramentas de análise de cobertura, verificou-se que os testes gerados pela
+\textit{Deepseek} obtiveram uma cobertura inferior em comparação com os testes gerados manualmente.
+As principais limitações observadas foram:
+
+\begin{itemize}
+  \item Ausência de testes negativos ou de fronteira;
+  \item Cobertura parcial de ramos condicionais e blocos de exceção;
+  \item Falta de conhecimento contextual sobre as regras de negócio da aplicação.
+\end{itemize}
+
+A utilização de IA como \textit{Deepseek-Coder} mostra-se útil para gerar testes iniciais ou esboços
+de casos simples, servindo como base para desenvolvimento manual posterior. No entanto, para atingir
+uma cobertura robusta e garantir a validação de cenários críticos, foi necessário complementar esta
+abordagem com testes gerados por métodos mais estruturados, como a geração controlada via Haskell.
+
+\section{Conclusão}
+
+\begingroup
+\section{Bibliografia}
+\renewcommand{\section}[2]{}
+
+\begin{thebibliography}{9}
+    \bibitem{opengl}
+        "The Industry's Foundation for High Performance Graphics."{}. OpenGL. Accessed:
+        Mar. 2, 2025. [Online.] Available: \url{https://www.opengl.org/}
+\end{thebibliography}
+\endgroup
+
+\end{document}
