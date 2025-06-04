@@ -22,8 +22,12 @@ module Generators
   , Activity(..)
   , TrainingPlan(..)
   , genActivity
-  , genTrainingPlan,
-  toJavaCreateUserArgs
+  , genTrainingPlan
+  , toJavaCreateUserArgs
+  , genAddress
+  , genPhone
+  , genEmail
+  , genUserName
   ) where
 
 import Data.List (intercalate)

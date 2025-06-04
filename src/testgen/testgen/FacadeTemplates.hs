@@ -15,6 +15,16 @@
 module FacadeTemplates (
     equalityTemplate,
     emailTemplate,
+    createAndGetUserTemplate,
+    removeUserByEmailTemplate,
+    removeUserByUUIDTemplate,
+    removeUserInvalidTypeTemplate,
+    getUserInvalidTypeTemplate,
+    removeNonExistentUserTemplate,
+    updateUserTemplate,
+    updateEmailTemplate,
+    duplicateUserTemplate,
+    getAllUsersTemplate,
     getActivitiesFromUserTemplate,
     addActivityToUserTemplate,
     removeActivityFromUserTemplate,
@@ -30,13 +40,13 @@ module FacadeTemplates (
     getAllTrainingPlansTemplate,
     addActivityToTrainingPlanTemplate,
     removeActivityFromTrainingPlanTemplate,
-    getTrainingPlansFromUserTemplate
+    getTrainingPlansFromUserTemplate,
   ) where
 
 import Java (assertEquals, assertTrue, runJava, toJavaExpression, toJavaExpressionList,
   JavaData (toJavaExpression), assertThrows)
 import TestTemplate (TestTemplate(..), genToTestTemplate)
-import Test.QuickCheck (Gen, arbitrary, elements, generate, listOf, Arbitrary (arbitrary))
+import Test.QuickCheck (Gen, arbitrary, elements, generate, choose, listOf, Arbitrary (arbitrary), suchThat)
 import Generators
 import Data.List (intercalate)
 import GHC.Generics (Associativity)
@@ -54,12 +64,6 @@ equalityTestGenerator = do
 equalityTemplate :: TestTemplate
 equalityTemplate = genToTestTemplate "equals" equalityTestGenerator 3
 
-genEmail :: Gen String
-genEmail = do
-  before <- listOf $ elements (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'])
-  after <- listOf $ elements (['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'])
-  return $ before ++ "@" ++ after ++ ".com"
-
 emailTestGenerator :: IO [String]
 emailTestGenerator = do
   email <- generate $ genEmail
@@ -76,7 +80,7 @@ emailTestGenerator = do
 emailTemplate :: TestTemplate
 emailTemplate = TestTemplate "validEmail" emailTestGenerator 1
 
--- getActivitiesFromUser 
+-- getActivitiesFromUser
 userEmail :: User -> String
 userEmail (Amateur _ _ _ _ _ _ _ _ _ email _)         = email
 userEmail (Occasional _ _ _ _ _ _ _ _ _ email _ _)    = email
@@ -92,6 +96,253 @@ userCodeActivity userCode (PushUp _ a b c d e f) = PushUp userCode a b c d e f
 userCodeActivity userCode (Running _ a b c d e f) = Running userCode a b c d e f
 userCodeActivity userCode (Trail _ a b c d e f g h) = Trail userCode a b c d e f g h
 userCodeActivity userCode (WeightSquat _ a b c d e f g) = WeightSquat userCode a b c d e f g
+
+userName :: User -> String
+userName (Amateur     name _ _ _ _ _ _ _ _ _ _)       = name
+userName (Occasional  name _ _ _ _ _ _ _ _ _ _ _)  = name
+userName (Professional name _ _ _ _ _ _ _ _ _ _ _)     = name
+
+userAge :: User -> Int
+userAge (Amateur     _ age _ _ _ _ _ _ _ _ _)       = age
+userAge (Occasional  _ age _ _ _ _ _ _ _ _ _ _)    = age
+userAge (Professional _ age _ _ _ _ _ _ _ _ _ _)     = age
+
+-- testCreateAndGetUser:
+testCreateAndGetUserGenerator :: Gen [String]
+testCreateAndGetUserGenerator = do
+  user <- arbitrary :: Gen User
+  let name       = userName user
+      age        = userAge user
+      email      = userEmail user
+      setupLine       = "MakeItFit model = new MakeItFit();"
+      createUserLine  = "model.createUser(" ++ toJavaCreateUserArgs user ++ ");"
+      existsLine      = "assertTrue(model.existsUserWithEmail(" ++ toJavaExpression email ++ "));"
+      getUserLine     = "User user = model.getUser(" ++ toJavaExpression email ++ ");"
+      assertNameLine  = "assertEquals(" ++ toJavaExpression name ++ ", user.getName());"
+      assertAgeLine   = "assertEquals(" ++ show age ++ ", user.getAge());"
+  return
+    [ setupLine
+    , createUserLine
+    , existsLine
+    , getUserLine
+    , assertNameLine
+    , assertAgeLine
+    ]
+
+createAndGetUserTemplate :: TestTemplate
+createAndGetUserTemplate =
+  genToTestTemplate "testCreateAndGetUser" testCreateAndGetUserGenerator 1
+
+-- testRemoveUserByEmail
+testRemoveUserByEmailGenerator :: Gen [String]
+testRemoveUserByEmailGenerator = do
+  user <- arbitrary :: Gen User
+  let email      = userEmail user
+      setupLine    = "MakeItFit model = new MakeItFit();"
+      createLine   = "model.createUser(" ++ toJavaCreateUserArgs user ++ ");"
+      removeLine   = "model.removeUser(" ++ toJavaExpression email ++ ");"
+      assertLine   = "assertFalse(model.existsUserWithEmail(" ++ toJavaExpression email ++ "));"
+  return [ setupLine, createLine, removeLine, assertLine ]
+
+removeUserByEmailTemplate :: TestTemplate
+removeUserByEmailTemplate =
+  genToTestTemplate "testRemoveUserByEmail" testRemoveUserByEmailGenerator 1
+
+-- testRemoveUserByUUID
+testRemoveUserByUUIDGenerator :: Gen [String]
+testRemoveUserByUUIDGenerator = do
+  user <- arbitrary :: Gen User
+  let email      = userEmail user
+      createArgs = toJavaCreateUserArgs user
+      setupLine    = "MakeItFit model = new MakeItFit();"
+      createLine   = "model.createUser(" ++ toJavaCreateUserArgs user ++ ");"
+      getIdLine    = "UUID id = model.getUser(" ++ toJavaExpression email ++ ").getCode();"
+      removeLine   = "model.removeUser(id);"
+      assertLine   = "assertFalse(model.existsUserWithEmail(" ++ toJavaExpression email ++ "));"
+  return [ setupLine, createLine, getIdLine, removeLine, assertLine ]
+
+removeUserByUUIDTemplate :: TestTemplate
+removeUserByUUIDTemplate =
+  genToTestTemplate "testRemoveUserByUUID" testRemoveUserByUUIDGenerator 1
+
+-- TODO testRemoveUserInvalidType
+testRemoveUserInvalidTypeGenerator :: Gen [String]
+testRemoveUserInvalidTypeGenerator = do
+  let setupLine  = "MakeItFit model = new MakeItFit();"
+      assertLine = "assertThrows(InvalidTypeException.class, () -> model.removeUser(123));"
+  return [ setupLine, assertLine ]
+
+removeUserInvalidTypeTemplate :: TestTemplate
+removeUserInvalidTypeTemplate =
+  genToTestTemplate "testRemoveUserInvalidType" testRemoveUserInvalidTypeGenerator 1
+
+-- TODO testGetUserInvalidType
+testGetUserInvalidTypeGenerator :: Gen [String]
+testGetUserInvalidTypeGenerator = do
+  let setupLine  = "MakeItFit model = new MakeItFit();"
+      assertLine = "assertThrows(InvalidTypeException.class, () -> model.getUser(123));"
+  return [ setupLine, assertLine ]
+
+getUserInvalidTypeTemplate :: TestTemplate
+getUserInvalidTypeTemplate =
+  genToTestTemplate "testGetUserInvalidType" testGetUserInvalidTypeGenerator 1
+
+-- TODO testRemoveNonExistentUserThrowsException
+testRemoveNonExistentUserGenerator :: Gen [String]
+testRemoveNonExistentUserGenerator = do
+  let setupLine  = "MakeItFit model = new MakeItFit();"
+      assertLine = "assertThrows(EntityDoesNotExistException.class, () -> model.removeUser(\"doesntexist@gmail.com\"));"
+  return [ setupLine, assertLine ]
+
+removeNonExistentUserTemplate :: TestTemplate
+removeNonExistentUserTemplate =
+  genToTestTemplate "testRemoveNonExistentUser" testRemoveNonExistentUserGenerator 1
+
+-- testUpdateUser
+testUpdateUserGenerator :: Gen [String]
+testUpdateUserGenerator = do
+  user <- arbitrary :: Gen User
+  let email     = userEmail user
+
+  newName    <- genUserName
+  newAge <- choose (18, 80) :: Gen Int
+  newGender  <- arbitrary :: Gen Gender
+  newWeight  <- elements [50..100] :: Gen Int
+  newHeight  <- choose (150, 195) :: Gen Int
+  newBpm <- choose (60, 100) :: Gen Int
+  newLevel   <- choose (1, 10) :: Gen Int
+  newAddress <- genAddress
+  newPhone   <- genPhone
+
+  let setupLine     = "MakeItFit model = new MakeItFit();"
+      createLine    = "model.createUser(" ++ toJavaCreateUserArgs user ++ ");"
+      updNameLine   = "model.updateUserName("   ++ toJavaExpression newName   ++ ", " ++ toJavaExpression email ++ ");"
+      updAgeLine    = "model.updateUserAge("    ++ show newAge       ++ ", " ++ toJavaExpression email ++ ");"
+      updGenderLine = "model.updateUserGender(" ++ toJavaExpression newGender ++ ", " ++ toJavaExpression email ++ ");"
+      updWeightLine = "model.updateUserWeight(" ++ show newWeight    ++ "f, " ++ toJavaExpression email ++ ");"
+      updHeightLine = "model.updateUserHeight(" ++ show newHeight    ++ ", " ++ toJavaExpression email ++ ");"
+      updBpmLine    = "model.updateUserBpm("    ++ show newBpm       ++ ", " ++ toJavaExpression email ++ ");"
+      updLevelLine  = "model.updateUserLevel("  ++ show newLevel     ++ ", " ++ toJavaExpression email ++ ");"
+      updAddrLine   = "model.updateUserAddress("++ toJavaExpression newAddress ++ ", " ++ toJavaExpression email ++ ");"
+      updPhoneLine  = "model.updateUserPhone("  ++ toJavaExpression newPhone ++ ", " ++ toJavaExpression email ++ ");"
+      getUpdatedByEmailLine = "User updated = model.getUser(" ++ toJavaExpression email ++ ");"
+      getCodeLine         = "UUID id = updated.getCode();"
+      getByIdLine         = "User u = model.getUser(id);"
+      assertName1        = "assertEquals(" ++ toJavaExpression newName ++ ", u.getName());"
+      assertName2        = "assertEquals(" ++ toJavaExpression newName ++ ", updated.getName());"
+      assertAge          = "assertEquals(" ++ show newAge ++ ", updated.getAge());"
+      assertGender       = "assertEquals(" ++ toJavaExpression newGender ++ ", updated.getGender());"
+      assertWeight       = "assertEquals(" ++ show newWeight ++ "f, updated.getWeight());"
+      assertHeight       = "assertEquals(" ++ show newHeight ++ ", updated.getHeight());"
+      assertBpm          = "assertEquals(" ++ show newBpm ++ ", updated.getBpm());"
+      assertLevel        = "assertEquals(" ++ show newLevel ++ ", updated.getLevel());"
+      assertAddress      = "assertEquals(" ++ toJavaExpression newAddress ++ ", updated.getAddress());"
+      assertPhone        = "assertEquals(" ++ toJavaExpression newPhone ++ ", updated.getPhone());"
+
+  return
+    [ setupLine
+    , createLine
+    , updNameLine
+    , updAgeLine
+    , updGenderLine
+    , updWeightLine
+    , updHeightLine
+    , updBpmLine
+    , updLevelLine
+    , updAddrLine
+    , updPhoneLine
+    , getUpdatedByEmailLine
+    , getCodeLine
+    , getByIdLine
+    , assertName1
+    , assertName2
+    , assertAge
+    , assertGender
+    , assertWeight
+    , assertHeight
+    , assertBpm
+    , assertLevel
+    , assertAddress
+    , assertPhone
+    ]
+
+updateUserTemplate :: TestTemplate
+updateUserTemplate =
+  genToTestTemplate "testUpdateUser" testUpdateUserGenerator 1
+
+-- testUpdateEmail
+testUpdateEmailGenerator :: Gen [String]
+testUpdateEmailGenerator = do
+  user <- arbitrary :: Gen User
+  let oldEmail   = userEmail user
+      oldNoSp    = filter (/= ' ') oldEmail
+  newEmail <- genEmail `suchThat` (/= oldEmail)
+  let newNoSp = filter (/= ' ') newEmail
+      setupLine      = "MakeItFit model = new MakeItFit();"
+      createLine     = "model.createUser(" ++ toJavaCreateUserArgs user ++ ");"
+      updEmailLine   = "model.updateUserEmail(" ++ toJavaExpression oldNoSp ++ ", " ++ toJavaExpression newNoSp ++ ");"
+      assertOldGone  = "assertFalse(model.existsUserWithEmail(" ++ toJavaExpression oldNoSp ++ "));"
+      assertNewThere = "assertTrue(model.existsUserWithEmail(" ++ toJavaExpression newNoSp ++ "));"
+      getUserLine    = "User user = model.getUser(" ++ toJavaExpression newNoSp ++ ");"
+      assertNameLine = "assertEquals(" ++ toJavaExpression (userName user) ++ ", user.getName());"
+
+  return
+    [ setupLine
+    , createLine
+    , updEmailLine
+    , assertOldGone
+    , assertNewThere
+    , getUserLine
+    , assertNameLine
+    ]
+
+updateEmailTemplate :: TestTemplate
+updateEmailTemplate =
+  genToTestTemplate "testUpdateEmail" testUpdateEmailGenerator 1
+
+-- testDuplicateUser
+testDuplicateUserGenerator :: Gen [String]
+testDuplicateUserGenerator = do
+  user <- arbitrary :: Gen User
+  let setupLine    = "MakeItFit model = new MakeItFit();"
+      firstCreate  = "model.createUser(" ++ toJavaCreateUserArgs user ++ ");"
+      assertLine   = "assertThrows(ExistingEntityConflictException.class, () -> model.createUser(" ++ toJavaCreateUserArgs user ++ "));"
+  return [ setupLine, firstCreate, assertLine ]
+
+duplicateUserTemplate :: TestTemplate
+duplicateUserTemplate =
+  genToTestTemplate "testDuplicateUser" testDuplicateUserGenerator 1
+
+-- testGetAllUsers
+testGetAllUsersGenerator :: Gen [String]
+testGetAllUsersGenerator = do
+  user <- arbitrary :: Gen User
+  let email      = userEmail user
+      createArgs = toJavaCreateUserArgs user
+
+      setupLine     = "MakeItFit model = new MakeItFit();"
+      getAll1       = "List<User> allUsers = model.getAllUsers();"
+      assertNotNull = "assertNotNull(allUsers);"
+      assertEmpty   = "assertTrue(allUsers.isEmpty());"
+      createLine    = "model.createUser(" ++ toJavaCreateUserArgs user ++ ");"
+      getAll2       = "allUsers = model.getAllUsers();"
+      collectEmails = "List<String> emails = allUsers.stream().map(User::getEmail).collect(Collectors.toList());"
+      assertContains = "assertTrue(emails.contains(" ++ toJavaExpression email ++ "));"
+
+  return
+    [ setupLine
+    , getAll1
+    , assertNotNull
+    , assertEmpty
+    , createLine
+    , getAll2
+    , collectEmails
+    , assertContains
+    ]
+
+getAllUsersTemplate :: TestTemplate
+getAllUsersTemplate =
+  genToTestTemplate "testGetAllUsers" testGetAllUsersGenerator 1
 
 getActivitiesFromUserTestGenerator :: Gen [String]
 getActivitiesFromUserTestGenerator = do
@@ -118,7 +369,7 @@ getActivitiesFromUserTemplate :: TestTemplate
 getActivitiesFromUserTemplate = genToTestTemplate "getActivitiesFromUserTest"
     getActivitiesFromUserTestGenerator 1
 
--- addActivityToUser 
+-- addActivityToUser
 addActivityToUserTestGenerator :: Gen [String]
 addActivityToUserTestGenerator = do
   user <- arbitrary :: Gen User
@@ -151,7 +402,7 @@ addActivityToUserTemplate :: TestTemplate
 addActivityToUserTemplate = genToTestTemplate "addActivityToUserTest"
       addActivityToUserTestGenerator 1
 
--- removeActivityFromUser 
+-- removeActivityFromUser
 removeActivityFromUserTestGenerator :: Gen [String]
 removeActivityFromUserTestGenerator = do
   user <- arbitrary :: Gen User
@@ -191,7 +442,7 @@ removeActivityFromUserTemplate :: TestTemplate
 removeActivityFromUserTemplate = genToTestTemplate "removeActivityFromUserTest"
       removeActivityFromUserTestGenerator 1
 
--- createTrainingPlan 
+-- createTrainingPlan
 createTrainingPlanTestGenerator :: Gen [String]
 createTrainingPlanTestGenerator = do
   user <- arbitrary :: Gen User
@@ -236,7 +487,7 @@ createTrainingPlanExceptionTemplate :: TestTemplate
 createTrainingPlanExceptionTemplate = genToTestTemplate "createTrainingPlanExceptionTest"
       createTrainingPlanExceptionTestGenerator 1
 
--- ConstructTrainingPlan 
+-- ConstructTrainingPlan
 constructTrainingPlanTestGenerator :: Gen [String]
 constructTrainingPlanTestGenerator = do
   user <- arbitrary :: Gen User
@@ -310,7 +561,7 @@ removeTrainingPlanTemplate :: TestTemplate
 removeTrainingPlanTemplate =
   genToTestTemplate "removeTrainingPlanTest" removeTrainingPlanTestGenerator 1
 
--- getTrainingPlan 
+-- getTrainingPlan
 getTrainingPlanTestGenerator :: Gen [String]
 getTrainingPlanTestGenerator = do
   user <- arbitrary :: Gen User
@@ -352,7 +603,7 @@ getTrainingPlanExceptionTemplate :: TestTemplate
 getTrainingPlanExceptionTemplate =
   genToTestTemplate "getTrainingPlanExceptionTest" getTrainingPlanExceptionTestGenerator 1
 
--- updateTrainingPlan 
+-- updateTrainingPlan
 updateTrainingPlanTestGenerator :: Gen [String]
 updateTrainingPlanTestGenerator = do
   user <- arbitrary :: Gen User
@@ -404,7 +655,7 @@ updateTrainingPlanExceptionTemplate :: TestTemplate
 updateTrainingPlanExceptionTemplate =
   genToTestTemplate "updateTrainingPlanExceptionTest" updateTrainingPlanExceptionTestGenerator 1
 
--- getAllTrainingPlans 
+-- getAllTrainingPlans
 getAllTrainingPlansTestGenerator :: Gen [String]
 getAllTrainingPlansTestGenerator = do
   user <- arbitrary :: Gen User

@@ -26,6 +26,16 @@ import FacadeTemplates
 
 templates =
   [
+    createAndGetUserTemplate,
+    removeUserByEmailTemplate,
+    removeUserByUUIDTemplate,
+    removeUserInvalidTypeTemplate,
+    getUserInvalidTypeTemplate,
+    removeNonExistentUserTemplate,
+    updateUserTemplate,
+    updateEmailTemplate,
+    duplicateUserTemplate,
+    getAllUsersTemplate,
     getActivitiesFromUserTemplate,
     addActivityToUserTemplate,
     removeActivityFromUserTemplate,
@@ -64,6 +74,7 @@ generateUnformattedTestClass = do
           , "import MakeItFit.users.User;"
           , "import MakeItFit.users.Gender;"
           , "import java.util.UUID;"
+          , "import java.util.stream.Collectors;"
           , "import MakeItFit.activities.Activity;"
           , "import MakeItFit.activities.implementation.*;"
           , "import MakeItFit.utils.MakeItFitDate;"
