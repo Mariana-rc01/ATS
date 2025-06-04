@@ -240,7 +240,8 @@ toJavaCreateUserArgs (Amateur name age gender weight height bpm level address ph
                    , "0"  -- valor default para frequency
                    , "\"Amateur\""
                    ]
-toJavaCreateUserArgs (Occasional name age gender weight height bpm level address phone email freq _) =
+toJavaCreateUserArgs (Occasional name age gender weight height bpm level address phone email
+    freq _) =
   intercalate ", " [ toJavaExpression name
                    , toJavaExpression age
                    , toJavaExpression gender
@@ -254,7 +255,8 @@ toJavaCreateUserArgs (Occasional name age gender weight height bpm level address
                    , toJavaExpression freq
                    , "\"Occasional\""
                    ]
-toJavaCreateUserArgs (Professional name age gender weight height bpm level address phone email freq _) =
+toJavaCreateUserArgs (Professional name age gender weight height bpm level address phone email
+    freq _) =
   intercalate ", " [ toJavaExpression name
                    , toJavaExpression age
                    , toJavaExpression gender
