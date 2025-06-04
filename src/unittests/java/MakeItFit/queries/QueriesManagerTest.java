@@ -154,8 +154,17 @@ public class QueriesManagerTest {
         WhoBurnsMoreCalories query = new WhoBurnsMoreCalories();
 
         this.user.addActivities(Arrays.asList(this.trail, this.trail));
-        User user1 = this.user.clone();
-        user1.setEmail("something@diferent.com");
+        User user1 = new Professional("JohnDoe",
+                                      21,
+                                      Gender.Male,
+                                      59,
+                                      150,
+                                      60,
+                                      6,
+                                      "Lloyd",
+                                      "987 123 432",
+                                      "something@diferent.pt",
+                                      7);
 
         this.userManager.insertUser(user);
         this.userManager.insertUser(user1);
@@ -174,8 +183,17 @@ public class QueriesManagerTest {
         WhoBurnsMoreCalories query = new WhoBurnsMoreCalories();
 
         this.user.addActivities(Arrays.asList(this.trail, this.trail));
-        User user1 = this.user.clone();
-        user1.setEmail("something@diferent.com");
+        User user1 = new Professional("JohnDoe",
+                                      21,
+                                      Gender.Male,
+                                      59,
+                                      150,
+                                      60,
+                                      6,
+                                      "Lloyd",
+                                      "987 123 432",
+                                      "something@diferent.pt",
+                                      7);
         user1.addActivity(this.trail);
 
         this.userManager.insertUser(user);
@@ -190,9 +208,17 @@ public class QueriesManagerTest {
         WhoDidTheMostActivities query = new WhoDidTheMostActivities();
 
         this.user.addActivities(Arrays.asList(this.trail, this.trail));
-        User user1 = this.user.clone();
-        user1.setEmail("something@diferent.com");
-        user1.addActivity(this.trail);
+        User user1 = new Professional("JohnDoe",
+                                      21,
+                                      Gender.Male,
+                                      59,
+                                      150,
+                                      60,
+                                      6,
+                                      "Lloyd",
+                                      "987 123 432",
+                                      "something@diferent.pt",
+                                      7);
 
         this.userManager.insertUser(user);
         this.userManager.insertUser(user1);
@@ -211,8 +237,18 @@ public class QueriesManagerTest {
         WhoDidTheMostActivities query = new WhoDidTheMostActivities();
 
         this.user.addActivities(Arrays.asList(this.trail, this.trail));
-        User user1 = this.user.clone();
-        user1.setEmail("something@diferent.com");
+        User user1 = new Professional("JohnDoe",
+                                      21,
+                                      Gender.Male,
+                                      59,
+                                      150,
+                                      60,
+                                      6,
+                                      "Lloyd",
+                                      "987 123 432",
+                                      "something@diferent.pt",
+                                      7);
+
         user1.addActivity(this.trail);
 
         this.userManager.insertUser(user);
