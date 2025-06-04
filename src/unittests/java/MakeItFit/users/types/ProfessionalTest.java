@@ -204,24 +204,22 @@ public class ProfessionalTest {
     @Test
     public void testToString1() {
         // clang-format off
-        String format = """
-                        == (User details) ==
-                        Code: %s
-                        Name: Alex
-                        Age: 40
-                        Gender: Other
-                        Weight: 65.00 kg
-                        Height: 170 cm
-                        Bpm: 68
-                        Level: 1
-                        Address: Morada
-                        Phone: +351 789
-                        Email: mno@pqr.com
-                        Activities: []
-                        Specialization: No specialization
-                        Frequency: 7
-                        ====================
-                        """;
+        String format = "== (User details) ==\n"+
+                        "Code: %s\n"+
+                        "Name: Alex\n"+
+                        "Age: 40\n"+
+                        "Gender: Other\n"+
+                        "Weight: 65.00 kg\n"+
+                        "Height: 170 cm\n"+
+                        "Bpm: 68\n"+
+                        "Level: 1\n"+
+                        "Address: Morada\n"+
+                        "Phone: +351 789\n"+
+                        "Email: mno@pqr.com\n"+
+                        "Activities: []\n"+
+                        "Specialization: No specialization\n"+
+                        "Frequency: 7\n"+
+                        "====================\n";
 
         assertEquals(String.format(format, this.referenceUser.getCode()),
                      this.referenceUser.toString());
@@ -233,24 +231,22 @@ public class ProfessionalTest {
         this.referenceUser.addActivity(this.referenceActivity);
 
         // clang-format off
-        String format = """
-                        == (User details) ==
-                        Code: %s
-                        Name: Alex
-                        Age: 40
-                        Gender: Other
-                        Weight: 65.00 kg
-                        Height: 170 cm
-                        Bpm: 68
-                        Level: 1
-                        Address: Morada
-                        Phone: +351 789
-                        Email: mno@pqr.com
-                        Activities: [%s]
-                        Specialization: No specialization
-                        Frequency: 7
-                        ====================
-                        """;
+        String format = "== (User details) ==\n"+
+                        "Code: %s\n"+
+                        "Name: Alex\n"+
+                        "Age: 40\n"+
+                        "Gender: Other\n"+
+                        "Weight: 65.00 kg\n"+
+                        "Height: 170 cm\n"+
+                        "Bpm: 68\n"+
+                        "Level: 1\n"+
+                        "Address: Morada\n"+
+                        "Phone: +351 789\n"+
+                        "Email: mno@pqr.com\n"+
+                        "Activities: [%s]\n"+
+                        "Specialization: No specialization\n"+
+                        "Frequency: 7\n"+
+                        "====================\n";
 
         assertEquals(String.format(format, this.referenceUser.getCode(), this.referenceActivity),
                      this.referenceUser.toString());

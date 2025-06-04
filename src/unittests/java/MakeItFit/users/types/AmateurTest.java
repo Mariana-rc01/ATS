@@ -167,22 +167,20 @@ public class AmateurTest {
     @Test
     public void testToString() {
         // clang-format off
-        String format = """
-                        == (User details) ==
-                        Code: %s
-                        Name: João
-                        Age: 30
-                        Gender: Male
-                        Weight: 80.50 kg
-                        Height: 180 cm
-                        Bpm: 70
-                        Level: 0
-                        Address: Casa
-                        Phone: +351 123
-                        Email: abc@def.com
-                        Activities: []
-                        ====================
-                        """;
+        String format = "== (User details) ==\n"+
+                        "Code: %s\n"+
+                        "Name: João\n"+
+                        "Age: 30\n"+
+                        "Gender: Male\n"+
+                        "Weight: 80.50 kg\n"+
+                        "Height: 180 cm\n"+
+                        "Bpm: 70\n"+
+                        "Level: 0\n"+
+                        "Address: Casa\n"+
+                        "Phone: +351 123\n"+
+                        "Email: abc@def.com\n"+
+                        "Activities: []\n"+
+                        "====================\n";
 
         assertEquals(String.format(format, this.referenceUser.getCode()),
                      this.referenceUser.toString());

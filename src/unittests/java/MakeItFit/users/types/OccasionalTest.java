@@ -165,23 +165,21 @@ public class OccasionalTest {
     @Test
     public void testToString() {
         // clang-format off
-        String format = """
-                        == (User details) ==
-                        Code: %s
-                        Name: Maria
-                        Age: 25
-                        Gender: Female
-                        Weight: 60.20 kg
-                        Height: 165 cm
-                        Bpm: 74
-                        Level: 1
-                        Address: Mi casa tu casa
-                        Phone: +351 456
-                        Email: ghi@jkl.com
-                        Activities: []
-                        Frequency: 10
-                        ====================
-                        """;
+        String format = "== (User details) ==\n"+
+                        "Code: %s\n"+
+                        "Name: Maria\n"+
+                        "Age: 25\n"+
+                        "Gender: Female\n"+
+                        "Weight: 60.20 kg\n"+
+                        "Height: 165 cm\n"+
+                        "Bpm: 74\n"+
+                        "Level: 1\n"+
+                        "Address: Mi casa tu casa\n"+
+                        "Phone: +351 456\n"+
+                        "Email: ghi@jkl.com\n"+
+                        "Activities: []\n"+
+                        "Frequency: 10\n"+
+                        "====================\n";
 
         assertEquals(String.format(format, this.referenceUser.getCode()),
                      this.referenceUser.toString());
