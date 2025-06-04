@@ -11,6 +11,9 @@ import java.io.Serializable;
  * @author  Afonso Santos (a104276), Hélder Gomes (a104100) and Pedro Pereira (a104082)
  * @version (11052024)
  */
+/* References to generic type MyTuple<T1,T2> should be parameterized
+public class MyTuple<T1, T2> implements Serializable, Comparable<MyTuple> {
+*/
 public class MyTuple<T1, T2> implements Serializable, Comparable<MyTuple<T1, T2>> {
 
     private final T1 item1;
@@ -81,6 +84,9 @@ public class MyTuple<T1, T2> implements Serializable, Comparable<MyTuple<T1, T2>
      *     or greater than the other tuple
      */
     @Override
+    /* References to generic type MyTuple<T1,T2> should be parameterized
+    public int compareTo(MyTuple other) {
+    */
     public int compareTo(MyTuple<T1, T2> other) {
         int compareItem1 = this.item1.toString().compareTo(other.item1.toString());
         if (compareItem1 == 0) {
@@ -95,6 +101,10 @@ public class MyTuple<T1, T2> implements Serializable, Comparable<MyTuple<T1, T2>
      * @return A new MyTuple instance that is a copy of the current instance.
      */
     @Override
+    /* References to generic type MyTuple<T1,T2> should be parameterized
+    public MyTuple clone() {
+        return new MyTuple(this.item1, this.item2);
+    */
     public MyTuple<T1, T2> clone() {
         return new MyTuple<T1, T2>(this.item1, this.item2);
     }
