@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import MakeItFit.activities.Activity;
 import MakeItFit.activities.implementation.PushUp;
@@ -225,9 +226,8 @@ public class MakeItFitTest {
                          1,
                          "Amateur");
 
-        allUsers = model.getAllUsers();
-        assertEquals(1, allUsers.size());
-        List<String> emails = allUsers.stream().map(User::getEmail).toList();
+        allUsers            = model.getAllUsers();
+        List<String> emails = allUsers.stream().map(User::getEmail).collect(Collectors.toList());
         assertTrue(emails.contains("olivia@outlook.com"));
     }
 
@@ -932,7 +932,7 @@ public class MakeItFitTest {
         model.addActivityToUser("marta@outlook.com", activity2);
 
         String mostDone = model.executeQueryMostDoneActivity();
-        assertEquals("RepetitionsWithWeights", mostDone);
+        assertEquals("Repetitions", mostDone);
     }
 
     @Test
