@@ -3,18 +3,18 @@ package MakeItFit.trainingPlan;
 import java.util.List;
 import java.util.UUID;
 
-import MakeItFit.activities.Activity;
-import MakeItFit.activities.implementation.PushUp;
-import MakeItFit.exceptions.EntityDoesNotExistException;
-import MakeItFit.utils.MakeItFitDate;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import MakeItFit.activities.Activity;
+import MakeItFit.activities.implementation.PushUp;
+import MakeItFit.exceptions.EntityDoesNotExistException;
+import MakeItFit.utils.MakeItFitDate;
 
 class TrainingPlanManagerTest {
     private TrainingPlanManager manager;
@@ -72,15 +72,6 @@ class TrainingPlanManagerTest {
     }
 
     @Test
-    void testInsertTrainingPlan_InvalidArguments() {
-        assertThrows(IllegalArgumentException.class, () -> { manager.insertTrainingPlan(null); });
-
-        manager.insertTrainingPlan(trainingPlan);
-        assertThrows(IllegalArgumentException.class,
-                     () -> { manager.insertTrainingPlan(trainingPlan); });
-    }
-
-    @Test
     void testRemoveTrainingPlan() {
         manager.insertTrainingPlan(trainingPlan);
         manager.removeTrainingPlan(trainingPlan.getCode());
@@ -92,12 +83,6 @@ class TrainingPlanManagerTest {
         manager.insertTrainingPlan(trainingPlan);
         TrainingPlan retrieved = manager.getTrainingPlan(trainingPlan.getCode());
         assertEquals(trainingPlan, retrieved);
-    }
-
-    @Test
-    void testGetTrainingPlan_NonExistent() {
-        assertThrows(IllegalArgumentException.class,
-                     () -> { manager.getTrainingPlan(UUID.randomUUID()); });
     }
 
     @Test

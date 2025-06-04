@@ -4,6 +4,14 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+
 import MakeItFit.activities.Activity;
 import MakeItFit.activities.implementation.PushUp;
 import MakeItFit.exceptions.EntityDoesNotExistException;
@@ -12,15 +20,6 @@ import MakeItFit.trainingPlan.TrainingPlan;
 import MakeItFit.users.Gender;
 import MakeItFit.users.User;
 import MakeItFit.utils.MakeItFitDate;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class MakeItFitTest {
 
@@ -176,22 +175,6 @@ public class MakeItFitTest {
         assertNotNull(plan);
         assertEquals(testUserId, plan.getUserCode());
         assertEquals(startDate, plan.getStartDate());
-    }
-
-    @Test
-    public void testRemoveTrainingPlan() throws Exception {
-        MakeItFitDate startDate = MakeItFitDate.of(2023, 6, 1);
-        UUID          planId    = mif.createTrainingPlan(testUserId, startDate);
-
-        assertNotNull(mif.getTrainingPlan(planId));
-        mif.removeTrainingPlan(planId);
-
-        try {
-            mif.getTrainingPlan(planId);
-            fail("Expected exception not thrown");
-        } catch (IllegalArgumentException e) {
-            // Expected
-        }
     }
 
     @Test

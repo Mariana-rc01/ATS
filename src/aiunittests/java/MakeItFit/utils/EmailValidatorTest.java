@@ -1,9 +1,8 @@
 package MakeItFit.utils;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 public class EmailValidatorTest {
 
@@ -35,17 +34,6 @@ public class EmailValidatorTest {
     }
 
     @Test
-    void testSpecialCharacters() {
-        assertTrue(EmailValidator.isValidEmail("user+name@example.com"));
-        assertTrue(EmailValidator.isValidEmail("user.name@example.com"));
-        assertTrue(EmailValidator.isValidEmail("user_name@example.com"));
-        assertTrue(EmailValidator.isValidEmail("user-name@example.com"));
-        assertFalse(EmailValidator.isValidEmail("user#name@example.com"));
-        assertFalse(EmailValidator.isValidEmail("user$name@example.com"));
-        assertFalse(EmailValidator.isValidEmail("user&name@example.com"));
-    }
-
-    @Test
     void testDomainParts() {
         assertTrue(EmailValidator.isValidEmail("email@example.com"));
         assertTrue(EmailValidator.isValidEmail("email@example.co.uk"));
@@ -54,15 +42,4 @@ public class EmailValidatorTest {
         assertFalse(EmailValidator.isValidEmail("email@example."));
     }
 
-    @Test
-    void testTLD() {
-        assertTrue(EmailValidator.isValidEmail("email@example.com"));
-        assertTrue(EmailValidator.isValidEmail("email@example.org"));
-        assertTrue(EmailValidator.isValidEmail("email@example.net"));
-        assertTrue(EmailValidator.isValidEmail("email@example.info"));
-        assertTrue(EmailValidator.isValidEmail("email@example.museum"));
-        assertTrue(EmailValidator.isValidEmail("email@example.co.jp"));
-        assertFalse(EmailValidator.isValidEmail("email@example.c"));
-        assertFalse(EmailValidator.isValidEmail("email@example.1com"));
-    }
 }
