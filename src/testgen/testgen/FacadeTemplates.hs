@@ -76,7 +76,7 @@ emailTestGenerator = do
 emailTemplate :: TestTemplate
 emailTemplate = TestTemplate "validEmail" emailTestGenerator 1
 
--- getActivitiesFromUser -> needs a throws Exception
+-- getActivitiesFromUser 
 userEmail :: User -> String
 userEmail (Amateur _ _ _ _ _ _ _ _ _ email _)         = email
 userEmail (Occasional _ _ _ _ _ _ _ _ _ email _ _)    = email
@@ -118,7 +118,7 @@ getActivitiesFromUserTemplate :: TestTemplate
 getActivitiesFromUserTemplate = genToTestTemplate "getActivitiesFromUserTest"
     getActivitiesFromUserTestGenerator 1
 
--- addActivityToUser -> needs a throws Exception
+-- addActivityToUser 
 addActivityToUserTestGenerator :: Gen [String]
 addActivityToUserTestGenerator = do
   user <- arbitrary :: Gen User
@@ -151,7 +151,7 @@ addActivityToUserTemplate :: TestTemplate
 addActivityToUserTemplate = genToTestTemplate "addActivityToUserTest"
       addActivityToUserTestGenerator 1
 
--- removeActivityFromUser -> needs a throws Exception
+-- removeActivityFromUser 
 removeActivityFromUserTestGenerator :: Gen [String]
 removeActivityFromUserTestGenerator = do
   user <- arbitrary :: Gen User
@@ -191,7 +191,7 @@ removeActivityFromUserTemplate :: TestTemplate
 removeActivityFromUserTemplate = genToTestTemplate "removeActivityFromUserTest"
       removeActivityFromUserTestGenerator 1
 
--- createTrainingPlan -> needs a throws Exception
+-- createTrainingPlan 
 createTrainingPlanTestGenerator :: Gen [String]
 createTrainingPlanTestGenerator = do
   user <- arbitrary :: Gen User
@@ -236,7 +236,7 @@ createTrainingPlanExceptionTemplate :: TestTemplate
 createTrainingPlanExceptionTemplate = genToTestTemplate "createTrainingPlanExceptionTest"
       createTrainingPlanExceptionTestGenerator 1
 
--- ConstructTrainingPlan -> needs a throws Exception
+-- ConstructTrainingPlan 
 constructTrainingPlanTestGenerator :: Gen [String]
 constructTrainingPlanTestGenerator = do
   user <- arbitrary :: Gen User
@@ -310,7 +310,7 @@ removeTrainingPlanTemplate :: TestTemplate
 removeTrainingPlanTemplate =
   genToTestTemplate "removeTrainingPlanTest" removeTrainingPlanTestGenerator 1
 
--- getTrainingPlan -> needs a throws Exception
+-- getTrainingPlan 
 getTrainingPlanTestGenerator :: Gen [String]
 getTrainingPlanTestGenerator = do
   user <- arbitrary :: Gen User
@@ -352,7 +352,7 @@ getTrainingPlanExceptionTemplate :: TestTemplate
 getTrainingPlanExceptionTemplate =
   genToTestTemplate "getTrainingPlanExceptionTest" getTrainingPlanExceptionTestGenerator 1
 
--- updateTrainingPlan -> needs a throws Exception
+-- updateTrainingPlan 
 updateTrainingPlanTestGenerator :: Gen [String]
 updateTrainingPlanTestGenerator = do
   user <- arbitrary :: Gen User
@@ -404,7 +404,7 @@ updateTrainingPlanExceptionTemplate :: TestTemplate
 updateTrainingPlanExceptionTemplate =
   genToTestTemplate "updateTrainingPlanExceptionTest" updateTrainingPlanExceptionTestGenerator 1
 
--- getAllTrainingPlans -> needs a throws Exception
+-- getAllTrainingPlans 
 getAllTrainingPlansTestGenerator :: Gen [String]
 getAllTrainingPlansTestGenerator = do
   user <- arbitrary :: Gen User
