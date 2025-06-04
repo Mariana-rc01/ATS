@@ -30,7 +30,7 @@
 }
 \lstset{style=codestyle}
 
-\title{\Huge \textbf{ATS \\ \Large Trabalho Prático}}
+\title{\Huge \textbf{Análise e Testes de Software \\ \Large Trabalho Prático}}
 \date{4 de junho 2025}
 
 \begin{document}
@@ -58,7 +58,7 @@
                         >{\centering\arraybackslash}p{0.25\textwidth}}
 
             Humberto Gomes & José Lopes & Mariana Cristino \\
-            A104348        & AXXXX      & A90817
+            A104348        & A104541    & A90817
         \end{tabular}
     \end{center}
 \end{adjustwidth}
@@ -70,6 +70,59 @@
 \end{abstract}
 
 \section{Gradle}
+
+Para automatizar a compilação e testagem deste projeto, foi utilizado o Gradle. No Gradle, a
+definição de um projeto é feito de forma imperativa, enquanto que no Maven, a ferramenta utilizada
+nas aulas práticas, é feita de forma declarativa. Deste modo, foi possível implementar diversas
+funcionalidades no sistema de compilação que teriam sido consideravelmente mais difíceis (ou até
+impossíveis) de implementar em Maven.
+
+Em primeiro lugar, o projeto suporta todas as tarefas comuns de um projeto Java, como \texttt{run},
+\texttt{build}, \texttt{test}, \texttt{jar}, \emph{etc.}. No entanto, estas tarefas foram estendidas
+para suportarem mais funcionalidades, sendo as maiores mudanças as da tarefa \texttt{test}. Uma
+destas mudanças foi a medição automática de cobertura de código, feita com o JaCoCo. Ademais, foi
+adicionado suporte para mais do que uma \emph{suite} de testes, para ser possível fazer comparações
+entre a qualidade dos diversos tipos de teste utilizados (testes unitários ou gerados
+automaticamente). Para trocar de \emph{suite} de testes, a propriedade \texttt{testDir} deve ser
+utilizada, como mostra o exemplo abaixo:
+
+\begin{center}
+    \texttt{gradle test -PtestDir=oldunittests}
+\end{center}
+
+Outra funcionalidade implementada foi a asserção da versão utilizada do Java conforme a tarefa a
+ser executada. Por exemplo, na geração e execução de testes EvoSuite, o Gradle foi programado para
+apenas aceitar a versão 8 do JDK, enquanto que a versão 21 deve ser utilizada para as restantes
+tarefas. Também durante a execução de testes EvoSuite, o Gradle foi programado para automaticamente
+utilizar o JUnit 4, em vez do JUnit 5.
+
+Muitas tarefas implementadas no Gradle servem para interagir com o projeto Cabal utilizado para
+geração de testes com o QuickCheck: o Gradle faz \emph{pass-through} de alguns comandos, garantindo
+antes que as dependências de cada tarefa foram executadas. Por exemplo, para gerar os teste
+unitários, é necessário que o projeto Java seja compilado em primeiro lugar, e o Gradle é
+responsável por garantir que isso acontece.
+
+Por último, também foram implementas outras tarefas, para uso do PIT e para formatação automática
+de código (feita com recurso ao \texttt{clang-format}). Segue-se uma lista das tarefas mais
+importantes:
+
+\begin{itemize}
+    \item \texttt{gradle build}              -- Compilar os projetos Java e Haskell
+    \item \texttt{gradle run}                -- Executar a aplicação Java (\texttt{MakeItFit})
+    \item \texttt{gradle test -PtestDir=...} -- Executar uma \emph{suite} de testes JUnit
+    \item \texttt{gradle pit}                -- Executar o PIT para \emph{mutation testing}
+    \item \texttt{gradle format}             -- Formatar o código Java e Haskell
+    \vspace{1cm}
+    \item \texttt{gradle generateQuickCheckTests}    -- Gerar testes com o QuickCheck
+    \item \texttt{gradle generateEvoSuiteCheckTests} -- Gerar testes com o EvoSuite
+    \vspace{1cm}
+    \item \texttt{gradle repl}    -- Execução do GHCi no projeto Haskell
+    \item \texttt{gradle haddock} -- Geração de documentação para o projeto Haskell
+\end{itemize}
+
+O Gradle, apesar da sua curva de aprendizagem acentuada, provou-se extremamente capaz de lidar com
+um projeto complexo, que envolvia o uso de diversas ferramentas, várias versões de Java, e duas
+linguagens de programação.
 
 \section{Testes JUnit}
 
@@ -93,7 +146,7 @@ Na classe \texttt{Trail.java}:
         this.trailType = Math.max(TRAIL_TYPE_EASY, Math.min(TRAIL_TYPE_HARD, trailType));
   \end{verbatim}
   Esta abordagem assegura que \texttt{trailType} seja sempre mantido entre os limites definidos
-  (\texttt{TRAIL_TYPE_EASY} e \texttt{TRAIL_TYPE_HARD}).
+  (\texttt{TRAIL\_TYPE\_EASY} e \texttt{TRAIL\_TYPE\_HARD}).
 
   \item O método \texttt{caloriesWaste()} permitia valores negativos devido a um erro aritmético,
   pois utilizava \texttt{-} onde deveria ser \texttt{+} na fórmula do cálculo de calorias. A fórmula
