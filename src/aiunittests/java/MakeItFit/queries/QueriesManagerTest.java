@@ -2,6 +2,10 @@ package MakeItFit.queries;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import org.junit.jupiter.api.Test;
+
 import MakeItFit.activities.Activity;
 import MakeItFit.activities.implementation.Trail;
 import MakeItFit.trainingPlan.TrainingPlan;
@@ -11,10 +15,6 @@ import MakeItFit.users.User;
 import MakeItFit.users.UserManager;
 import MakeItFit.users.types.Amateur;
 import MakeItFit.utils.MakeItFitDate;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class QueriesManagerTest {
 
@@ -23,7 +23,7 @@ public class QueriesManagerTest {
         // Setup managers
         UserManager         userManager    = new UserManager();
         TrainingPlanManager tpManager      = new TrainingPlanManager();
-        QueriesManager      queriesManager = new QueriesManager(userManager, tpManager);
+        QueriesManager      queriesManager = new QueriesManager();
 
         // Create test data
         User user = new Amateur("José Fernandes",
@@ -93,7 +93,7 @@ public class QueriesManagerTest {
     void testWithEmptyData() {
         UserManager         userManager    = new UserManager();
         TrainingPlanManager tpManager      = new TrainingPlanManager();
-        QueriesManager      queriesManager = new QueriesManager(userManager, tpManager);
+        QueriesManager      queriesManager = new QueriesManager();
 
         // MostDoneActivity with no users
         String mostDone = queriesManager.executeQueryMostDoneActivity(userManager);

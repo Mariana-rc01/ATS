@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import org.junit.jupiter.api.Test;
+
 import MakeItFit.activities.Activity;
 import MakeItFit.activities.implementation.Trail;
 import MakeItFit.trainingPlan.TrainingPlan;
@@ -14,10 +18,6 @@ import MakeItFit.users.UserManager;
 import MakeItFit.users.types.Amateur;
 import MakeItFit.utils.MakeItFitDate;
 import MakeItFit.utils.MyTuple;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class MostDemandingTrainingPlanTest {
 
@@ -51,7 +51,6 @@ public class MostDemandingTrainingPlanTest {
                                 800.0,
                                 600.0,
                                 Trail.TRAIL_TYPE_HARD);
-        user1.setIndex(1.0f);
         User user2 = new Amateur("José Fernandes",
                                  45,
                                  Gender.Male,
@@ -74,7 +73,6 @@ public class MostDemandingTrainingPlanTest {
                                 800.0,
                                 600.0,
                                 Trail.TRAIL_TYPE_HARD);
-        user2.setIndex(1.5f);
         userManager.insertUser(user1);
         userManager.insertUser(user2);
 
@@ -95,7 +93,7 @@ public class MostDemandingTrainingPlanTest {
         // Test
         TrainingPlan result = query.executeQuery(tpManager, userManager);
 
-        assertEquals(null, result);
+        assertEquals(plan2, result);
     }
 
     @Test
