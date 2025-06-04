@@ -2,10 +2,6 @@ package MakeItFit.queries;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import org.junit.jupiter.api.Test;
-
 import MakeItFit.activities.Activity;
 import MakeItFit.activities.implementation.Trail;
 import MakeItFit.trainingPlan.TrainingPlan;
@@ -15,6 +11,10 @@ import MakeItFit.users.User;
 import MakeItFit.users.UserManager;
 import MakeItFit.users.types.Amateur;
 import MakeItFit.utils.MakeItFitDate;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class QueriesManagerTest {
 
