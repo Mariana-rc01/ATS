@@ -23,6 +23,10 @@ module Generators
   , TrainingPlan(..)
   , genActivity
   , genTrainingPlan
+  , toJavaCreateUserArgs
+  , genAddress
+  , genPhone
+  , genUserName
   ) where
 
 import Data.List (intercalate)
@@ -47,7 +51,7 @@ data User =
     String     -- ^ User's name
     Int        -- ^ User's age
     Gender     -- ^ User's gender
-    Float      -- ^ User's weight
+    Int        -- ^ User's weight
     Int        -- ^ User's height
     Int        -- ^ User's BPM
     Int        -- ^ User's level
@@ -60,7 +64,7 @@ data User =
     String     -- ^ User's name
     Int        -- ^ User's age
     Gender     -- ^ User's gender
-    Float      -- ^ User's weight
+    Int        -- ^ User's weight
     Int        -- ^ User's height
     Int        -- ^ User's BPM
     Int        -- ^ User's level
@@ -74,7 +78,7 @@ data User =
     String     -- ^ User's name
     Int        -- ^ User's age
     Gender     -- ^ User's gender
-    Float      -- ^ User's weight
+    Int        -- ^ User's weight
     Int        -- ^ User's height
     Int        -- ^ User's BPM
     Int        -- ^ User's level
@@ -143,7 +147,7 @@ instance Arbitrary User where
     name       <- genUserName
     age        <- choose (18, 80)
     gender     <- arbitrary :: Gen Gender
-    weight     <- elements [50.0..100.00] -- NOTE: elements is used to avoid fractional numbers
+    weight     <- elements [50..100] -- NOTE: elements is used to avoid fractional numbers
     height     <- choose (150, 195)
     bpm        <- choose (60, 100)
     level      <- choose (1, 10)
@@ -226,6 +230,52 @@ instance JavaData User where
         Amateur      _ _ _ _ _ _ _ _ _ _   activities -> activities
         Occasional   _ _ _ _ _ _ _ _ _ _ _ activities -> activities
         Professional _ _ _ _ _ _ _ _ _ _ _ activities -> activities
+
+toJavaCreateUserArgs :: User -> String
+toJavaCreateUserArgs (Amateur name age gender weight height bpm level address phone email _) =
+  intercalate ", " [ toJavaExpression name
+                   , toJavaExpression age
+                   , toJavaExpression gender
+                   , toJavaExpression weight
+                   , toJavaExpression height
+                   , toJavaExpression bpm
+                   , toJavaExpression level
+                   , toJavaExpression address
+                   , toJavaExpression phone
+                   , toJavaExpression email
+                   , "0"  -- valor default para frequency
+                   , "\"Amateur\""
+                   ]
+toJavaCreateUserArgs (Occasional name age gender weight height bpm level address phone email
+    freq _) =
+  intercalate ", " [ toJavaExpression name
+                   , toJavaExpression age
+                   , toJavaExpression gender
+                   , toJavaExpression weight
+                   , toJavaExpression height
+                   , toJavaExpression bpm
+                   , toJavaExpression level
+                   , toJavaExpression address
+                   , toJavaExpression phone
+                   , toJavaExpression email
+                   , toJavaExpression freq
+                   , "\"Occasional\""
+                   ]
+toJavaCreateUserArgs (Professional name age gender weight height bpm level address phone email
+    freq _) =
+  intercalate ", " [ toJavaExpression name
+                   , toJavaExpression age
+                   , toJavaExpression gender
+                   , toJavaExpression weight
+                   , toJavaExpression height
+                   , toJavaExpression bpm
+                   , toJavaExpression level
+                   , toJavaExpression address
+                   , toJavaExpression phone
+                   , toJavaExpression email
+                   , toJavaExpression freq
+                   , "\"Professional\""
+                   ]
 
 -- | A MakeItFit date (YYYY/MM/DD)
 data MakeItFitDate = MakeItFitDate Int Int Int deriving (Show, Eq, Ord)
@@ -340,7 +390,7 @@ genActivity userCode = do
        series      <- choose (1, 10)
        return $ PushUp userCode date duration designation name repetitions series
     "Running" -> do
-       distance <- choose (1.0, 45.0)
+       distance <- choose (1.0, 20.0)
        speed    <- choose (6.0, 15.0)
        return $ Running userCode date duration designation name distance speed
     "Trail" -> do
@@ -353,7 +403,7 @@ genActivity userCode = do
     "WeightSquat" -> do
        repetitions <- choose (5, 100)
        series      <- choose (1, 10)
-       weight      <- choose (10.0, 200.0)
+       weight      <- choose (10.0, 20.0)
        return $ WeightSquat userCode date duration designation name repetitions series weight
 
 instance JavaData Activity where

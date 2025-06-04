@@ -15,7 +15,7 @@
 module TestClass (generateTestClass) where
 
 import Data.List (intercalate)
-import Java (indent, javaImports)
+import Java (indent, toJavaExpressionList, javaImports)
 import TestTemplate (generateTestsFromTemplate)
 
 import System.Process (StdStream(CreatePipe), createProcess, proc, std_in, std_out, waitForProcess)
@@ -25,11 +25,36 @@ import Control.Exception (bracket, evaluate)
 import FacadeTemplates
 
 templates =
-  [
-    executeQueryHowManyKMsDoneTemplate
-  , executeQueryHowManyKMsDoneDatesTemplate
-  , executeQueryHowManyAltimetryDoneTemplate
-  , executeQueryHowManyAltimetryDoneDatesTemplate
+  [ createAndGetUserTemplate,
+    removeUserByEmailTemplate,
+    removeUserByUUIDTemplate,
+    removeUserInvalidTypeTemplate,
+    getUserInvalidTypeTemplate,
+    removeNonExistentUserTemplate,
+    updateUserTemplate,
+    updateEmailTemplate,
+    duplicateUserTemplate,
+    getAllUsersTemplate,
+    getActivitiesFromUserTemplate,
+    addActivityToUserTemplate,
+    removeActivityFromUserTemplate,
+    createTrainingPlanTemplate,
+    createTrainingPlanExceptionTemplate,
+    constructTrainingPlanTemplate,
+    constructTrainingPlanExceptionTemplate,
+    removeTrainingPlanTemplate,
+    getTrainingPlanTemplate,
+    getTrainingPlanExceptionTemplate,
+    updateTrainingPlanTemplate,
+    updateTrainingPlanExceptionTemplate,
+    getAllTrainingPlansTemplate,
+    addActivityToTrainingPlanTemplate,
+    removeActivityFromTrainingPlanTemplate,
+    getTrainingPlansFromUserTemplate,
+    executeQueryHowManyKMsDoneTemplate,
+    executeQueryHowManyKMsDoneDatesTemplate,
+    executeQueryHowManyAltimetryDoneTemplate,
+    executeQueryHowManyAltimetryDoneDatesTemplate
   ]
 
 generateTests :: IO [String]
@@ -49,6 +74,18 @@ generateUnformattedTestClass = do
         , [
             "import static org.junit.jupiter.api.Assertions.*;"
           , "import org.junit.jupiter.api.Test;"
+          , "import static org.junit.jupiter.api.Assertions.*;"
+          , ""
+          , "import MakeItFit.users.User;"
+          , "import MakeItFit.users.Gender;"
+          , "import java.util.UUID;"
+          , "import java.util.stream.Collectors;"
+          , "import MakeItFit.activities.Activity;"
+          , "import MakeItFit.activities.implementation.*;"
+          , "import MakeItFit.utils.MakeItFitDate;"
+          , "import MakeItFit.trainingPlan.TrainingPlan;"
+          , "import static org.junit.Assert.assertThrows;"
+          , "import MakeItFit.exceptions.*;"
           , ""
           , "public class MakeItFitTest {"
           ]
