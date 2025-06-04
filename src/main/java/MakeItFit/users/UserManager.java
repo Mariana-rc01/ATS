@@ -119,6 +119,12 @@ public class UserManager implements Serializable {
                                                       " already exists.");
         }
 
+        // CHANGED: this check was missing
+        if (this.usersByCode.containsKey(user.getCode())) {
+            throw new ExistingEntityConflictException("User with code " + user.getCode() +
+                                                      " already exists.");
+        }
+
         this.usersByCode.put(user.getCode(), user);
         this.usersByEmail.put(email, user);
     }
@@ -147,9 +153,11 @@ public class UserManager implements Serializable {
      * @throws EntityDoesNotExistException if the user does not exist
      */
     public void removeUserByEmail(String email) throws EntityDoesNotExistException {
+        // CHANGED: original authors forgot conversion to lower case before comparison
+        email = email.toLowerCase();
 
         if (!this.usersByEmail.containsKey(email)) {
-            throw new EntityDoesNotExistException("User with code " + email + " does not exist.");
+            throw new EntityDoesNotExistException("User with email " + email + " does not exist.");
         }
 
         User user = this.usersByEmail.get(email);
@@ -241,6 +249,9 @@ public class UserManager implements Serializable {
      * @return a list of all activities from the user
      */
     public List<Activity> getActivitiesFromUser(String email) throws EntityDoesNotExistException {
+        // CHANGED: original authors forgot conversion to lower case before comparison
+        email = email.toLowerCase();
+
         if (!this.usersByEmail.containsKey(email)) {
             throw new EntityDoesNotExistException(email);
         }
@@ -253,7 +264,14 @@ public class UserManager implements Serializable {
      * @param email the user's email
      * @param activity the activity to be added
      */
-    public void addActivityToUser(String email, Activity activity) {
+    public void addActivityToUser(String email, Activity activity)
+        throws EntityDoesNotExistException {
+        // CHANGED: added email conversion to lower case and exception
+        email = email.toLowerCase();
+
+        if (!this.usersByEmail.containsKey(email)) {
+            throw new EntityDoesNotExistException(email);
+        }
         usersByEmail.get(email).addActivity(activity);
     }
 
@@ -264,6 +282,13 @@ public class UserManager implements Serializable {
      * @param activityCode the activity code
      */
     public void removeActivityFromUser(String email, UUID activityCode) {
+        // CHANGED: added email conversion to lower case and exception
+        email = email.toLowerCase();
+
+        if (!this.usersByEmail.containsKey(email)) {
+            throw new EntityDoesNotExistException(email);
+        }
+
         usersByEmail.get(email).removeActivity(activityCode);
     }
 
@@ -273,7 +298,13 @@ public class UserManager implements Serializable {
      * @param userCode the user's code
      * @param activities the activities to be added
      */
-    public void addActivitiesToUser(UUID userCode, List<Activity> activities) {
+    public void addActivitiesToUser(UUID userCode, List<Activity> activities)
+        throws EntityDoesNotExistException {
+        // CHANGED: add exception
+        if (!this.usersByCode.containsKey(userCode)) {
+            throw new EntityDoesNotExistException("User with code " + userCode + " does not exist");
+        }
+
         usersByCode.get(userCode).addActivities(activities);
     }
 
