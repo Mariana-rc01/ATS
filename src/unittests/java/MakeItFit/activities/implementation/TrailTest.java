@@ -2,17 +2,17 @@ package MakeItFit.activities.implementation;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import MakeItFit.utils.MakeItFitDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static MakeItFit.activities.implementation.Trail.TRAIL_TYPE_EASY;
 import static MakeItFit.activities.implementation.Trail.TRAIL_TYPE_HARD;
 import static MakeItFit.activities.implementation.Trail.TRAIL_TYPE_MEDIUM;
-import MakeItFit.utils.MakeItFitDate;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TrailTest {
     private Trail         trail;
