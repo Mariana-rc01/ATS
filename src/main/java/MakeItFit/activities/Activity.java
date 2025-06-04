@@ -220,6 +220,15 @@ public abstract class Activity implements ActivityInterface, Serializable, Compa
      *
      * @return the specialization of the activity
      */
+    public String getSpecialization() {
+        return this.specialization;
+    }
+
+    /**
+     * Gets the specialization of the activity.
+     *
+     * @return the specialization of the activity
+     */
     @Override
     public boolean equals(Object o) {
         if (o == this)

@@ -92,13 +92,15 @@ public class Trail extends DistanceWithAltimetry implements HardInterface, Seria
      * @param trailType The trail type to set (easy, medium, or hard).
      */
     public void setTrailType(int trailType) {
+        /* Changed because of the pit mutation
         if (trailType < TRAIL_TYPE_EASY) {
             this.trailType = TRAIL_TYPE_EASY;
         } else if (trailType > TRAIL_TYPE_HARD) {
             this.trailType = TRAIL_TYPE_HARD;
         } else {
             this.trailType = trailType;
-        }
+        }*/
+        this.trailType = Math.max(TRAIL_TYPE_EASY, Math.min(TRAIL_TYPE_HARD, trailType));
     }
 
     /**
@@ -119,7 +121,8 @@ public class Trail extends DistanceWithAltimetry implements HardInterface, Seria
      * @return The calculated caloric waste as an integer.
      */
     public int caloricWaste(float index) {
-        return (int) ((getDistance() * 0.5 + getElevationGain() * 0.1 - getElevationLoss() * 0.1) *
+        // Fix calories calculation formula
+        return (int) ((getDistance() * 0.5 + getElevationGain() * 0.1 + getElevationLoss() * 0.1) *
                       index * 0.01);
     }
 
