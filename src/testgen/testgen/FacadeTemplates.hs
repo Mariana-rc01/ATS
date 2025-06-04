@@ -165,7 +165,7 @@ removeUserByUUIDTemplate :: TestTemplate
 removeUserByUUIDTemplate =
   genToTestTemplate "testRemoveUserByUUID" testRemoveUserByUUIDGenerator 1
 
--- TODO testRemoveUserInvalidType
+-- testRemoveUserInvalidTypeGenerator
 testRemoveUserInvalidTypeGenerator :: Gen [String]
 testRemoveUserInvalidTypeGenerator = do
   let setupLine  = "MakeItFit model = new MakeItFit();"
@@ -176,7 +176,7 @@ removeUserInvalidTypeTemplate :: TestTemplate
 removeUserInvalidTypeTemplate =
   genToTestTemplate "testRemoveUserInvalidType" testRemoveUserInvalidTypeGenerator 1
 
--- TODO testGetUserInvalidType
+-- testGetUserInvalidTypeGenerator
 testGetUserInvalidTypeGenerator :: Gen [String]
 testGetUserInvalidTypeGenerator = do
   let setupLine  = "MakeItFit model = new MakeItFit();"
@@ -187,11 +187,12 @@ getUserInvalidTypeTemplate :: TestTemplate
 getUserInvalidTypeTemplate =
   genToTestTemplate "testGetUserInvalidType" testGetUserInvalidTypeGenerator 1
 
--- TODO testRemoveNonExistentUserThrowsException
+-- testRemoveNonExistentUserGenerator
 testRemoveNonExistentUserGenerator :: Gen [String]
 testRemoveNonExistentUserGenerator = do
+  email <- genEmail
   let setupLine  = "MakeItFit model = new MakeItFit();"
-      assertLine = "assertThrows(EntityDoesNotExistException.class, () -> model.removeUser(\"doesntexist@gmail.com\"));"
+      assertLine = "assertThrows(EntityDoesNotExistException.class, () -> model.removeUser(" ++ toJavaExpression email ++ "));"
   return [ setupLine, assertLine ]
 
 removeNonExistentUserTemplate :: TestTemplate
