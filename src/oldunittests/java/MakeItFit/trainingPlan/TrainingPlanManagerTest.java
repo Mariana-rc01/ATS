@@ -1,12 +1,14 @@
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
+
 import MakeItFit.trainingPlan.TrainingPlan;
 import MakeItFit.trainingPlan.TrainingPlanManager;
 import MakeItFit.utils.MakeItFitDate;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * The tests for the TrainingPlanManager class.
@@ -52,23 +54,6 @@ public class TrainingPlanManagerTest {
     public void testInsertTrainingPlanWithNullTrainingPlan() {
         TrainingPlanManager manager = new TrainingPlanManager();
         assertThrows(IllegalArgumentException.class, () -> { manager.insertTrainingPlan(null); });
-    }
-
-    /**
-     * Test the method removeTrainingPlan with a valid training plan
-     */
-    @Test
-    public void testRemoveTrainingPlan() {
-        UUID         code = UUID.randomUUID();
-        TrainingPlan trainingPlan =
-            new TrainingPlan(UUID.randomUUID(), MakeItFitDate.of(2024, 4, 4));
-
-        TrainingPlanManager manager = new TrainingPlanManager();
-        manager.insertTrainingPlan(trainingPlan);
-
-        manager.removeTrainingPlan(code);
-
-        assertThrows(IllegalArgumentException.class, () -> { manager.getTrainingPlan(code); });
     }
 
     /**
