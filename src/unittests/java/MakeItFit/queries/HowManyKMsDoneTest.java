@@ -77,6 +77,22 @@ public class HowManyKMsDoneTest {
     }
 
     @Test
+    void testExecuteQueryWithNullDatesThrows() {
+        assertThrows(IllegalArgumentException.class,
+                     () -> query.executeQuery(userManager, "jd@suspect.pt", null, null));
+    }
+
+    @Test
+    void testExecuteQueryWithNullDateThrows() {
+        assertThrows(IllegalArgumentException.class,
+                     ()
+                         -> query.executeQuery(userManager,
+                                               "jd@suspect.pt",
+                                               MakeItFitDate.of(1999, 2, 9),
+                                               null));
+    }
+
+    @Test
     void testExecuteQueryWithDatesNoValidActivities() {
         user.addActivities(Arrays.asList(createPushUp(MakeItFitDate.of(1999, 2, 9))));
         userManager.insertUser(user);
@@ -98,6 +114,18 @@ public class HowManyKMsDoneTest {
                                         "jd@suspect.pt",
                                         MakeItFitDate.of(1999, 2, 9),
                                         MakeItFitDate.of(1999, 4, 10)));
+    }
+
+    @Test
+    void testExecuteQueryWithDatesActivitiesOutsideTimeWindow2() {
+        user.addActivities(Arrays.asList(createRunning(MakeItFitDate.of(1999, 2, 9), 123.143)));
+        userManager.insertUser(user);
+
+        assertEquals(0,
+                     query.executeQuery(userManager,
+                                        "jd@suspect.pt",
+                                        MakeItFitDate.of(1999, 2, 4),
+                                        MakeItFitDate.of(1999, 2, 6)));
     }
 
     @Test
