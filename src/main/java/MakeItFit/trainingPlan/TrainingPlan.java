@@ -2,6 +2,7 @@ package MakeItFit.trainingPlan;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import MakeItFit.activities.Activity;
 import MakeItFit.users.UserManager;
@@ -87,7 +88,8 @@ public class TrainingPlan implements Serializable, Comparable<TrainingPlan> {
      * @return the activities
      */
     public List<MyTuple<Integer, Activity>> getActivities() {
-        return this.activities;
+        // CHANGED: failing association
+        return this.activities.stream().collect(Collectors.toList());
     }
 
     /**
@@ -115,6 +117,8 @@ public class TrainingPlan implements Serializable, Comparable<TrainingPlan> {
      * @param code the code of the activity to remove
      */
     public void removeActivity(UUID code) {
+        // NOTE: no information on whether this should throw an exception or not
+
         for (MyTuple<Integer, Activity> tuple : this.activities) {
             if (tuple.getItem2().getCode().equals(code)) {
                 this.activities.remove(tuple);
@@ -161,7 +165,7 @@ public class TrainingPlan implements Serializable, Comparable<TrainingPlan> {
     @Override
     public String toString() {
         return "        == (Training plan details) =="
-            + "        \nTraining Plan: " + this.code + "\n        User Code: " + this.userCode +
+            + "\n        Training Plan: " + this.code + "\n        User Code: " + this.userCode +
             "\n        Start Date: " + this.startDate +
             "\n        Activities(Iterations / Activity): " + this.activities;
     }
