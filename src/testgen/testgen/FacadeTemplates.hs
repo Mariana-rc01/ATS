@@ -21,7 +21,10 @@ module FacadeTemplates (
     createTrainingPlanTemplate,
     createTrainingPlanExceptionTemplate,
     constructTrainingPlanTemplate,
-    constructTrainingPlanExceptionTemplate
+    constructTrainingPlanExceptionTemplate,
+    removeTrainingPlanTemplate,
+    getTrainingPlanTemplate,
+    getTrainingPlanExceptionTemplate
   ) where
 
 import Java (assertEquals, assertTrue, runJava, toJavaExpression, toJavaExpressionList, JavaData (toJavaExpression), assertThrows)
@@ -245,3 +248,69 @@ constructTrainingPlanExceptionTestGenerator = do
 constructTrainingPlanExceptionTemplate :: TestTemplate
 constructTrainingPlanExceptionTemplate =
   genToTestTemplate "constructTrainingPlanExceptionTest" constructTrainingPlanExceptionTestGenerator 1
+
+-- removeTrainingPlan
+removeTrainingPlanTestGenerator :: Gen [String]
+removeTrainingPlanTestGenerator = do
+  user <- arbitrary :: Gen User
+  let email = userEmail user
+  date <- arbitrary :: Gen MakeItFitDate
+  let userLine = "model.create(" ++ toJavaCreateUserArgs user ++ ");"
+  let userCodeLine = "UUID userCode = model.getUser(" ++ toJavaExpression email ++ ").getCode();"
+  let dateLine = "MakeItFitDate startDate = " ++ toJavaExpression date ++ ";"
+  let planCodeLine = "UUID planCode = model.createTrainingPlan(userCode, startDate);"
+  let removeLine = "model.removeTrainingPlan(planCode);"
+  let assertLine = assertThrows "IllegalArgumentException" ["model.getTrainingPlan(planCode);"]
+  return
+    ([ userLine
+    , userCodeLine
+    , dateLine
+    , planCodeLine
+    , removeLine
+    ] ++ assertLine)
+
+removeTrainingPlanTemplate :: TestTemplate
+removeTrainingPlanTemplate =
+  genToTestTemplate "removeTrainingPlanTest" removeTrainingPlanTestGenerator 1
+
+-- getTrainingPlan -> needs a throws Exception
+getTrainingPlanTestGenerator :: Gen [String]
+getTrainingPlanTestGenerator = do
+  user <- arbitrary :: Gen User
+  let email = userEmail user
+  date <- arbitrary :: Gen MakeItFitDate
+  let userLine = "model.create(" ++ toJavaCreateUserArgs user ++ ");"
+  let userCodeLine = "UUID userCode = model.getUser(" ++ toJavaExpression email ++ ").getCode();"
+  let dateLine = "MakeItFitDate startDate = " ++ toJavaExpression date ++ ";"
+  let planCodeLine = "UUID planCode = model.createTrainingPlan(userCode, startDate);"
+  let retrievedLine = "TrainingPlan retrievedPlan = model.getTrainingPlan(planCode);"
+  let assertNotNullLine = "assertNotNull(retrievedPlan);"
+  let assertEqualsLine = "assertEquals(planCode, retrievedPlan.getCode());"
+  return
+    [ userLine
+    , userCodeLine
+    , dateLine
+    , planCodeLine
+    , retrievedLine
+    , assertNotNullLine
+    , assertEqualsLine
+    ]
+
+getTrainingPlanTemplate :: TestTemplate
+getTrainingPlanTemplate =
+  genToTestTemplate "getTrainingPlanTest" getTrainingPlanTestGenerator 1
+
+getTrainingPlanExceptionTestGenerator :: Gen [String]
+getTrainingPlanExceptionTestGenerator = do
+  let invalidCodeLine = "UUID invalidCode = UUID.randomUUID();"
+  let assertLine = "assertThrows(IllegalArgumentException.class, () -> { model.getTrainingPlan(invalidCode); });"
+  return
+    [ invalidCodeLine
+    , assertLine
+    ]
+
+getTrainingPlanExceptionTemplate :: TestTemplate
+getTrainingPlanExceptionTemplate =
+  genToTestTemplate "getTrainingPlanExceptionTest" getTrainingPlanExceptionTestGenerator 1
+
+

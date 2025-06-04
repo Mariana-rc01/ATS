@@ -32,7 +32,10 @@ templates =
     createTrainingPlanTemplate,
     createTrainingPlanExceptionTemplate,
     constructTrainingPlanTemplate,
-    constructTrainingPlanExceptionTemplate
+    constructTrainingPlanExceptionTemplate,
+    removeTrainingPlanTemplate,
+    getTrainingPlanTemplate,
+    getTrainingPlanExceptionTemplate
   ]
 
 generateTests :: IO [String]
