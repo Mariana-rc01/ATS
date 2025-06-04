@@ -262,7 +262,7 @@ Na classe \texttt{QueriesManager.java}, o construtor inicial recebia parâmetros
 que não eram usados. Estes foram removidos para refletir corretamente a
 funcionalidade da classe e evitar confusão na sua utilização.
 
-\subsection{\texttt{Utils}}
+\subsection{Utilitários}
 
 Durante a execução dos testes unitários ao \emph{package} \texttt{Utils}, foi
 identificado um problema relevante na classe \texttt{EmailValidator.java},
@@ -314,6 +314,17 @@ Os testes cobrem condições normais, limites, entradas inválidas e casos extre
 confiabilidade e robustez no comportamento das funcionalidades relacionadas às atividades e à gestão
 de utilizadores.
 
+\subsection{Resultados Obtidos}
+
+Para os testes unitários desenvolvidos, apresentam-se as coberturas medidas abaixo:
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{res/Jacoco.png}
+    \includegraphics[width=\textwidth]{res/Pit.png}
+    \caption{Coberturas medidas com o Jacoco e com o PIT, respetivamente, nos novos testes unitários.}
+\end{figure}
+
+
 \section{Geração de Testes com o EvoSuite}
 
 Para a geração de testes com o EvoSuite, foi necessário, em primeiro lugar, converter o projeto para
@@ -329,6 +340,21 @@ atividades, vários testes são feitos com valores inválidos (ex.: altura negat
 a validação destes valores não está a ser feita. Ademais, o EvoSuite deteta exceções que não estão
 explícitas no código (ex.: \texttt{NullPointerException}), o que pode informar o desenvolvedor das
 verificações que deve implementar.
+
+Segue-se a cobertura dos testes gerados por EvoSuite:
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{res/EvoSuiteJacoco.png}
+    \caption{Cobertura medidas com o Jacoco dos unitários gerados pelo EvoSuite.}
+\end{figure}
+
+Observa-se que estas são consideravelmente superiores às da antiga \emph{suite} de testes unitários:
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{res/OldJacoco.png}
+    \includegraphics[width=\textwidth]{res/OldPit.png}
+    \caption{Coberturas medidas com o Jacoco e com o PIT, respetivamente, nos antigos testes unitários.}
+\end{figure}
 
 \section{Geração de Testes com o QuickCheck}
 
@@ -450,6 +476,16 @@ os métodos lançam exceções apropriadas como \texttt{IllegalArgumentException
 \texttt{EntityDoesNotExistException}. Isto contribui para uma verificação mais rigorosa do
 comportamento esperado do sistema em casos inválidos.
 
+\subsection{Resultados Obtidos}
+
+Seguem-se os resultados da cobertura dos testes gerados por QuickCheck:
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{res/QuickCheckJacoco.png}
+    \includegraphics[width=\textwidth]{res/QuickCheckPit.png}
+    \caption{Coberturas medidas com o Jacoco e com o PIT, respetivamente, nos testes gerados por QuickCheck.}
+\end{figure}
+
 \section{Testes gerados por AI}
 
 Durante a fase de testes da aplicação \textit{MakeItFit}, foi também explorada a utilização de
@@ -489,6 +525,14 @@ A utilização de IA como \textit{Deepseek-Coder} mostra-se útil para gerar tes
 de casos simples, servindo como base para desenvolvimento manual posterior. No entanto, para atingir
 uma cobertura robusta e garantir a validação de cenários críticos, foi necessário complementar esta
 abordagem com testes gerados por métodos mais estruturados, como o EvoSuite.
+
+Segue-se a cobertura dos testes unitários gerados por AI:
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{res/AiJacoco.png}
+    \includegraphics[width=\textwidth]{res/AiPit.png}
+    \caption{Coberturas medidas com o Jacoco e com o PIT, respetivamente, nos unitários gerados por AI.}
+\end{figure}
 
 \section{Teste da Camada de Apresentação}
 
