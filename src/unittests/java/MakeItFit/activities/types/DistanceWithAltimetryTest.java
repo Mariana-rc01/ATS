@@ -2,14 +2,14 @@ package MakeItFit.activities.types;
 
 import java.util.UUID;
 
+import MakeItFit.utils.MakeItFitDate;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import MakeItFit.utils.MakeItFitDate;
 
 public class DistanceWithAltimetryTest {
     private TestDistanceWithAltimetry activity;
@@ -101,23 +101,23 @@ public class DistanceWithAltimetryTest {
         assertFalse(activity.equals(different));
 
         TestDistanceWithAltimetry diff2 = new TestDistanceWithAltimetry(userCode,
-                                                                            date,
-                                                                            91,
-                                                                            "Biking",
-                                                                            "Bom Jesus Biking",
-                                                                            12345.0,
-                                                                            234.0,
-                                                                            200.0);
+                                                                        date,
+                                                                        91,
+                                                                        "Biking",
+                                                                        "Bom Jesus Biking",
+                                                                        12345.0,
+                                                                        234.0,
+                                                                        200.0);
         assertFalse(activity.equals(diff2));
 
         TestDistanceWithAltimetry diff3 = new TestDistanceWithAltimetry(userCode,
-                                                                            date,
-                                                                            90,
-                                                                            "Biking",
-                                                                            "Bom Jesus Biking",
-                                                                            12345.0,
-                                                                            234.0,
-                                                                            210.0);
+                                                                        date,
+                                                                        90,
+                                                                        "Biking",
+                                                                        "Bom Jesus Biking",
+                                                                        12345.0,
+                                                                        234.0,
+                                                                        210.0);
         assertFalse(activity.equals(diff3));
     }
 
