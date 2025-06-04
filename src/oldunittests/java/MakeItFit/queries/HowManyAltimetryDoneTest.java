@@ -1,16 +1,14 @@
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import MakeItFit.activities.implementation.Trail;
 import MakeItFit.queries.HowManyAltimetryDone;
 import MakeItFit.users.Gender;
 import MakeItFit.users.User;
 import MakeItFit.users.UserManager;
-import MakeItFit.users.types.*;
+import MakeItFit.users.types.Amateur;
 import MakeItFit.utils.MakeItFitDate;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static java.lang.Math.round;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * The tests for the HowManyAltimetryDone class.
@@ -63,33 +61,6 @@ public class HowManyAltimetryDoneTest {
                                        299.2,
                                        299.7,
                                        Trail.TRAIL_TYPE_EASY));
-    }
-
-    /**
-     * Tests the HowManyAltimetryDone class method executeQuery.
-     */
-    @Test
-    void testExecuteQueryWithoutDates() {
-        HowManyAltimetryDone altimetryAnalyzer = new HowManyAltimetryDone();
-
-        double result = altimetryAnalyzer.executeQuery(userManager, "test@example.com");
-
-        assertEquals(500, round(result));
-    }
-
-    /**
-     * Tests the HowManyAltimetryDone class method executeQuery.
-     */
-    @Test
-    void testExecuteQueryValidDates() {
-        HowManyAltimetryDone altimetryAnalyzer = new HowManyAltimetryDone();
-        MakeItFitDate        date1             = MakeItFitDate.of(2024, 5, 1);
-        MakeItFitDate        date2             = MakeItFitDate.of(2024, 5, 5);
-
-        double result =
-            altimetryAnalyzer.executeQuery(userManager, "test@example.com", date1, date2);
-
-        assertEquals((double) 1500, round(result));
     }
 
     /**

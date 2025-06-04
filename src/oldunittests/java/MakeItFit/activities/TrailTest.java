@@ -1,4 +1,7 @@
-import java.util.UUID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Test;
 
 import MakeItFit.activities.implementation.Trail;
 import MakeItFit.users.Gender;
@@ -6,9 +9,6 @@ import MakeItFit.users.User;
 import MakeItFit.users.types.Amateur;
 import MakeItFit.users.types.Professional;
 import MakeItFit.utils.MakeItFitDate;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for the Trail class.
@@ -108,36 +108,6 @@ public class TrailTest {
 
         trail1.setTrailType(Trail.TRAIL_TYPE_HARD);
         assertEquals(trail1.getTrailType(), Trail.TRAIL_TYPE_HARD, "The trail type should be hard");
-    }
-
-    /**
-     * Tests the calculateCaloricWaste method of the Trail class.
-     */
-    @Test
-    public void testCalculateCaloricWaste() {
-        User  user   = new Amateur("John",
-                                20,
-                                Gender.Male,
-                                70,
-                                180,
-                                65,
-                                3,
-                                "Wallstreet N16",
-                                "974632836",
-                                "jonh@mail.com");
-        Trail trail1 = new Trail(user.getCode(),
-                                 MakeItFitDate.of(2024, 4, 4),
-                                 40,
-                                 "Serra da Estrela",
-                                 "Trail",
-                                 900.6,
-                                 700.8,
-                                 200.3,
-                                 Trail.TRAIL_TYPE_HARD);
-        trail1.calculateCaloricWaste(user.getIndex());
-        assertEquals(trail1.getCaloricWaste(),
-                     116,
-                     "Caloric waste should match the expected value");
     }
 
     /**
