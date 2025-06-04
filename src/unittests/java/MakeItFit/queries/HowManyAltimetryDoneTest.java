@@ -80,6 +80,22 @@ public class HowManyAltimetryDoneTest {
     }
 
     @Test
+    void testExecuteQueryWithNullDatesThrows() {
+        assertThrows(IllegalArgumentException.class,
+                     () -> query.executeQuery(userManager, "jd@suspect.pt", null, null));
+    }
+
+    @Test
+    void testExecuteQueryWithDateThrows() {
+        assertThrows(IllegalArgumentException.class,
+                     ()
+                         -> query.executeQuery(userManager,
+                                               "jd@suspect.pt",
+                                               MakeItFitDate.of(1999, 2, 9),
+                                               null));
+    }
+
+    @Test
     void testExecuteQueryWithDatesNoValidActivities() {
         user.addActivities(Arrays.asList(createPushUp(MakeItFitDate.of(1999, 2, 9))));
         userManager.insertUser(user);
@@ -103,6 +119,20 @@ public class HowManyAltimetryDoneTest {
                                         "jd@suspect.pt",
                                         MakeItFitDate.of(1999, 4, 9),
                                         MakeItFitDate.of(1999, 4, 10)));
+    }
+
+    @Test
+    void testExecuteQueryWithDatesActivitiesOutsideTimeWindow2() {
+        user.addActivities(
+            Arrays.asList(createTrail(MakeItFitDate.of(1999, 2, 9), 229.12, 142.0),
+                          createTrail(MakeItFitDate.of(1999, 2, 14), 654.129, 532.0)));
+        userManager.insertUser(user);
+
+        assertEquals(0,
+                     query.executeQuery(userManager,
+                                        "jd@suspect.pt",
+                                        MakeItFitDate.of(1999, 1, 2),
+                                        MakeItFitDate.of(1999, 1, 3)));
     }
 
     @Test

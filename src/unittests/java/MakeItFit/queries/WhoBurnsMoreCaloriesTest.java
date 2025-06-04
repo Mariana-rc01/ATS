@@ -56,6 +56,19 @@ public class WhoBurnsMoreCaloriesTest {
     }
 
     @Test
+    void testExecuteQueryWithNullDatesThrows() {
+        assertThrows(IllegalArgumentException.class,
+                     () -> this.query.executeQuery(userManager, null, null));
+    }
+
+    @Test
+    void testExecuteQueryWithNullDateThrows() {
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> this.query.executeQuery(userManager, MakeItFitDate.of(2000, 2, 9), null));
+    }
+
+    @Test
     void testExecuteQueryWithDatesReturnsUserWithValidActivities() {
         User user1 = createUser("jd@uminho.pt", 58, 167, 80);
         user1.addActivities(
@@ -63,7 +76,7 @@ public class WhoBurnsMoreCaloriesTest {
 
         User user2 = createUser("jd@gemail.pt", 58, 167, 80);
         user2.addActivities(
-            Arrays.asList(createPushUp(user1.getCode(), MakeItFitDate.of(2004, 2, 15)),
+            Arrays.asList(createPushUp(user1.getCode(), MakeItFitDate.of(1950, 2, 15)),
                           createPushUp(user1.getCode(), MakeItFitDate.of(2003, 2, 15)),
                           createPushUp(user1.getCode(), MakeItFitDate.of(2002, 2, 15))));
 
