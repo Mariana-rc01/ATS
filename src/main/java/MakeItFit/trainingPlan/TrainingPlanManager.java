@@ -8,6 +8,7 @@ import MakeItFit.activities.ActivityManager;
 import MakeItFit.activities.HardInterface;
 import MakeItFit.activities.implementation.*;
 import MakeItFit.exceptions.EntityDoesNotExistException;
+import MakeItFit.exceptions.ExistingEntityConflictException;
 import MakeItFit.utils.ExtendedRandom;
 import MakeItFit.utils.MakeItFitDate;
 import MakeItFit.utils.MyTuple;
@@ -206,15 +207,17 @@ public class TrainingPlanManager implements Serializable {
      *
      * @param trainingPlan the training plan to be inserted
      */
-    public void insertTrainingPlan(TrainingPlan trainingPlan) throws IllegalArgumentException {
+    public void insertTrainingPlan(TrainingPlan trainingPlan)
+        throws IllegalArgumentException, ExistingEntityConflictException {
 
         if (trainingPlan == null) {
             throw new IllegalArgumentException("Invalid input: trainingPlan cannot be null.");
         }
 
         if (this.trainingPlans.containsKey(trainingPlan.getCode())) {
-            throw new IllegalArgumentException("Training with code " + trainingPlan.getCode() +
-                                               " already exists.");
+            // CHANGE: change exception type
+            throw new ExistingEntityConflictException("Training with code " +
+                                                      trainingPlan.getCode() + " already exists.");
         }
 
         this.trainingPlans.put(trainingPlan.getCode(), trainingPlan);
@@ -226,6 +229,7 @@ public class TrainingPlanManager implements Serializable {
      * @param code the code of the user
      */
     public void removeTrainingPlan(UUID code) {
+        // NOTE: no information on whether this should throw an exception or not
         this.trainingPlans.remove(code);
     }
 
@@ -234,13 +238,15 @@ public class TrainingPlanManager implements Serializable {
      *
      * @param code the code of the user
      * @return the training plan by the user code
-     * @throws IllegalArgumentException if the training plan does not exist
+     * @throws EntityDoesNotExistException if the training plan does not exist
      */
-    public TrainingPlan getTrainingPlan(UUID code) throws IllegalArgumentException {
+    public TrainingPlan getTrainingPlan(UUID code) throws EntityDoesNotExistException {
         TrainingPlan trainingPlan = this.trainingPlans.get(code);
 
         if (trainingPlan == null) {
-            throw new IllegalArgumentException("Training with code " + code + " does not exist.");
+            // CHANGE: type of exception
+            throw new EntityDoesNotExistException("Training with code " + code +
+                                                  " does not exist.");
         }
 
         return trainingPlan;
@@ -278,6 +284,7 @@ public class TrainingPlanManager implements Serializable {
      * @param activity the activity to add
      */
     public void addActivity(UUID code, int repetitions, Activity activity) {
+        // NOTE: no information on whether this should throw an exception or not
         this.trainingPlans.get(code).addActivity(repetitions, activity);
     }
 
@@ -288,6 +295,7 @@ public class TrainingPlanManager implements Serializable {
      * @param activity the code of the activity to remove
      */
     public void removeActivity(UUID code, UUID activity) {
+        // NOTE: no information on whether this should throw an exception or not
         this.trainingPlans.get(code).removeActivity(activity);
     }
 
