@@ -1,10 +1,10 @@
 package MakeItFit.utils;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.jupiter.api.Test;
 
 public class ExtendedRandomTest {
     private int SAMPLE_SIZE = 1000;
@@ -14,14 +14,15 @@ public class ExtendedRandomTest {
         ExtendedRandom unseededRandom = new ExtendedRandom();
         for (int i = 0; i < SAMPLE_SIZE; i++) {
             int expected = unseededRandom.nextInt(5, 15);
-            assertTrue(expected >= 5 && expected < 15);
+            assertTrue(expected >= 5);
+            assertTrue(expected < 15);
         }
     }
 
     @Test
     void testDeterministicOutputSeededRandom() {
         ExtendedRandom seededRandom = new ExtendedRandom(123456L);
-        int[] firstRun = new int[5];
+        int[]          firstRun     = new int[5];
         for (int i = 0; i < firstRun.length; i++) {
             firstRun[i] = seededRandom.nextInt(5, 10);
         }
@@ -35,19 +36,13 @@ public class ExtendedRandomTest {
     @Test
     void testOriginEqualThrows() {
         ExtendedRandom unseededRandom = new ExtendedRandom();
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> unseededRandom.nextInt(10, 10)
-        );
+        assertThrows(IllegalArgumentException.class, () -> unseededRandom.nextInt(10, 10));
     }
 
     @Test
     void testOriginGreaterThrows() {
         ExtendedRandom unseededRandom = new ExtendedRandom();
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> unseededRandom.nextInt(15, 5)
-        );
+        assertThrows(IllegalArgumentException.class, () -> unseededRandom.nextInt(15, 5));
     }
 
     @Test
@@ -63,7 +58,8 @@ public class ExtendedRandomTest {
         ExtendedRandom unseededRandom = new ExtendedRandom();
         for (int i = 0; i < SAMPLE_SIZE; i++) {
             int expected = unseededRandom.nextInt(-5, 5);
-            assertTrue(expected >= -5 && expected < 5);
+            assertTrue(expected >= -5);
+            assertTrue(expected < 5);
         }
     }
 }
