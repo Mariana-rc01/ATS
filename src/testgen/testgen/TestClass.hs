@@ -62,6 +62,15 @@ generateUnformattedTestClass = do
           , "import static org.junit.jupiter.api.Assertions.*;"
           , ""
           , "import MakeItFit.users.User;"
+          , "import MakeItFit.users.Gender;"
+          , "import java.util.UUID;"
+          , "import MakeItFit.activities.Activity;"
+          , "import MakeItFit.activities.implementation.*;"
+          , "import MakeItFit.utils.MakeItFitDate;"
+          , "import MakeItFit.trainingPlan.TrainingPlan;"
+          , "import static org.junit.Assert.assertThrows;"
+          , "import MakeItFit.exceptions.*;"
+
           , ""
           , "public class MakeItFitTest {"
           ]

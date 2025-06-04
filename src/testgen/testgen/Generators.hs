@@ -48,7 +48,7 @@ data User =
     String     -- ^ User's name
     Int        -- ^ User's age
     Gender     -- ^ User's gender
-    Float      -- ^ User's weight
+    Int        -- ^ User's weight
     Int        -- ^ User's height
     Int        -- ^ User's BPM
     Int        -- ^ User's level
@@ -61,7 +61,7 @@ data User =
     String     -- ^ User's name
     Int        -- ^ User's age
     Gender     -- ^ User's gender
-    Float      -- ^ User's weight
+    Int        -- ^ User's weight
     Int        -- ^ User's height
     Int        -- ^ User's BPM
     Int        -- ^ User's level
@@ -75,7 +75,7 @@ data User =
     String     -- ^ User's name
     Int        -- ^ User's age
     Gender     -- ^ User's gender
-    Float      -- ^ User's weight
+    Int        -- ^ User's weight
     Int        -- ^ User's height
     Int        -- ^ User's BPM
     Int        -- ^ User's level
@@ -144,7 +144,7 @@ instance Arbitrary User where
     name       <- genUserName
     age        <- choose (18, 80)
     gender     <- arbitrary :: Gen Gender
-    weight     <- elements [50.0..100.00] -- NOTE: elements is used to avoid fractional numbers
+    weight     <- elements [50..100] -- NOTE: elements is used to avoid fractional numbers
     height     <- choose (150, 195)
     bpm        <- choose (60, 100)
     level      <- choose (1, 10)
@@ -384,7 +384,7 @@ genActivity userCode = do
        series      <- choose (1, 10)
        return $ PushUp userCode date duration designation name repetitions series
     "Running" -> do
-       distance <- choose (1.0, 45.0)
+       distance <- choose (1.0, 20.0)
        speed    <- choose (6.0, 15.0)
        return $ Running userCode date duration designation name distance speed
     "Trail" -> do
@@ -397,7 +397,7 @@ genActivity userCode = do
     "WeightSquat" -> do
        repetitions <- choose (5, 100)
        series      <- choose (1, 10)
-       weight      <- choose (10.0, 200.0)
+       weight      <- choose (10.0, 20.0)
        return $ WeightSquat userCode date duration designation name repetitions series weight
 
 instance JavaData Activity where
