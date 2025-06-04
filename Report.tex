@@ -99,7 +99,8 @@ Na classe \texttt{Trail.java}:
   pois utilizava \texttt{-} onde deveria ser \texttt{+} na fórmula do cálculo de calorias. A fórmula
   foi atualizada para:
   \begin{verbatim}
-return (int) ((getDistance() * 0.5 + getElevationGain() * 0.1 + getElevationLoss() * 0.1) * index * 0.01);
+    return (int) ((getDistance() * 0.5 + getElevationGain() * 0.1 + getElevationLoss() * 0.1) *
+    index * 0.01);
   \end{verbatim}
   Esta alteração assegura que o cálculo de calorias gastas reflita corretamente o esforço físico
   baseado nos parâmetros da atividade.
@@ -210,7 +211,8 @@ inclui:
   \item A configuração inicial do modelo (\texttt{MakeItFit});
   \item A criação do utilizador com os seus respetivos dados e atividades;
   \item As chamadas aos métodos da API Java a serem testados;
-  \item Instruções de verificação, como \texttt{assertEquals}, \texttt{assertTrue} e \texttt{assertThrows}.
+  \item Instruções de verificação, como \texttt{assertEquals}, \texttt{assertTrue} e
+  \texttt{assertThrows}.
 \end{itemize}
 
 A estrutura dos testes é parametrizada por geradores, como \texttt{Gen User} e
