@@ -413,7 +413,7 @@ public class MakeItFitTest {
         UUID          planCode  = model.createTrainingPlan(userCode, startDate);
 
         model.removeTrainingPlan(planCode);
-        assertThrows(IllegalArgumentException.class, () -> { model.getTrainingPlan(planCode); });
+        assertThrows(EntityDoesNotExistException.class, () -> { model.getTrainingPlan(planCode); });
     }
 
     @Test
@@ -443,8 +443,7 @@ public class MakeItFitTest {
     @Test
     void testGetTrainingPlanException() {
         UUID invalidCode = UUID.randomUUID();
-
-        assertThrows(IllegalArgumentException.class, () -> { model.getTrainingPlan(invalidCode); });
+        assertThrows(EntityDoesNotExistException.class, () -> { model.getTrainingPlan(invalidCode); });
     }
 
     @Test
