@@ -1,8 +1,11 @@
 # ATS
 
-UMinho's 2024/25 Software Testing and Analysis class assignment. See
-[Assignment.pdf](Assignment.pdf) for more details. This assignment consisted of testing a previous
-year's [Object Oriented Programming Project](https://github.com/pedrofp4444/POO).
+UMinho's 2024/25 Software Testing and Analysis class assignment. This assignment consisted of
+testing a previous year's [Object Oriented Programming Project](https://github.com/pedrofp4444/POO)
+using unit testing and automatically generated tests, with branch and mutant coverage analysis. See
+[Assignment.pdf](Assignment.pdf) for more details.
+
+Grade: 18.5 / 20 :star:
 
 ### Authors
 
