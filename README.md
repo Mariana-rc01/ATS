@@ -5,7 +5,7 @@ testing a previous year's [Object Oriented Programming Project](https://github.c
 using unit testing and automatically generated tests, with branch and mutant coverage analysis. See
 [Assignment.pdf](Assignment.pdf) for more details.
 
-Grade: 18.5 / 20 :star:
+## Grade: 18.5 / 20 :star:
 
 ### Authors
 
